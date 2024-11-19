@@ -122,6 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 # API_KEY 추가
 TMDB_API_KEY = config('TMDB_API_KEY')
 
