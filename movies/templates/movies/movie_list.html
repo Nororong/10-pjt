@@ -3,7 +3,7 @@
 
 {% block content %}
 <div>
-  <h1>Movie List</h1>
+  <h1>영화 리스트</h1>
   <div id="movies" class="movies-container">
     {% for movie in movies %}
       <div class="movie">
@@ -39,20 +39,11 @@
     // 클릭 이벤트 처리 -> 좋아요, 좋아요 해제
     const movieContainer = document.querySelector('.movies-container');
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    // Django 템플릿 태그 사용
-    const isUserLoggedIn = {{ request.user.is_authenticated|yesno:"true,false" }};
     
     movieContainer.addEventListener('click', function (event) {
       if (!event.target.classList.contains('heart-icon')) return;
       
       event.preventDefault();
-
-      // 비로그인 상태에서 하트 클릭 시, 알럿 + 로그인 페이지로 이동
-      if (!isUserLoggedIn) {
-        alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.')
-        window.location.href = "{% url 'accounts:login' %}"
-        return
-      }
       const movieId = event.target.dataset.movieId;
   
       axios({

@@ -49,9 +49,6 @@ def movie_list(request):
 
 @login_required
 def likes(request, movie_pk):
-    # view 에서 비로그인 상태 체크
-    # if not request.user.is_authenticated:
-    #      return JsonResponse({'error': '로그인이 필요합니다.'}, status=401)
     movie = get_object_or_404(Movie, pk=movie_pk)
 
     if request.user in movie.like_users.all():
