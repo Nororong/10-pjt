@@ -5,8 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
+
     <link rel="stylesheet" href="{% static 'movies/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'articles/css/style.css' %}">
     <title>WARM</title>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+      body {
+        font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    }
+    </style>
 </head>
 <body>
     <header>
