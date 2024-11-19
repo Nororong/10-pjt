@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>선호도 설정</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <h3>선호하는 감독 (최대 3개)</h3>
+        <div id="directorsSection">
+            {{ form.favorite_directors }}
+        </div>
+    
+        <h3>선호하는 장르 (최대 3개)</h3>
+        <div id="genresSection">
+            {{ form.favorite_genres }}
+        </div>
+    
+        <h3>관심있는 수상 내역 (최대 3개)</h3>
+        <div id="awardsSection">
+            {{ form.favorite_awards }}
+        </div>
+    
+        <button type="submit">저장</button>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = ['directors', 'genres', 'awards'];
+        
+            sections.forEach(section => {
+                const checkboxes = document.querySelectorAll(`#${section}Section input[type="checkbox"]`);
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const checked = document.querySelectorAll(`#${section}Section input[type="checkbox"]:checked`);
+                        if (checked.length > 3) {
+                            this.checked = false; // 현재 체크를 해제
+                            alert(`${section.charAt(0).toUpperCase() + section.slice(1)}는 최대 3개까지만 선택할 수 있습니다.`);
+                        }
+                    });
+                });
+            });
+        });
+        </script>
+</script>
+</body>
+</html>
