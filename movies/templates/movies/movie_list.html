@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div>
+  <h1>영화 리스트</h1>
+  <div id="movies" class="movies-container">
+    {% for movie in movies %}
+      <div class="movie">
+        <div class='poster-with-heart'>
+          <img class='heart-icon'
+          src="{% static 'img/heart-none.png' %}"
+          alt="icon"
+          data-movie-id="{{ movie.id }}"
+          {% if movie.id in liked_movie_ids %}
+          data-is-liked="true"
+          {% endif %}>
+          <div class="poster-overlay"></div>
+          <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
+        </div>
+        <h4 class="movie-title">{{ movie.title }}</h4>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  // 초기 페이지 로드 시 자동 실행
+  document.addEventListener('DOMContentLoaded', function() {
+    const heartIcons = document.querySelectorAll('.heart-icon');
+    
+    // 초기 상태 설정 -> 좋아요 누른 영화 아이콘 채워진 하트로 설정
+    heartIcons.forEach(icon => {
+      if (icon.dataset.isLiked === "true") {
+        icon.src = "{% static 'img/heart-fill.png' %}";
+      }
+    });
+  
+    // 클릭 이벤트 처리 -> 좋아요, 좋아요 해제
+    const movieContainer = document.querySelector('.movies-container');
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    movieContainer.addEventListener('click', function (event) {
+      if (!event.target.classList.contains('heart-icon')) return;
+      
+      event.preventDefault();
+      const movieId = event.target.dataset.movieId;
+  
+      axios({
+        method: 'post',
+        url: `/movies/${movieId}/likes/`,
+        headers: {'X-CSRFToken': csrftoken},
+      })
+        .then((response) => {
+          const isLiked = response.data.is_liked;
+          event.target.src = isLiked 
+            ? "{% static 'img/heart-fill.png' %}" 
+            : "{% static 'img/heart-none.png' %}";
+          // 확장성을 위한 코드!!! -> data-is-liked 속성 업데이트
+          event.target.dataset.isLiked = isLiked.toString();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  });
+</script>
+{% endblock content %}
