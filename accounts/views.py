@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, CustomUserChangeForm, PreferenceForm
 from .forms import PreferenceForm
-from django.contrib.auth import login  # Make sure to import login
+from django.shortcuts import get_object_or_404
 
 def signup(request):
     if request.method == 'POST':
@@ -104,3 +104,24 @@ def show_preferences(request):
         'favorite_awards': user.favorite_awards.all(),
     }
     return render(request, 'preferences/show_preferences.html', context)
+
+@login_required
+def password_change(request, user_pk):
+    User = get_user_model()
+    user = get_object_or_404(User, pk=user_pk)
+    if request.user != user:
+        return redirect('articles:index') 
+    
+    if request.method == 'POST':
+        form = PasswordChangeForm(user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            return redirect('articles:index')
+    else:
+        form = PasswordChangeForm(user)
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'accounts/change_password.html', context)
