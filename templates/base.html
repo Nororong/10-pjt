@@ -1,23 +1,75 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Site{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static 'movies/css/style.css' %}">
+    <title>WARM</title>
 </head>
 <body>
-    <header>
-        <a href="{% url "movies:index" %}">WARM</a>
-    </header>
+  <header>
+    <a href="{% url "movies:index" %}">WARM</a>
+  </header>
+  <main>
+    {% if request.user.is_authenticated %}
+    <p>반가워요! {{ user.username }}님</p>
+    
+    <form action="{% url 'accounts:logout' %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="LOGOUT">
+    </form>
 
+    <form action="{% url 'accounts:delete' %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="회원탈퇴">
+    </form>
+    <form action="{% url 'accounts:update' %}" method="GET">
+      <button type="submit">회원정보 수정</button>
+    </form>
 
-    <main>
-        {% block content %}
+    <h1>선호도 정보</h1>
 
-        {% endblock %}
-    </main>
-    <footer>
-        <p>&copy; 2024 My Website</p>
-    </footer>
+    <h2>선호하는 감독:</h2>
+    <ul>
+      {% for director in favorite_directors %}
+        <li>{{ director.name }}</li>
+      {% endfor %}
+    </ul>
+    
+    <h2>선호하는 장르:</h2>
+    <ul>
+      {% for genre in favorite_genres %}
+        <li>{{ genre.name }}</li>
+      {% endfor %}
+    </ul>
+
+    <h2>관심있는 수상 내역:</h2>
+    <ul>
+      {% for award in favorite_awards %}
+        <li>{{ award.name }}</li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+    <form action="{% url 'accounts:signup' %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="회원가입">
+    </form>
+    <form action="{% url 'accounts:login' %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="LOGIN">
+    </form>
+  {% endif %}
+  </main>
+  {% block content %}
+  {% endblock content %}
+  <footer>
+      <p>&copy; 2024 My Website</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  {% comment %} <script src="{% static 'movies/js/vue-app.js' %}"></script> {% endcomment %}
 </body>
 </html>
