@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ article.title }}</h1>
+<p>작성일: {{ article.created_at }}</p>
+<p>수정일: {{ article.updated_at }}</p>
+<hr>
+
+{% if article.image %}
+    <img src="{{ article.image.url }}" alt="img">
+{% else %}
+    <p>이미지가 없습니다.</p>
+{% endif %}
+
+<p>내용: {{ article.content }}</p>
+<hr>
+
+<h2>좋아요 / 싫어요</h2>
+<button id="like-button" data-id="{{ article.id }}">
+    {% if request.user in article.likes.all %} 
+        Unlike 
+    {% else %} 
+        Like 
+    {% endif %}
+</button>
+<span id="like-count">{{ article.likes.count }} Likes</span>
+
+<button id="dislike-button" data-id="{{ article.id }}">
+    {% if request.user in article.dislikes.all %} 
+        Undislike 
+    {% else %} 
+        Dislike 
+    {% endif %}
+</button>
+<span id="dislike-count">{{ article.dislikes.count }} Dislikes</span>
+
+<h2>댓글</h2>
+<form id="comment-form">
+    {% csrf_token %}
+    <textarea id="comment-content" placeholder="댓글을 입력하세요"></textarea>
+    <button type="submit">댓글 작성</button>
+</form>
+
+<ul id="comments-list">
+{% for comment in comments %}
+    <li id="comment-{{ comment.id }}">
+        <strong>{{ comment.author.username }}</strong>: 
+        <span class="comment-content">{{ comment.content }}</span>
+        <small>{{ comment.created_at }}</small>
+
+        <button class="delete-comment" data-id="{{ comment.id }}">삭제</button>
+
+        <!-- 대댓글 작성 폼 -->
+        <form class="reply-form" data-comment-id="{{ comment.id }}">
+            {% csrf_token %}
+            <textarea class="reply-content" placeholder="대댓글을 입력하세요"></textarea>
+            <button type="submit">대댓글 작성</button>
+        </form>
+
+        <ul class="replies-list">
+        {% for reply in comment.replies.all %}
+            <li id="reply-{{ reply.id }}">
+                <strong>{{ reply.author.username }}</strong>: {{ reply.content }} 
+                <small>{{ reply.created_at }}</small>
+                <button class="delete-reply" data-id="{{ reply.id }}">삭제</button>
+            </li>
+        {% endfor %}
+        </ul>
+    </li>
+{% endfor %}
+</ul>
+
+<script>
+// 댓글 작성
+document.getElementById('comment-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const content = document.getElementById('comment-content').value;
+    const articleId = {{ article.id }};
+    
+    fetch("{% url 'articles:articles_detail' article.pk %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content: content,
+            parent_comment_id: null  // 일반 댓글 작성
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 새로운 댓글 추가
+            const newComment = document.createElement('li');
+            newComment.id = 'comment-' + data.comment_id;
+            newComment.innerHTML = `
+                <strong>${data.author}</strong>: 
+                <span class="comment-content">${data.content}</span>
+                <small>${data.created_at}</small>
+                <button class="delete-comment" data-id="${data.comment_id}">삭제</button>
+
+                <!-- 대댓글 작성 폼 -->
+                <form class="reply-form" data-comment-id="${data.comment_id}">
+                    {% csrf_token %}
+                    <textarea class="reply-content" placeholder="대댓글을 입력하세요"></textarea>
+                    <button type="submit">대댓글 작성</button>
+                </form>
+
+                <ul class="replies-list"></ul>  <!-- 대댓글 목록 -->
+            `;
+            document.getElementById('comments-list').appendChild(newComment);
+            document.getElementById('comment-content').value = '';  // 입력 필드 초기화
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("오류가 발생했습니다.");
+    });
+});
+
+// 댓글 삭제
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-comment')) {
+        const commentId = event.target.getAttribute('data-id');
+
+        if (confirm("이 댓글을 정말로 삭제하시겠습니까?")) {
+            fetch("{% url 'articles:comment_delete' '0' %}".replace('0', commentId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('comment-' + commentId).remove();
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("오류가 발생했습니다.");
+            });
+        }
+    }
+
+    // 대댓글 삭제
+    if (event.target.classList.contains('delete-reply')) {
+        const replyId = event.target.getAttribute('data-id');
+
+        if (confirm("이 대댓글을 정말로 삭제하시겠습니까?")) {
+            fetch("{% url 'articles:comment_delete' '0' %}".replace('0', replyId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('reply-' + replyId).remove();
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("오류가 발생했습니다.");
+            });
+        }
+    }
+
+    // 대댓글 작성
+    if (event.target.closest('.reply-form')) {
+        event.preventDefault();
+        
+        const form = event.target.closest('.reply-form');
+        const content = form.querySelector('.reply-content').value;
+        const parentCommentId = form.getAttribute('data-comment-id');
+
+        fetch("{% url 'articles:articles_detail' article.pk %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: content,
+                parent_comment_id: parentCommentId  // 대댓글 작성
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // 새로운 대댓글 추가
+                const newReply = document.createElement('li');
+                newReply.id = 'reply-' + data.comment_id;
+                newReply.innerHTML = `
+                    <strong>${data.author}</strong>: ${data.content}
+                    <small>${data.created_at}</small>
+                    <button class="delete-reply" data-id="${data.comment_id}">삭제</button>
+                `;
+                
+                // 대댓글 목록에 추가
+                const repliesList = form.nextElementSibling;  // ul 요소
+                repliesList.appendChild(newReply);
+                
+                form.querySelector('.reply-content').value = '';  // 입력 필드 초기화
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("오류가 발생했습니다.");
+        });
+    }
+});
+
+// 좋아요 버튼 클릭 이벤트
+document.getElementById('like-button').addEventListener('click', function() {
+    const articleId = this.getAttribute('data-id');
+
+    fetch("{% url 'articles:toggle_like' %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ article_id: articleId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('like-count').textContent = data.total_likes + ' Likes';
+        this.textContent = data.liked ? 'Unlike' : 'Like';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("오류가 발생했습니다.");
+    });
+});
+
+// 싫어요 버튼 클릭 이벤트
+document.getElementById('dislike-button').addEventListener('click', function() {
+    const articleId = this.getAttribute('data-id');
+
+    fetch("{% url 'articles:toggle_dislike' %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ article_id: articleId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('dislike-count').textContent = data.total_dislikes + ' Dislikes';
+        this.textContent = data.disliked ? 'Undislike' : 'Dislike';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("오류가 발생했습니다.");
+    });
+});
+</script>
+
+{% endblock content %}

@@ -9,6 +9,25 @@
     <title>WARM</title>
 </head>
 <body>
+    <header>
+        <a href="{% url "movies:index" %}">WARM</a>
+    </header>
+    <a href="{% url "movies:index" %}">장르별 영화</a>
+    <a href="{% url "movies:index" %}">나의 기록</a>
+    <a href="{% url "articles:articles_main" %}">커뮤니티</a>
+    {% if request.user.is_authenticated %}
+        <form action="{% url 'accounts:logout' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="LOGOUT">
+        </form>
+    반가워요! {{ user.username }}님
+    <hr>
+    {% else %}
+    <a href="{% url "accounts:login" %}">로그인</a>
+    <a href="{% url "accounts:signup" %}">회원가입</a>
+    {% endif %}
+    <main>
+        {% block content %}
   <header>
     <a href="{% url "movies:index" %}">WARM</a>
   </header>

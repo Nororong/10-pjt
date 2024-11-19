@@ -19,6 +19,7 @@ class CustomUserCreationForm(UserCreationForm):
         }
 
 class CustomUserChangeForm(UserChangeForm):
+    password = None
     favorite_directors = forms.ModelMultipleChoiceField(
         queryset=Director.objects.all(),
         widget=forms.CheckboxSelectMultiple,
