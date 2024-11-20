@@ -131,7 +131,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 
 # API_KEY 추가
-TMDB_API_KEY = config('TMDB_API_KEY')
+# TMDB_API_KEY = config('TMDB_API_KEY')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

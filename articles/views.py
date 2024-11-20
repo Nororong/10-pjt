@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -5,17 +6,41 @@ from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.views.generic import ListView
 from django.views.decorators.http import require_POST
 
-def articles_main(request):
-    keys_to_clear = [key for key in request.session.keys() if key.startswith('viewed_article_')]
-    for key in keys_to_clear:
-        del request.session[key]
-    articles = Article.objects.all().order_by('-created_at')
-    context = {
-        'articles' : articles,
-    }
-    return render(request, 'articles/articles_main.html', context)
+class CategoryListView(ListView):
+    model = Article
+    template_name = 'articles/category_list.html'
+    context_object_name = 'articles'
+
+    def get_queryset(self):
+        category = self.kwargs.get('category')
+        return Article.objects.filter(category=category).order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.kwargs.get('category')
+        return context
+
+class MainPageView(ListView):
+    model = Article
+    template_name = 'articles/main_page.html'
+    context_object_name = 'articles'
+    
+    def get_queryset(self):
+        return Article.objects.all().order_by('-created_at')
+
+def articles_list(request):
+   keys_to_clear = [key for key in request.session.keys() if key.startswith('viewed_article_')]
+   for key in keys_to_clear:
+       del request.session[key]
+   
+   articles = Article.objects.all().order_by('-created_at')
+   context = {
+       'articles': articles,
+   }
+   return render(request, 'articles/articles_list.html', context)
 
 @login_required
 def create(request):
@@ -25,7 +50,7 @@ def create(request):
             article = form.save(commit=False)
             article.author = request.user
             article.save()
-            return redirect('articles:articles_main')
+            return redirect('articles:main_page')
     else:
         form = ArticleForm()
     context ={
@@ -36,51 +61,71 @@ def create(request):
 
 def articles_detail(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
-   # 세션을 사용하여 조회수 증가 방지
-    session_key = f'viewed_article_{article_pk}'
-    if session_key not in request.session:
-        article.views += 1  # 조회수 증가
-        article.save()
-        request.session[session_key] = True  # 세션 키 저장
+
+    # 조회수 증가 로직: 로그인한 유저의 ID 기반으로 관리
+    if request.user.is_authenticated:  # 유저가 로그인한 경우
+        # 유저의 조회 기록 확인
+        if not article.views_set.filter(user=request.user).exists():  
+            article.views += 1
+            article.save()
+            article.views_set.create(user=request.user)  # 조회 기록 생성
+    else:  # 비로그인 유저는 기존 세션 기반으로 관리
+        session_key = f'viewed_article_{article_pk}'  # 세션 키 설정
+        if session_key not in request.session:
+            article.views += 1
+            article.save()
+            request.session[session_key] = True
+
+    # 댓글 작성 및 대댓글 작성 처리
     if request.method == "POST":
-       # 댓글 또는 대댓글 작성 처리
-       data = json.loads(request.body)
-       
-       # 댓글 내용과 부모 댓글 ID 가져오기
-       content = data.get("content")
-       parent_comment_id = data.get("parent_comment_id")
+        try:
+            data = json.loads(request.body)
+            content = data.get("content")
+            parent_comment_id = data.get("parent_comment_id", None)
 
-       # 일반 댓글 작성
-       if parent_comment_id is None:
-           comment = Comment.objects.create(article=article, author=request.user, content=content)
-           
-           return JsonResponse({
-               "success": True,
-               "comment_id": comment.id,
-               "author": comment.author.username,
-               "content": comment.content,
-               "created_at": comment.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-           })
+            if not content:
+                return JsonResponse({"success": False, "error": "댓글 내용을 입력해주세요."})
 
-       # 대댓글 작성 처리
-       parent_comment = get_object_or_404(Comment, id=parent_comment_id)
-       reply_comment = Comment.objects.create(article=article, author=request.user, content=content, parent_comment=parent_comment)
-       
-       return JsonResponse({
-           "success": True,
-           "comment_id": reply_comment.id,
-           "author": reply_comment.author.username,
-           "content": reply_comment.content,
-           "created_at": reply_comment.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-       })
+            if parent_comment_id:
+                parent_comment = get_object_or_404(Comment, id=parent_comment_id)
+                comment = Comment.objects.create(
+                    article=article,
+                    author=request.user,
+                    content=content,
+                    parent_comment=parent_comment
+                )
+            else:
+                comment = Comment.objects.create(
+                    article=article,
+                    author=request.user,
+                    content=content
+                )
 
-    comments = Comment.objects.filter(article=article, parent_comment=None)
-   
+            return JsonResponse({
+                "success": True,
+                "comment_id": comment.id,
+                "author": comment.author.username,
+                "content": comment.content,
+                "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            })
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    # 댓글 목록 가져오기
+    comments = Comment.objects.filter(article=article, parent_comment=None).order_by("-created_at")
     context = {
-       "article": article,
-       "comments": comments,
-   }
+        "article": article,
+        "comments": comments,
+    }
     return render(request, "articles/detail.html", context)
+    
+    # # 댓글 조회
+    # comments = Comment.objects.filter(article=article, parent_comment=None).order_by("-created_at")
+    # context = {
+    #     "article": article,
+    #     "comments": comments,
+    # }
+    # return render(request, "articles/detail.html", context)
 
 @login_required
 def toggle_like(request):
@@ -94,7 +139,7 @@ def toggle_like(request):
         else:
             article.likes.add(request.user)  # 좋아요 추가
             liked = True
-        
+
         return JsonResponse({
             'liked': liked,
             'total_likes': article.likes.count(),
@@ -134,38 +179,4 @@ def comment_delete(request, comment_id):
            return JsonResponse({"success": True})
    return JsonResponse({"success": False, "error": "권한이 없습니다."})
 
-@login_required
-def toggle_like(request):
-   if request.method == "POST":
-       article_id = request.POST.get("article_id")
-       article = get_object_or_404(Article, id=article_id)
-
-       if article.likes.filter(id=request.user.id).exists():
-           article.likes.remove(request.user)  # 좋아요 취소
-           liked = False
-       else:
-           article.likes.add(request.user)  # 좋아요 추가
-           liked = True
-
-       return JsonResponse({
-           "liked": liked,
-           "total_likes": article.likes.count(),
-       })
     
-@login_required
-def toggle_dislike(request):
-   if request.method == "POST":
-       article_id = request.POST.get("article_id")
-       article = get_object_or_404(Article, id=article_id)
-
-       if article.dislikes.filter(id=request.user.id).exists():
-           article.dislikes.remove(request.user)  # 싫어요 취소
-           disliked = False
-       else:
-           article.dislikes.add(request.user)  # 싫어요 추가
-           disliked = True
-
-       return JsonResponse({
-           "disliked": disliked,
-           "total_dislikes": article.dislikes.count(),
-       })

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>커뮤티니에 오신 것을 환영합니다!</h1>
+<a href="{% url 'articles:create' %}">글쓰기</a><br>
+<a href="{% url 'articles:category_list' 'MOVIE' %}">영화</a>
+<a href="{% url 'articles:category_list' 'TICKET' %}">티켓</a>
+<a href="{% url 'articles:category_list' 'CHAT' %}">잡담</a>
+<hr>
+{% for article in articles %}
+    <div>
+        <h2 class="article-title" data-id="{{ article.id }}">{{ article.title }}</h2>
+        <p>카테고리: {{ article.get_category_display }}</p>
+        <p>작성자 : {{ article.author }}</p>
+        <p>작성일 : {{ article.created_at|date:"Y-m-d H:i" }}</p>
+        <p>조회수 : {{ article.views }}</p>
+        <p>{{ article.content|truncatewords:30  }}</p>
+    </div>
+    <hr>
+    {% empty %}
+        <p>아직 작성된 글이 없습니다</p>
+    {% endfor %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const titles = document.querySelectorAll('.article-title');
+            titles.forEach(title => {
+                title.addEventListener('click', function() {
+                    const articleId = this.getAttribute('data-id');
+                    window.location.href = `http://127.0.0.1:8000/articles/${articleId}/articles_detail/`;  // 실제 URL 패턴에 맞게 수정해야 합니다
+                });
+                title.style.cursor = 'pointer';  // 마우스 오버 시 커서 모양 변경
+            });
+        });
+        </script>
+{% endblock content %}
