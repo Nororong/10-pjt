@@ -7,7 +7,7 @@
     {{ form.as_p }}
 <input type="submit">
 <p>비밀번호를 수정하고 싶다면 해당 링크로 이동하세요</p>
-<a href="{% url "accounts:password_change" userpk %}">비밀번호 수정</a>
+<a href="{% url "accounts:password_change" user.pk %}">비밀번호 수정</a>
 {% endblock content %}
 
 
