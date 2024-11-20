@@ -128,7 +128,12 @@ MEDIA_URL = '/media/'
 # ]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
+
+# 루트 경로의 static 폴더
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),  
+]
 
 # API_KEY 추가
 TMDB_API_KEY = config('TMDB_API_KEY')

@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+body {
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif !important; /* Bootstrap 덮어쓰기 */
+}
+
+
+/* base.html css */
+
+.base-main-text > a {
+    text-decoration: none;
+    color: black;
+    font-weight: 700;
+    font-size: 36px;
+}
+
+nav {
+    margin-top: 36px;
+    margin-left: 60px;
+}
+
+.base-nav-menu > a {
+    text-decoration: none;
+    
+}

@@ -26,18 +26,46 @@ def fetch_movie_credits(movie_id):
     response = requests.get(url, params={"api_key": API_KEY})
     return response.json() if response.status_code == 200 else None
 
+def fetch_movie_details(movie_id):
+    """Fetch detailed information for a specific movie."""
+    url = f"{BASE_URL}/movie/{movie_id}"
+    response = requests.get(url, params={"api_key": API_KEY, "language": "ko-KR", "append_to_response": "release_dates"})
+    if response.status_code == 200:
+        details = response.json()
+        print(details.get("release_dates"))  # API 응답 디버깅
+        return details
+    return None
+
 def save_movie(movie_data, credits_data):
     """Save movie details to the database, excluding movies without posters."""
+    # 영화 상세 정보 가져오기
+    movie_details = fetch_movie_details(movie_data["id"])
+    if not movie_details:
+        print(f"Skipping movie '{movie_data['title']}' (No detailed info available)")
+        return
+
     # 포스터가 없는 영화 제외
     if not movie_data.get("poster_path"):
         print(f"Skipping movie '{movie_data['title']}' (No poster available)")
         return
 
+    # 연령등급 가져오기
+    age_rating = None
+    release_dates = movie_details.get("release_dates", {}).get("results", [])
+    for country_data in release_dates:
+        if country_data["iso_3166_1"] == "KR":  # 한국 기준
+            for release_date in country_data.get("release_dates", []):
+                age_rating = release_date.get("certification")
+                if age_rating:
+                    break
+        if age_rating:
+            break
+
     # 영화 저장
     movie, created = Movie.objects.get_or_create(
         title=movie_data["title"],
         release_date=movie_data["release_date"],
-        runtime=movie_data.get("runtime"),
+        runtime=movie_details.get("runtime"),
         overview=movie_data.get("overview"),
         poster_path=movie_data["poster_path"],
         director=next(
@@ -45,9 +73,15 @@ def save_movie(movie_data, credits_data):
         ),
     )
 
+    # 연령등급 저장
+    movie.age_rating = age_rating or "정보 없음"  # 값이 없으면 기본값 설정
+
     # 장르 저장
-    for genre_data in movie_data.get("genre_ids", []):  # TMDB는 genre_ids로 제공
-        genre, _ = Genre.objects.get_or_create(name=str(genre_data))  # 장르 이름이 id로 제공될 경우 처리
+    for genre_data in movie_details.get("genres", []):
+        genre, _ = Genre.objects.get_or_create(
+            tmdb_id=genre_data["id"],
+            defaults={"name": genre_data["name"]},
+        )
         movie.genres.add(genre)
 
     # 배우 저장 (최대 5명)
@@ -60,6 +94,8 @@ def save_movie(movie_data, credits_data):
         movie.actors.add(actor)
 
     movie.save()
+    print(f"Saved movie '{movie.title}' with age rating: {movie.age_rating}")
+
 
 class Command(BaseCommand):
     help = "Fetch popular movies excluding 19세 관람가 and save them to the database"
