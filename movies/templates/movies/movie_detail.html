@@ -63,22 +63,35 @@
 
 <hr>
 
-<p>{{ movie_comments|length }}개의 댓글이 있어요</p>
+<p class="comment-ment">{{ movie_comments|length }}개의 댓글이 있어요</p>
 
-<form action="{% url "movies:movie_comments_create" movie.pk %}" method="POST">
-  {% csrf_token %}
-  {{ movie_comment_form }}
-  <input type="submit">
-</form>
+<div class="movie-comment-container">
+  <form action="{% url "movies:movie_comments_create" movie.pk %}" method="POST">
+    {% csrf_token %}
+    <div class="movie-comment-form ">
+      {{ movie_comment_form }}
+    <div class="movie-comment-form-btn">
+      <input type="submit" value="등록">
+    </div>
+    </div>
+  </form>
+</div>
 
 {% for movie_comment in movie_comments %}
-  <p>{{ movie_comment.content }} - {{ movie_comment.user.username }}</p>
+<div class="movie-comment-delete">
+  <div class="movie-comment-delete-text">
+    <p class="comment-name">{{ movie_comment.user.username }}</p>
+    <p>{{ movie_comment.content }}</p>
+  </div>
   {% if request.user == movie_comment.user %}
-    <form action="{% url "movies:movie_comments_delete" movie.pk movie_comment.pk %}" method="POST">
-      {% csrf_token %}
-      <input type="submit" value="삭제">
-    </form>
+    <div class="movie-comment-delete-btn">
+      <form action="{% url "movies:movie_comments_delete" movie.pk movie_comment.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+      </form>
+    </div>
   {% endif %}
+</div>
 {% endfor %}
 
 <script>

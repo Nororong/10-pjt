@@ -19,7 +19,7 @@
         <a href="{% url "movies:index" %}">WARM</a>
     </header>
     <div class='base-nav-menu'>
-      <a href="{% url "movies:index" %}">장르별 영화</a>
+      <a href="{% url "movies:movie_list" %}">장르별 영화</a>
       <a href="{% url "movies:index" %}">나의 기록</a>
       <a href="{% url "articles:main_page" %}">커뮤니티</a>
     </div>
@@ -76,7 +76,7 @@
         <li>{{ award.name }}</li>
       {% endfor %}
     </ul> {% endcomment %} 
-  {% else %}
+  {% comment %} {% else %}
     <form action="{% url 'accounts:signup' %}" method="POST">
       {% csrf_token %}
       <input type="submit" value="회원가입">
@@ -89,9 +89,11 @@
   </main> {% endcomment %}
   {% block content %}
   {% endblock content %}
-  <hr>
   <footer>
-      <p>&copy; 2024 My Website</p>
+    <div class="footer-container">
+      <p class="footer-text1">&copy; SSAFY 12 / 2024 My Website</p>
+      <p class="footer-text2">WARM</p>
+    </div>
   </footer>
   <script>
     window.isUserLoggedIn = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
