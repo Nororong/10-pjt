@@ -17,7 +17,8 @@
     {% comment %} <h1 class="movie-list-title">Movie List</h1> {% endcomment %}
     <div id="movies" class="movies-container">
       {% for movie in movies %}
-        <div class="movie">
+      <!-- 각 영화 요소에 데이터 속성으로 장르 ID 목록을 추가 -->
+      <div class="movie" data-genre-ids="{% for genre in movie.genres.all %}{{ genre.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
           <div class='poster-with-heart'>
             <img class='heart-icon'
             src="{% static 'img/heart-none.png' %}"
@@ -49,27 +50,25 @@
     // 장르 선택 이벤트 처리
     genreSelect.addEventListener('change', function () {
       const selectedGenre = genreSelect.value;
-
-      // 전체 보기
-      if (selectedGenre === 'all') {
-        allMovies.forEach(movie => {
-          movie.style.display = 'block';
-        });
-        return;
-      }
-
-      // 특정 장르 필터링
+    
       allMovies.forEach(movie => {
-        const movieGenres = movie.dataset.genreIds.split(',');
-        if (movieGenres.includes(selectedGenre)) {
+        // 전체 보기 선택 시 모든 영화 표시
+        if (selectedGenre === 'all') {
           movie.style.display = 'block';
         } else {
-          movie.style.display = 'none';
+          // 선택된 장르에 해당하는 영화 필터링
+          // 데이터 속성에서 장르 ID 배열로 변환
+          const movieGenres = movie.dataset.genreIds.split(',');
+          // 선택된 장르가 영화의 장르 목록에 포함된 경우 표시
+          if (movieGenres.includes(selectedGenre)) {
+            movie.style.display = 'block';
+          } else {
+            // 선택된 장르가 포함되지 않는 경우 숨김
+            movie.style.display = 'none';
+          }
         }
       });
     });
-
-
     // 2. 하트 버튼 찜하기 기능 구현
     const heartIcons = document.querySelectorAll('.heart-icon');
     

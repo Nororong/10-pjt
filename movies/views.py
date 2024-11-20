@@ -35,11 +35,15 @@ def index(request):
 #     return render(request, 'movies/movie_list.html', context)
 
 def movie_list(request):
-    movies = Movie.objects.all()
+    # 모든 영화와 관련된 장르를 미리 가져온다 -> 쿼리 최적화
+    movies = Movie.objects.all().prefetch_related('genres')
+    # 모든 장르를 가져온다
     genres = Genre.objects.all()
 
+    # 사용자가 좋아요를 누른 영화 ID 목록
     liked_movie_ids = []
     if request.user.is_authenticated:
+        # 로그인 한 사용자일 경우, 좋아요를 누른 영화의 ID를 가져온다
         liked_movie_ids = request.user.like_movies.values_list('id', flat=True)
     
     context = {
