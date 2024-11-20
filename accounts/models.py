@@ -24,12 +24,6 @@ class User(AbstractUser):
     favorite_genres = models.ManyToManyField('Genre', blank=True)
     favorite_awards = models.ManyToManyField('Award', blank=True)
     birth_date = models.DateField(null=True, blank=True)  # 생년월일 추가
-    GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('O', 'Other'),
-    ]
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)  # 성별 추가
 
     def __str__(self):
         return self.username
