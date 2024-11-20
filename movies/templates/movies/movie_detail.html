@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row gx-5">
+    <div class="col">
+      <img class="detail-poster" src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="{{ movie.title }}">
+    </div>
+    <div class="col">
+      <div>
+        <h4>{{ movie.title }}</h4>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-4">
+          <p>개봉일</p>
+          <p>장르</p>
+          <p>태그</p>
+          <p>러닝타임</p>
+          <p>연령등급</p>
+        </div>
+        <div class="col-8">
+          <p>{{ movie.release_date }}</p>
+          <p>
+            {% for genre in genres %}
+              {{ genre }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </p>
+          <p>{{ movie.tags|default:"정보 없음" }}</p>
+          <p>{{ movie.runtime|default:"정보 없음" }}</p>
+          <p>{{ movie.age_rating|default:"정보 없음" }}</p>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-4">
+          <p>줄거리</p>
+        </div>
+        <div class="col-8">
+          <p>{{ movie.overview }}</p>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-4">
+          <p>감독</p>
+          <p>출연</p>
+        </div>
+        <div class="col-8">
+          <p>{{ movie.director }}</p>
+          <p>
+            {% for actor in actors %}
+              {{ actor.name }} ({{ actor.character|default:"역할 정보 없음" }}){% if not forloop.last %},<br> {% endif %}
+            {% empty %}
+              출연진 정보가 없습니다.
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<p>{{ movie_comments|length }}개의 댓글이 있어요</p>
+
+<form action="{% url "movies:movie_comments_create" movie.pk %}" method="POST">
+  {% csrf_token %}
+  {{ movie_comment_form }}
+  <input type="submit">
+</form>
+
+{% for movie_comment in movie_comments %}
+  <p>{{ movie_comment.content }} - {{ movie_comment.user.username }}</p>
+  {% if request.user == movie_comment.user %}
+    <form action="{% url "movies:movie_comments_delete" movie.pk movie_comment.pk %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="삭제">
+    </form>
+  {% endif %}
+{% endfor %}
+
+<script>
+  
+</script>
+{% endblock content %}

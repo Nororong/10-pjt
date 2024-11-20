@@ -3,6 +3,7 @@ from accounts.models import User
 
 class Genre(models.Model):
     name = models.CharField(max_length=255)
+    tmdb_id = models.IntegerField(unique=True, null=True, blank=True)  # NULL 허용으로 변경
 
     def __str__(self):
         return self.name
@@ -20,6 +21,7 @@ class Movie(models.Model):
     title = models.CharField(max_length=255)
     release_date = models.DateField()
     runtime = models.IntegerField(null=True, blank=True)
+    age_rating = models.CharField(max_length=50, null=True, blank=True)
     overview = models.TextField(null=True, blank=True)
     poster_path = models.CharField(max_length=255, null=True, blank=True)
     director = models.CharField(max_length=255, null=True, blank=True)
@@ -29,3 +31,9 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+class MovieComment(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)

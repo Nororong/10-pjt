@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from movies.models import Movie
+from django.shortcuts import render, redirect
+from movies.models import Movie, MovieComment, Genre
+from .forms import MovieCommentForm
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -35,6 +36,7 @@ def index(request):
 
 def movie_list(request):
     movies = Movie.objects.all()
+    genres = Genre.objects.all()
 
     liked_movie_ids = []
     if request.user.is_authenticated:
@@ -43,6 +45,7 @@ def movie_list(request):
     context = {
         'movies': movies,
         'liked_movie_ids': list(liked_movie_ids),
+        'genres': genres,
     }
     return render(request, 'movies/movie_list.html', context)
 
@@ -62,3 +65,55 @@ def likes(request, movie_pk):
         'is_liked': is_liked
     }
     return JsonResponse(context)
+
+
+def detail(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    
+    # QuerySet에서 ID만 추출하고 TMDB_GENRES를 통해 이름 매핑
+    genre_ids = movie.genres.values_list('tmdb_id', flat=True)
+    genres = Genre.objects.filter(tmdb_id__in=genre_ids).values_list('name', flat=True)
+
+    # 나머지 데이터
+    movie_comment_form = MovieCommentForm()
+    movie_comments = movie.moviecomment_set.all()
+    actors = movie.actors.all()
+
+    print(f"Genre IDs: {list(genre_ids)}")
+    print(f"Genres: {list(genres)}")
+    
+    context = {
+        'movie': movie,
+        'genres': genres, 
+        'actors': actors,
+        'movie_comment_form': movie_comment_form,
+        'movie_comments': movie_comments,
+    }
+    return render(request, 'movies/movie_detail.html', context)
+
+@login_required
+def movie_comments_create(request, movie_comment_pk):
+    movie = get_object_or_404(Movie, pk=movie_comment_pk)
+    movie_comment_form = MovieCommentForm(request.POST)
+
+    if movie_comment_form.is_valid():
+        movie_comment = movie_comment_form.save(commit=False)
+        movie_comment.movie = movie
+        movie_comment.user = request.user
+        movie_comment.save()
+        return redirect('movies:movie_detail', movie.pk)
+    
+    context = {
+        'movie': movie,
+        'movie_comment_form': movie_comment_form,
+    }
+    return render(request, 'movies/movie_detail.html', context)
+
+@login_required
+def movie_comments_delete(request, movie_pk, movie_comment_pk):
+    movie_comment = MovieComment.objects.get(pk=movie_comment_pk)
+    movie = Movie.objects.get(pk=movie_pk)
+
+    if request.user == movie_comment.user:
+        movie_comment.delete()
+    return redirect('movies:movie_detail', movie.pk)
