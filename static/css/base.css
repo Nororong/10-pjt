@@ -6,6 +6,14 @@ body {
 
 
 /* base.html css */
+nav {
+    margin-top: 36px;
+    margin-left: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+}
 
 .base-main-text > a {
     text-decoration: none;
@@ -14,12 +22,68 @@ body {
     font-size: 36px;
 }
 
-nav {
-    margin-top: 36px;
-    margin-left: 60px;
+.base-nav-menu {
+    margin-left: 20px;
+    margin-top: 10px;
 }
 
 .base-nav-menu > a {
     text-decoration: none;
-    
+    color: black;
+    margin-left: 20px;
+}
+
+.nav-base-name {
+    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
+    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
+    right: 150px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    font-size: 16px; /* 텍스트 크기 */
+    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    font-weight: 400; /* 텍스트 두께 */
+    white-space: nowrap;
+}
+
+.nav-base-name > span {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.nav-logout-form {
+    position: absolute;
+    top: 17px; /* 네비게이션 바 상단에서 10px 떨어짐 */
+    right: 60px;
+}
+
+.nav-logout-form input[type="submit"] {
+    padding: 3px 8px; /* 버튼 내부 여백 */
+    font-size: 12px; /* 버튼 글꼴 크기 */
+    font-weight: 400; /* 버튼 글꼴 두께 */
+    color: white; /* 텍스트 색상 */
+    background-color: #000000; /* 버튼 배경색 */
+    border: none; /* 버튼 테두리 제거 */
+    border-radius: 4px; /* 버튼 모서리를 둥글게 */
+    cursor: pointer; /* 마우스를 올리면 포인터 커서 표시 */
+    transition: background-color 0.3s ease; /* 색상 전환 효과 */
+}
+
+.nav-user-login {
+    text-decoration: none;
+    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
+    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
+    right: 140px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    font-size: 16px; /* 텍스트 크기 */
+    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    font-weight: 700; /* 텍스트 두께 */
+    white-space: nowrap;
+}
+
+.nav-user-signup {
+    text-decoration: none;
+    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
+    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
+    right: 60px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    font-size: 16px; /* 텍스트 크기 */
+    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    font-weight: 700; /* 텍스트 두께 */
+    white-space: nowrap;
 }

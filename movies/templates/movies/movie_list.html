@@ -2,40 +2,41 @@
 {% load static %}
 
 {% block content %}
-<div class="genre-filter">
-  <label for="genre-select">장르 선택:</label>
-  <select id="genre-select">
-    <option value="all">전체</option>
-    {% for genre in genres %}
-      <option value="{{ genre.id }}">{{ genre.name }}</option>
-    {% endfor %}
-  </select>
-</div>
+<div class="movie-list-container">
+  <div class="genre-filter">
+    <label for="genre-select">장르를 선택하세요! </label>
+    <select id="genre-select">
+      <option value="all">전체</option>
+      {% for genre in genres %}
+        <option value="{{ genre.id }}">{{ genre.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
-<div>
-  <h1>Movie List</h1>
-  <div id="movies" class="movies-container">
-    {% for movie in movies %}
-      <div class="movie">
-        <div class='poster-with-heart'>
-          <img class='heart-icon'
-          src="{% static 'img/heart-none.png' %}"
-          alt="icon"
-          data-movie-id="{{ movie.id }}"
-          {% if movie.id in liked_movie_ids %}
-          data-is-liked="true"
-          {% endif %}>
-          <div class="poster-overlay"></div>
-          <a href="{% url 'movies:movie_detail' movie.id %}">
-            <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
-          </a>
+  <div>
+    {% comment %} <h1 class="movie-list-title">Movie List</h1> {% endcomment %}
+    <div id="movies" class="movies-container">
+      {% for movie in movies %}
+        <div class="movie">
+          <div class='poster-with-heart'>
+            <img class='heart-icon'
+            src="{% static 'img/heart-none.png' %}"
+            alt="icon"
+            data-movie-id="{{ movie.id }}"
+            {% if movie.id in liked_movie_ids %}
+            data-is-liked="true"
+            {% endif %}>
+            <div class="poster-overlay"></div>
+            <a href="{% url 'movies:movie_detail' movie.id %}">
+              <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
+            </a>
+          </div>
+          <h4 class="movie-title">{{ movie.title }}</h4>
         </div>
-        <h4 class="movie-title">{{ movie.title }}</h4>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
 </div>
-
 <script>
   // 초기 페이지 로드 시 자동 실행
   document.addEventListener('DOMContentLoaded', function() {

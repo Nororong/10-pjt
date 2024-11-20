@@ -25,14 +25,14 @@
     </div>
 
     {% if request.user.is_authenticated %}
-      <form action="{% url 'accounts:logout' %}" method="POST">
+      <form action="{% url 'accounts:logout' %}" method="POST" class="nav-logout-form">
           {% csrf_token %}
           <input type="submit" value="LOGOUT">
       </form>
-    <p>반가워요! {{ user.username }}님</p>
+    <p class="nav-base-name">반가워요! <span>{{ user.username }}</span>님, 영화 보기 좋은 날이에요!</p>
     {% else %}
-    <a href="{% url "accounts:login" %}">로그인</a>
-    <a href="{% url "accounts:signup" %}">회원가입</a>
+    <a class="nav-user-login" href="{% url "accounts:login" %}">로그인</a>
+    <a class="nav-user-signup" href="{% url "accounts:signup" %}">회원가입</a>
     {% endif %}
   </nav>
   <hr>
@@ -75,8 +75,7 @@
       {% for award in favorite_awards %}
         <li>{{ award.name }}</li>
       {% endfor %}
-    </ul> {% endcomment %}
-{% comment %} 
+    </ul> {% endcomment %} 
   {% else %}
     <form action="{% url 'accounts:signup' %}" method="POST">
       {% csrf_token %}

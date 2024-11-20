@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container movie-detail-container">
   <div class="row gx-5">
     <div class="col">
       <img class="detail-poster" src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="{{ movie.title }}">
     </div>
-    <div class="col">
+    <div class="col movie-detail-text">
       <div>
-        <h4>{{ movie.title }}</h4>
+        <h4 class="movie-detail-title">{{ movie.title }}</h4>
       </div>
       <hr>
       <div class="row">
-        <div class="col-4">
+        <div class="col-4 movie-detail-check">
           <p>개봉일</p>
           <p>장르</p>
           <p>태그</p>
@@ -33,7 +33,7 @@
       </div>
       <hr>
       <div class="row">
-        <div class="col-4">
+        <div class="col-4 movie-detail-check">
           <p>줄거리</p>
         </div>
         <div class="col-8">
@@ -42,7 +42,7 @@
       </div>
       <hr>
       <div class="row">
-        <div class="col-4">
+        <div class="col-4 movie-detail-check">
           <p>감독</p>
           <p>출연</p>
         </div>
