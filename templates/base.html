@@ -52,8 +52,8 @@
     <form action="{% url 'accounts:update' %}" method="GET">
       <button type="submit">회원정보 수정</button>
     </form>
-
-    <h1>선호도 정보</h1>
+    <hr>
+    {% comment %} <h1>선호도 정보</h1>
 
     <h2>선호하는 감독:</h2>
     <ul>
@@ -74,7 +74,7 @@
       {% for award in favorite_awards %}
         <li>{{ award.name }}</li>
       {% endfor %}
-    </ul>
+    </ul> {% endcomment %}
 
   {% else %}
     <form action="{% url 'accounts:signup' %}" method="POST">
