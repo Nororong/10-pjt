@@ -1,32 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h2>선호도 설정</h2>
-    <form method="post">
-        {% csrf_token %}
-        
-        <h3>선호하는 감독 (최대 3개)</h3>
-        <div id="directorsSection">
-            {{ form.favorite_directors }}
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="preference-form-container">
+        <div>
+        <h2>나의 취향을 선택하고, 만들어요!</h2>
+        <hr>
         </div>
-    
-        <h3>선호하는 장르 (최대 3개)</h3>
-        <div id="genresSection">
-            {{ form.favorite_genres }}
-        </div>
-    
-        <h3>관심있는 수상 내역 (최대 3개)</h3>
-        <div id="awardsSection">
-            {{ form.favorite_awards }}
-        </div>
-    
-        <button type="submit">저장</button>
-    </form>
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="preference-section">
+                <h3>감독 (최대 3개)</h3>
+                <div class="checkbox-group" id="directorsSection">
+                    {{ form.favorite_directors }}
+                </div>
+            </div>
+
+            <div class="preference-section">
+                <h3>장르 (최대 3개)</h3>
+                <div class="checkbox-group" id="genresSection">
+                    {{ form.favorite_genres }}
+                </div>
+            </div>
+
+            <div class="preference-section">
+                <h3>수상 내역 (최대 3개)</h3>
+                <div class="checkbox-group" id="awardsSection">
+                    {{ form.favorite_awards }}
+                </div>
+            </div>
+            <hr class="preference-hr">
+            <preference-button type="submit" class="submit-btn signup-btn-pink">저장하기</button>
+        </form>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sections = ['directors', 'genres', 'awards'];
@@ -44,7 +51,5 @@
                 });
             });
         });
-        </script>
-</script>
-</body>
-</html>
+    </script>
+{% endblock content %}
