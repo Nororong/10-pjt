@@ -5,9 +5,11 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, CustomUserChangeForm, PreferenceForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm, PreferenceForm, CustomPasswordChangeForm
 from .forms import PreferenceForm
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
 
 def signup(request):
     if request.method == 'POST':
@@ -105,23 +107,42 @@ def show_preferences(request):
     }
     return render(request, 'preferences/show_preferences.html', context)
 
+class CustomPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    template_name = 'accounts/password_change.html'
+    
+    def get_success_url(self):
+        # movies 페이지로 리다이렉트
+        return reverse_lazy('movies:index')  # movies 앱의 index URL name 사용
+    
+    def form_valid(self, form):
+        # 부모 메서드 호출
+        response = super().form_valid(form)
+        
+        # 선택적으로 성공 메시지 추가 가능
+        from django.contrib import messages
+        messages.success(self.request, '비밀번호가 성공적으로 변경되었습니다.')
+        
+        return response
+    
 @login_required
 def password_change(request, user_pk):
     User = get_user_model()
     user = get_object_or_404(User, pk=user_pk)
     if request.user != user:
-        return redirect('articles:index') 
+        return redirect('movies:index') 
     
     if request.method == 'POST':
-        form = PasswordChangeForm(user, request.POST)
+        form = CustomPasswordChangeForm(user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            return redirect('articles:index')
+            return redirect('movies:index')
     else:
-        form = PasswordChangeForm(user)
+        form = CustomPasswordChangeForm(user)
     
     context = {
         'form': form,
     }
-    return render(request, 'accounts/change_password.html', context)
+    return render(request, 'accounts/password_change.html', context)
+
