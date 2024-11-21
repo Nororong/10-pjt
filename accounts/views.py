@@ -10,6 +10,7 @@ from .forms import PreferenceForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
+from .models import Genre
 
 def signup(request):
     if request.method == 'POST':
@@ -41,19 +42,30 @@ def login(request):
     }
     return render(request, 'accounts/login.html', context)
 
-@login_required
 def preference(request):
     if request.method == 'POST':
         form = PreferenceForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save()
+            # 먼저 사용자 정보 저장
+            user = form.save(commit=False)  # commit=False로 먼저 저장
+            user.save()  # 사용자 객체 저장
+
+            # 기존 선호 장르 초기화
+            user.favorite_genres.clear()
+
+            # 새로 선택된 장르 추가 (장르가 존재하는지 확인)
+            for genre in form.cleaned_data['favorite_genres']:
+                if Genre.objects.filter(id=genre.id).exists():  # 장르가 존재하는지 확인
+                    user.favorite_genres.add(genre.pk)  # genre의 pk 값을 사용
+                else:
+                    messages.error(request, f"선택한 장르 '{genre}'가 존재하지 않습니다.")
+                    return redirect('accounts:preference')
+
             messages.success(request, '선호도가 성공적으로 저장되었습니다.')
             return redirect('movies:index')
-        else:
-            messages.error(request, '선호도 저장에 실패했습니다. 입력을 확인해주세요.')
     else:
         form = PreferenceForm(instance=request.user)
-    
+
     context = {
         'form': form,
     }
