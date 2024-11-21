@@ -1,199 +1,338 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ article.title }}</h1>
-<p>작성일: {{ article.created_at }}</p>
-<p>수정일: {{ article.updated_at }}</p>
-<form action="{% url "articles:articles_update" article.pk %}">
-    <input type="submit" value="글 수정">
-</form>
-<hr>
+<div class="container">
+  <div>
+    <div class="article-detail-title">
+      <p>{{ article.title }}</p>
+    </div>
+    <div class="article-detail-user">
+      <p>작성일: {{ article.created_at }}</p>
+      <p class="article-detail-user-name">{{ article.author }}</p>
+    </div>
+    <hr>
+    <div class="article-detail-img">
+      {% if article.image %}
+        <img src="{{ article.image.url }}" alt="img">
+      {% else %}
+        <p>이미지가 없습니다.</p>
+      {% endif %}
+    </div>
+    <div class="article-detail-content">
+      <p>{{ article.content }}</p>
+    </div>
+    <hr>
+    <div class="article-detail-like">
+      <div>
+        <button class="article-detail-like-btn" id="like-button" data-id="{{ article.id }}">
+          {% if request.user in article.likes.all %} 
+            Unlike 
+          {% else %} 
+            Like 
+          {% endif %}
+        </button>
+        {% if not article.likes.exists %}
+          <span id="like-count">아직 추천이 없어요!</span>
+        {% else %}
+          <span id="like-count">{{ article.likes.count }}개의 추천을 받았어요!</span>
+        {% endif %}
+      </div>
+      <div class="article-detail-form">
+        {% if request.user == article.author %}
+        <form class="article-detail-update-btn" action="{% url "articles:articles_update" article.pk %}">
+          <input type="submit" value="글 수정">
+        </form>
+        {% endif %}
 
-{% if article.image %}
-    <img src="{{ article.image.url }}" alt="img">
-{% else %}
-    <p>이미지가 없습니다.</p>
-{% endif %}
+      </div>
+    </div>
+    <hr>
+  </div>
 
-<p>내용: {{ article.content }}</p>
-<hr>
+  {% comment %}
+  <div>
+    <div class="article-detail-comment">
+      <form class="article-detail-comment-form" id="comment-form">
+        {% csrf_token %}
+        <textarea id="comment-content" placeholder="댓글을 입력하세요"></textarea>
+        <button type="submit">댓글 작성</button>
+      </form>
+    </div>
+  
 
-<h2>좋아요</h2>
-<button id="like-button" data-id="{{ article.id }}">
-    {% if request.user in article.likes.all %} 
-        Unlike 
-    {% else %} 
-        Like 
-    {% endif %}
-</button>
-{% if not article.likes.exists %}
-    <span id="like-count">아직 추천이 없어요!</span>
-{% else %}
-    <span id="like-count">{{ article.likes.count }}개의 추천을 받았어요!</span>
-{% endif %}
-<hr>
-
-<h2>댓글</h2>
-<form id="comment-form">
-    {% csrf_token %}
-    <textarea id="comment-content" placeholder="댓글을 입력하세요"></textarea>
-    <button type="submit">댓글 작성</button>
-</form>
-
-<ul id="comments-list">
+  <ul id="comments-list">
     {% for comment in comments %}
     <li id="comment-{{ comment.id }}">
-        <strong>{{ comment.author.username }}</strong>: 
-        <span class="comment-content">{{ comment.content }}</span>
-        <small>{{ comment.created_at }}</small>
-        {% if request.user == comment.author %}
-            <button class="delete-comment" data-id="{{ comment.id }}">삭제</button>
-        {% endif %}
-        <!-- 대댓글 작성 폼 -->
-        <form class="reply-form" data-comment-id="{{ comment.id }}">
-            {% csrf_token %}
-            <textarea class="reply-content" placeholder="대댓글을 입력하세요"></textarea>
-            <button type="button" class="submit-reply-btn">대댓글 작성</button>
-        </form>
+      <strong>{{ comment.author.username }}</strong>: 
+      <span class="comment-content">{{ comment.content }}</span>
+      <small>{{ comment.created_at }}</small>
+      {% if request.user == comment.author %}
+          <button class="delete-comment" data-id="{{ comment.id }}">삭제</button>
+      {% endif %}
+      <!-- 대댓글 작성 폼 -->
+      <form class="reply-form" data-comment-id="{{ comment.id }}">
+        {% csrf_token %}
+        <textarea class="reply-content" placeholder="대댓글을 입력하세요"></textarea>
+        <button type="button" class="submit-reply-btn">대댓글 작성</button>
+      </form>
 
-        <ul class="replies-list">
-            {% for reply in comment.replies.all %}
-            <li id="reply-{{ reply.id }}">
-                <strong>{{ reply.author.username }}</strong>: {{ reply.content }} 
-                <small>{{ reply.created_at }}</small>
-                {% if request.user == reply.author %}
-                    <button class="delete-reply" data-id="{{ reply.id }}">삭제</button>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
+      <ul class="replies-list">
+        {% for reply in comment.replies.all %}
+        <li id="reply-{{ reply.id }}">
+          <strong>{{ reply.author.username }}</strong>: {{ reply.content }} 
+          <small>{{ reply.created_at }}</small>
+          {% if request.user == reply.author %}
+            <button class="delete-reply" data-id="{{ reply.id }}">삭제</button>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
     </li>
     {% endfor %}
-</ul>
+  </ul>
+  </div>
+  {% endcomment %}
+
+  {% comment %} 
+  <div class="article-detail-comment-container">
+    <form class="article-detail-comment-form" id="comment-form">
+      {% csrf_token %}
+      <textarea id="comment-content" placeholder="댓글을 입력하세요"></textarea>
+      <button type="submit">댓글 작성</button>
+    </form>
+  
+    <ul id="comments-list">
+      {% for comment in comments %}
+      <li class="article-detail-comment-item" id="comment-{{ comment.id }}">
+        <div class="article-detail-comment-text">
+          <p><span class="article-detail-comment-name">{{ comment.author.username }}</span>: {{ comment.content }}</p>
+          <small>{{ comment.created_at }}</small>
+          {% if request.user == comment.author %}
+          <div class="article-detail-comment-delete-btn">
+            <button class="delete-comment" data-id="{{ comment.id }}">삭제</button>
+          </div>
+          {% endif %}
+        </div>
+  
+        <!-- 대댓글 작성 폼 -->
+        <form class="article-detail-reply-form reply-form" data-comment-id="{{ comment.id }}">
+          {% csrf_token %}
+          <textarea class="reply-content" placeholder="대댓글을 입력하세요"></textarea>
+          <button type="button" class="submit-reply-btn">대댓글 작성</button>
+        </form>
+  
+        <!-- 대댓글 목록 -->
+        <ul class="article-detail-replies-list">
+          {% for reply in comment.replies.all %}
+          <li class="article-detail-reply-item" id="reply-{{ reply.id }}">
+            <div class="article-detail-comment-text">
+              <p><span class="article-detail-comment-name">{{ reply.author.username }}</span>: {{ reply.content }}</p>
+              <small>{{ reply.created_at }}</small>
+              {% if request.user == reply.author %}
+              <div class="article-detail-comment-delete-btn">
+                <button class="delete-reply" data-id="{{ reply.id }}">삭제</button>
+              </div>
+              {% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endcomment %}
+  
+  <div class="article-detail-comment-container">
+    <form class="article-detail-comment-form" id="comment-form">
+      {% csrf_token %}
+      <textarea id="comment-content" placeholder="댓글을 입력하세요"></textarea>
+      <button type="submit">댓글 작성</button>
+    </form>
+
+    <!-- 댓글 목록 -->
+    <ul id="comments-list">
+      {% for comment in comments %}
+      <li class="article-detail-comment-item" id="comment-{{ comment.id }}">
+        <div class="article-detail-comment-box">
+            <div class="article-detail-comment-text">
+                <span class="article-detail-comment-name">{{ comment.author.username }}</span>
+                <span>{{ comment.content }}</span>
+                <!--<small class="article-detail-comment-time">{{ comment.created_at }}</small>-->
+            </div>
+            {% if request.user == comment.author %}
+                <button class="article-detail-comment-delete" data-id="{{ comment.id }}">삭제</button>
+            {% endif %}
+        </div>
+  
+        <!-- 대댓글 작성 폼 -->
+        <form class="article-detail-reply-form reply-form" data-comment-id="{{ comment.id }}">
+          {% csrf_token %}
+          <textarea class="reply-content" placeholder="대댓글을 입력하세요"></textarea>
+          <button type="button" class="submit-reply-btn">대댓글 작성</button>
+        </form>
+  
+        <!-- 대댓글 목록 -->
+        <ul class="article-detail-replies-list">
+          {% for reply in comment.replies.all %}
+          <li class="article-detail-reply-item" id="reply-{{ reply.id }}">
+            <div class="article-detail-reply-box">
+              <p><span class="article-detail-reply-name">{{ reply.author.username }}</span> {{ reply.content }}</p>
+              {% if request.user == reply.author %}
+              <button class="article-detail-reply-delete" data-id="{{ reply.id }}">삭제</button>
+              {% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        <hr>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+  const currentUser = "{{ request.user.username }}";
+</script>
 
 <script>
 // 댓글 작성
-document.getElementById('comment-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const content = document.getElementById('comment-content').value.trim();
-    if (!content) {
-        alert("댓글 내용을 입력해주세요.");
-        return;
-    }
+document.getElementById('comment-form').addEventListener('submit', function (event) {
+  event.preventDefault();
+  const content = document.getElementById('comment-content').value.trim();
+  if (!content) {
+      alert("댓글 내용을 입력해주세요.");
+      return;
+  }
 
-    fetch("{% url 'articles:articles_detail' article.pk %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ content: content, parent_comment_id: null })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const newComment = document.createElement("li");
-            newComment.id = `comment-${data.comment_id}`;
-            newComment.innerHTML = `
-                <strong>${data.author}</strong>: 
-                <span class="comment-content">${data.content}</span>
-                <small>${data.created_at}</small>
-                <button class="delete-comment" data-id="${data.comment_id}">삭제</button>
-                <form class="reply-form" data-comment-id="${data.comment_id}">
-                    {% csrf_token %}
-                    <textarea class="reply-content" placeholder="대댓글을 입력하세요"></textarea>
-                    <button type="button" class="submit-reply-btn">대댓글 작성</button>
-                </form>
-                <ul class="replies-list"></ul>
-            `;
-            document.getElementById("comments-list").appendChild(newComment);
-            document.getElementById("comment-content").value = "";
-        } else {
-            alert(data.error || "댓글 작성에 실패했습니다.");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("댓글 작성 중 오류가 발생했습니다.");
-    });
-});
-
-// 댓글 및 대댓글 삭제
-document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('delete-comment') || event.target.classList.contains('delete-reply')) {
-        const isReply = event.target.classList.contains('delete-reply');
-        const commentId = event.target.getAttribute('data-id');
-        const confirmMessage = isReply ? "이 대댓글을 정말로 삭제하시겠습니까?" : "이 댓글을 정말로 삭제하시겠습니까?";
-        
-        if (confirm(confirmMessage)) {
-            fetch("{% url 'articles:comment_delete' '0' %}".replace('0', commentId), {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const elementId = isReply ? `reply-${commentId}` : `comment-${commentId}`;
-                    document.getElementById(elementId).remove();
-                } else {
-                    alert(data.error || "삭제에 실패했습니다.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("삭제 중 오류가 발생했습니다.");
-            });
-        }
-    }
+  fetch("{% url 'articles:articles_detail' article.pk %}", {
+      method: "POST",
+      headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: content, parent_comment_id: null }),
+  })
+      .then((response) => response.json())
+      .then((data) => {
+          if (data.success) {
+              const newComment = document.createElement("li");
+              newComment.classList.add("article-detail-comment-item");
+              newComment.id = `comment-${data.comment_id}`;
+              newComment.innerHTML = `
+                  <div class="article-detail-comment-box">
+                      <p><span class="article-detail-comment-name">${data.author}</span> ${data.content}</p>
+                    
+                      ${
+                          data.author === currentUser
+                              ? `<button class="article-detail-comment-delete" data-id="${data.comment_id}">삭제</button>`
+                              : ""
+                      }
+                  </div>
+                  <form class="article-detail-reply-form reply-form" data-comment-id="${data.comment_id}">
+                      <textarea class="reply-content" placeholder="대댓글을 입력하세요"></textarea>
+                      <button type="button" class="submit-reply-btn">대댓글 작성</button>
+                  </form>
+                  <ul class="article-detail-replies-list"></ul>
+              `;
+              document.getElementById("comments-list").appendChild(newComment);
+              document.getElementById("comment-content").value = "";
+          } else {
+              alert(data.error || "댓글 작성에 실패했습니다.");
+          }
+      })
+      .catch((error) => {
+          console.error("Error:", error);
+          alert("댓글 작성 중 오류가 발생했습니다.");
+      });
 });
 
 // 대댓글 작성
-document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('submit-reply-btn')) {
-        event.preventDefault();
-        const form = event.target.closest('.reply-form');
-        const content = form.querySelector('.reply-content').value.trim();
-        const parentCommentId = form.getAttribute('data-comment-id');
-        
-        if (!content) {
-            alert("대댓글 내용을 입력해주세요.");
-            return;
-        }
+document.addEventListener('click', function (event) {
+  if (event.target.classList.contains('submit-reply-btn')) {
+      event.preventDefault();
+      const form = event.target.closest('.reply-form');
+      const content = form.querySelector('.reply-content').value.trim();
+      const parentCommentId = form.getAttribute('data-comment-id');
 
-        fetch("{% url 'articles:articles_detail' article.pk %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ content: content, parent_comment_id: parentCommentId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const newReply = document.createElement("li");
-                newReply.id = `reply-${data.comment_id}`;
-                newReply.innerHTML = `
-                    <strong>${data.author}</strong>: ${data.content}
-                    <small>${data.created_at}</small>
-                    <button class="delete-reply" data-id="${data.comment_id}">삭제</button>
-                `;
-                form.nextElementSibling.appendChild(newReply);
-                form.querySelector('.reply-content').value = "";
-            } else {
-                alert(data.error || "대댓글 작성에 실패했습니다.");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("대댓글 작성 중 오류가 발생했습니다.");
-        });
-    }
+      if (!content) {
+          alert("대댓글 내용을 입력해주세요.");
+          return;
+      }
+
+      fetch("{% url 'articles:articles_detail' article.pk %}", {
+          method: "POST",
+          headers: {
+              "X-CSRFToken": "{{ csrf_token }}",
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: content, parent_comment_id: parentCommentId }),
+      })
+          .then((response) => response.json())
+          .then((data) => {
+              if (data.success) {
+                  const newReply = document.createElement("li");
+                  newReply.classList.add("article-detail-reply-item");
+                  newReply.id = `reply-${data.comment_id}`;
+                  newReply.innerHTML = `
+                      <div class="article-detail-reply-box">
+                          <p><span class="article-detail-reply-name">${data.author}</span> ${data.content}</p>
+                          ${
+                              data.author === currentUser
+                                  ? `<button class="article-detail-reply-delete" data-id="${data.comment_id}">삭제</button>`
+                                  : ""
+                          }
+                      </div>
+                  `;
+                  form.nextElementSibling.appendChild(newReply);
+                  form.querySelector('.reply-content').value = '';
+              } else {
+                  alert(data.error || "대댓글 작성에 실패했습니다.");
+              }
+          })
+          .catch((error) => {
+              console.error("Error:", error);
+              alert("대댓글 작성 중 오류가 발생했습니다.");
+          });
+  }
 });
+
+// 댓글 및 대댓글 삭제
+document.addEventListener('click', function (event) {
+  if (event.target.classList.contains('article-detail-comment-delete') || event.target.classList.contains('article-detail-reply-delete')) {
+      const isReply = event.target.classList.contains('article-detail-reply-delete');
+      const commentId = event.target.getAttribute('data-id');
+      const confirmMessage = isReply
+          ? "이 대댓글을 정말로 삭제하시겠습니까?"
+          : "이 댓글을 정말로 삭제하시겠습니까?";
+
+      if (confirm(confirmMessage)) {
+          fetch("{% url 'articles:comment_delete' '0' %}".replace('0', commentId), {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": "{{ csrf_token }}",
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({}),
+          })
+              .then((response) => response.json())
+              .then((data) => {
+                  if (data.success) {
+                      const elementId = isReply ? `reply-${commentId}` : `comment-${commentId}`;
+                      document.getElementById(elementId).remove();
+                  } else {
+                      alert(data.error || "삭제에 실패했습니다.");
+                  }
+              })
+              .catch((error) => {
+                  console.error("Error:", error);
+                  alert("삭제 중 오류가 발생했습니다.");
+              });
+      }
+  }
+});
+
 // 좋아요 처리
 document.getElementById('like-button').addEventListener('click', function() {
     const articleId = this.getAttribute('data-id');

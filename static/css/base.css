@@ -4,6 +4,25 @@ body {
     font-family: 'Montserrat', 'Noto Sans KR', sans-serif !important; /* Bootstrap 덮어쓰기 */
 }
 
+/* 전체 페이지 레이아웃 설정 */
+html, body {
+    height: 100%; /* 페이지 전체 높이를 100%로 설정 */
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* 상단에서 하단으로 정렬 */
+}
+
+/* 메인 콘텐츠 영역 */
+body > nav, body > hr, body > footer {
+    flex-shrink: 0; /* 네비게이션 바와 푸터의 크기를 유지 */
+}
+
+main {
+    flex: 1; /* 메인 콘텐츠가 화면에서 남은 공간을 채움 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 콘텐츠를 위쪽 정렬 */
+}
 
 /* base.html css */
 nav {
@@ -88,26 +107,35 @@ nav {
     white-space: nowrap;
 }
 
+/* 푸터 스타일 */
 footer {
     width: 100%;
     height: 200px;
     background-color: #000000;
-    position: relative;
-    margin-top: 30px;
+    position: relative; /* 자식 요소의 absolute 위치 기준 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 중앙에 위치할 요소를 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
 }
 
+/* 푸터 텍스트 스타일 */
 .footer-text1 {
+    position: absolute; /* 푸터 하단에 위치 */
+    bottom: 10px; /* 푸터 하단에서 10px 위 */
+    left: 50%; /* 수평 중앙 정렬 */
+    transform: translateX(-50%); /* 수평 정렬 보정 */
     color: #ffffff;
-    position: absolute;
-    bottom: 0;
-    left: 43%;
+    text-align: center;
+    font-size: 14px;
 }
 
+/* 중앙에 위치할 텍스트 스타일 */
 .footer-text2 {
     font-size: 22px;
     font-weight: 700;
     color: #FF21A6;
-    position: absolute;
-    bottom: 80px;
-    left: 48%;
+    text-align: center; /* 텍스트 중앙 정렬 */
+    margin-top: 0; /* 기본 여백 제거 */
+    margin-bottom: 0; /* 기본 여백 제거 */
 }
