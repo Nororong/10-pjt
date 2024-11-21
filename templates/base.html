@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
     <link rel="stylesheet" href="{% static 'css/movies.css' %}">
+    <link rel="stylesheet" href="{% static 'css/articles.css' %}">
     <title>WARM</title>
 </head>
 <body>
@@ -87,8 +88,11 @@
     </form>
   {% endif %}
   </main> {% endcomment %}
-  {% block content %}
-  {% endblock content %}
+  <main>
+    {% block content %}
+    {% endblock content %}
+  </main>
+  
   <footer>
     <div class="footer-container">
       <p class="footer-text1">&copy; SSAFY 12 / 2024 My Website</p>
