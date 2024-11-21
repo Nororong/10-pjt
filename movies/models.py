@@ -27,7 +27,7 @@ class Movie(models.Model):
     director = models.CharField(max_length=255, null=True, blank=True)
     genres = models.ManyToManyField(Genre, related_name="movies")
     actors = models.ManyToManyField(Actor, related_name="movies")
-
+    weather = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return self.title

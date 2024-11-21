@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>도시명을 입력해주세요!</h1>
+    <p>도시 입력 예시:(서울->Seoul) (광주->Gwangju)</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">날씨 확인</button>
+    </form>
+
+    {% if weather_condition %}
+        <h2>{{ city }}의 날씨</h2>
+        <p><strong>상태:</strong> {{ weather_condition }} ({{ description }})</p>
+        <p><strong>온도:</strong> {{ temperature }}°C</p>
+        <p><strong>습도:</strong> {{ humidity }}%</p>
+    {% elif error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+{% endblock content %}

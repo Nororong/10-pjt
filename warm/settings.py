@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+import environ
 
+env = environ.Env()
+environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -137,7 +140,7 @@ STATICFILES_DIRS = [
 
 # API_KEY 추가
 TMDB_API_KEY = config('TMDB_API_KEY')
-
+OPENWEATHERMAP_API_KEY=config('OPENWEATHERMAP_API_KEY')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

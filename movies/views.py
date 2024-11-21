@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from movies.models import Movie, MovieComment, Genre
-from .forms import MovieCommentForm
+from .forms import MovieCommentForm, CityForm
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-
+import requests
+from django.conf import settings
+from django.urls import reverse
+import json
 # Create your views here.
 def index(request):
     if request.user.is_authenticated:
@@ -121,3 +124,84 @@ def movie_comments_delete(request, movie_pk, movie_comment_pk):
     if request.user == movie_comment.user:
         movie_comment.delete()
     return redirect('movies:movie_detail', movie.pk)
+
+# 날씨정보를 얻기 위한 view함수
+from django.shortcuts import render
+import requests
+from django.conf import settings
+from .forms import CityForm  # 이 부분에서 CityForm을 import한다고 가정
+
+def get_weather_data(city):
+    api_key = settings.OPENWEATHERMAP_API_KEY
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=kr"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        return response.json()
+    return None
+
+# def weather_view(request, city):
+#     weather_data = get_weather_data(city)
+#     context = {}
+    
+#     if weather_data:
+#         # 날씨 정보
+#         weather_condition = weather_data['weather'][0]['main']
+#         description = weather_data['weather'][0]['description']
+#         temperature = weather_data['main']['temp']
+#         humidity = weather_data['main']['humidity']
+        
+#         context = {
+#             'city': city,
+#             'weather_condition': weather_condition,
+#             'description': description,
+#             'temperature': temperature,
+#             'humidity': humidity,
+#         }
+#     else:
+#         context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'
+    
+#     return render(request, 'movies/weather.html', context)
+
+from django.shortcuts import render
+from movies.models import Movie  # Movie 모델을 임포트
+
+def weather_view(request, city):
+    weather_data = get_weather_data(city)  # API에서 날씨 데이터 가져오기
+    context = {}
+
+    if weather_data:
+        weather_condition = weather_data['weather'][0]['main']  # 예: "Clouds", "Rain" 등
+        description = weather_data['weather'][0]['description']
+        temperature = weather_data['main']['temp']
+        humidity = weather_data['main']['humidity']
+
+        # 날씨 조건과 일치하는 영화를 필터링
+        movies = Movie.objects.filter(weather__icontains=weather_condition)
+
+        context = {
+            'city': city,
+            'weather_condition': weather_condition,
+            'description': description,
+            'temperature': temperature,
+            'humidity': humidity,
+            'movies': movies,  # 영화 객체를 템플릿으로 전달
+        }
+    else:
+        context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'
+
+    return render(request, 'movies/weather.html', context)
+
+def weather_input(request):
+    if request.method == 'POST':
+        form = CityForm(request.POST)
+        if form.is_valid():
+            city = form.cleaned_data['city']
+            return redirect(reverse('movies:weather', args=[city]))
+    else:
+        form = CityForm()
+    context = {
+        'form' : form,
+    }
+    
+    return render(request, 'movies/weather_input.html', context)
