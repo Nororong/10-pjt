@@ -8,13 +8,6 @@
         </div>
         <form method="post">
             {% csrf_token %}
-            
-            <div class="preference-section">
-                <h3>감독 (최대 3개)</h3>
-                <div class="checkbox-group" id="directorsSection">
-                    {{ form.favorite_directors }}
-                </div>
-            </div>
 
             <div class="preference-section">
                 <h3>장르 (최대 3개)</h3>
@@ -22,21 +15,21 @@
                     {{ form.favorite_genres }}
                 </div>
             </div>
-
-            <div class="preference-section">
-                <h3>수상 내역 (최대 3개)</h3>
-                <div class="checkbox-group" id="awardsSection">
-                    {{ form.favorite_awards }}
-                </div>
-            </div>
             <hr class="preference-hr">
-            <preference-button type="submit" class="submit-btn signup-btn-pink">저장하기</button>
+            <button type="submit" class="submit-btn signup-btn-pink">저장하기</button>
         </form>
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sections = ['directors', 'genres', 'awards'];
+            const sections = ['genres'];
         
             sections.forEach(section => {
                 const checkboxes = document.querySelectorAll(`#${section}Section input[type="checkbox"]`);

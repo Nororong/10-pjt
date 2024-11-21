@@ -4,8 +4,10 @@ from django.core.exceptions import ValidationError
 from django import forms
 from .models import Award, Director, Genre
 from django.contrib.auth.forms import PasswordChangeForm
-User = get_user_model()
 from django.utils.translation import gettext_lazy
+from movies.models import Genre
+
+User = get_user_model()
 class CustomUserCreationForm(UserCreationForm):
     birth_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label="생년월일")
 
@@ -61,53 +63,42 @@ class CustomUserCreationForm(UserCreationForm):
 
 class CustomUserChangeForm(UserChangeForm):
     password = None
-    favorite_directors = forms.ModelMultipleChoiceField(
-        queryset=Director.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
+    # favorite_directors = forms.ModelMultipleChoiceField(
+    #     queryset=Director.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple,
+    #     required=False
+    # )
     favorite_genres = forms.ModelMultipleChoiceField(
         queryset=Genre.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    favorite_awards = forms.ModelMultipleChoiceField(
-        queryset=Award.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
+    # favorite_awards = forms.ModelMultipleChoiceField(
+    #     queryset=Award.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple,
+    #     required=False
+    # )
 
     class Meta(UserChangeForm.Meta):
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'birth_date', 'favorite_directors', 'favorite_genres', 'favorite_awards')
+        fields = ('username', 'first_name', 'last_name', 'email', 'birth_date', 'favorite_genres')
 
 
 class PreferenceForm(forms.ModelForm):
-    favorite_directors = forms.ModelMultipleChoiceField(
-        queryset=Director.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
     favorite_genres = forms.ModelMultipleChoiceField(
-        queryset=Genre.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    favorite_awards = forms.ModelMultipleChoiceField(
-        queryset=Award.objects.all(),
+        queryset=Genre.objects.all(),  # 'Genre'를 movies의 Genre로 지정
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
 
     class Meta:
-        model = User
-        fields = ['favorite_directors', 'favorite_genres', 'favorite_awards']
+        model = User  # User 모델을 accounts 앱에서 참조
+        fields = ['favorite_genres']
 
     def clean(self):
         cleaned_data = super().clean()
-        for field in ['favorite_directors', 'favorite_genres', 'favorite_awards']:
-            if len(cleaned_data.get(field, [])) > 3:
-                raise forms.ValidationError(f"{field}는 최대 3개까지만 선택할 수 있습니다.")
+        if len(cleaned_data.get('favorite_genres', [])) > 3:
+            raise forms.ValidationError("장르는 최대 3개까지만 선택할 수 있습니다.")
         return cleaned_data
     
 class CustomPasswordChangeForm(PasswordChangeForm):

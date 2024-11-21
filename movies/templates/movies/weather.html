@@ -2,22 +2,28 @@
 
 {% block content %}
     <p><strong>{{ user.username }}</strong>님! 오늘 날씨에 어울리는 영화를 <strong>{{ user.username }}</strong>님의 선호도를 기반으로 추천해드릴게요!</p>
-    {% if weather_condition %}
-        <p><strong>{{ city }}</strong>의 <strong>{{ weather_condition }}</strong>한 날씨와 어울리는 영화는?</p>
-        <div class="movies-container">
-            {% for movie in movies %}
-                <div class="movie">
-                    <div class="poster">
-                        <a href="{% url 'movies:movie_detail' movie.id %}">
-                            <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
-                        </a>
-                    </div>
-                    <h4 class="movie-title">{{ movie.title }}</h4>
+{% if weather_condition %}
+    <p><strong>{{ city }}</strong>의 <strong>{{ weather_condition }}</strong>한 날씨와 어울리는 영화는?</p>
+    <div class="movies-container">
+        {% for movie in movies %}
+            <div class="movie">
+                <div class="poster">
+                    <a href="{% url 'movies:movie_detail' movie.id %}">
+                        <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
+                    </a>
                 </div>
-            {% endfor %}
-        </div>
+                <h4 class="movie-title">{{ movie.title }}</h4>
+                <p class="movie-genres">
+                    {% for genre in movie.genres.all %}
+                        {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
-    {% else %}
+    {% comment %} {% else %}
         <p>{{ error }}</p>
-    {% endif %}
+    {% endif %} {% endcomment %}
 {% endblock %}
