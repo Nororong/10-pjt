@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 import requests
 from django.conf import settings
 from django.urls import reverse
+from articles.models import Article, Comment
 import json
 # Create your views here.
 def index(request):
@@ -192,6 +193,7 @@ def weather_view(request, city):
 
     return render(request, 'movies/weather.html', context)
 
+@login_required
 def weather_input(request):
     if request.method == 'POST':
         form = CityForm(request.POST)
@@ -205,3 +207,24 @@ def weather_input(request):
     }
     
     return render(request, 'movies/weather_input.html', context)
+
+def movie_record(request):
+    # 1. 찜한 영화 목록
+    liked_movies = request.user.like_movies.all()
+
+    # 2. 작성한 영화 댓글
+    movie_comments = MovieComment.objects.filter(user=request.user)
+
+    # 3. 작성한 커뮤니티 글
+    user_articles = Article.objects.filter(author=request.user)
+
+    # 4. 작성한 커뮤니티 댓글
+    user_comments = Comment.objects.filter(author=request.user)
+
+    context = {
+        'liked_movies': liked_movies,
+        'movie_comments': movie_comments,
+        'user_articles': user_articles,
+        'user_comments': user_comments,
+    }
+    return render(request, 'movies/movie_record.html', context)
