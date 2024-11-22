@@ -4496,6 +4496,7 @@
     "fields": {
         "title": "베놈: 라스트 댄스",
         "weather": ["Thunderstorm", "Rain", "Clouds"],
+        "recommended_temperature": ["cold"],
         "release_date": "2024-10-22",
         "runtime": 109,
         "age_rating": "15",
@@ -4523,6 +4524,7 @@
     "fields": {
         "title": "와일드 로봇",
         "weather": ["Clear"],
+        "recommended_temperature": ["cool"],
         "release_date": "2024-09-12",
         "runtime": 102,
         "age_rating": "ALL",
@@ -4550,6 +4552,7 @@
     "fields": {
         "title": "글래디에이터 II",
         "weather": ["Clear"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-11-13",
         "runtime": 148,
         "age_rating": "19",
@@ -4577,6 +4580,7 @@
     "fields": {
         "title": "데드풀과 울버린",
         "weather": ["Clouds", "Mist"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-07-24",
         "runtime": 128,
         "age_rating": "19",
@@ -4604,6 +4608,7 @@
     "fields": {
         "title": "서브스턴스",
         "weather": ["Mist", "Drizzle"],
+        "recommended_temperature": ["cool"],
         "release_date": "2024-09-07",
         "runtime": 140,
         "age_rating": "15",
@@ -4631,6 +4636,7 @@
     "fields": {
         "title": "트랜스포머 ONE",
         "weather": ["Clear"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-09-11",
         "runtime": 104,
         "age_rating": "ALL",
@@ -4659,6 +4665,7 @@
     "fields": {
         "title": "레드 원",
         "weather": ["Snow"],
+        "recommended_temperature": ["cold", "very_cold"],
         "release_date": "2024-10-31",
         "runtime": 124,
         "age_rating": "12",
@@ -4686,6 +4693,7 @@
     "fields": {
         "title": "에이리언: 로물루스",
         "weather": ["Fog","Thunderstorm","Clouds","Rain"],
+        "recommended_temperature": ["hot"],
         "release_date": "2024-08-13",
         "runtime": 119,
         "age_rating": "15",
@@ -4712,6 +4720,7 @@
     "fields": {
         "title": "슈퍼배드 4",
         "weather" : ["Clear"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-06-20",
         "runtime": 94,
         "age_rating": "ALL",
@@ -4740,6 +4749,7 @@
     "fields": {
         "title": "아카디안",
         "weather" : ["Clear", "Drizzle"],
+        "recommended_temperature": ["cool"],
         "release_date": "2024-04-12",
         "runtime": 92,
         "age_rating": "19",
@@ -4768,6 +4778,7 @@
     "fields": {
         "title": "캐시 아웃",
         "weather" : ["Clear", "Rain", "Mist"],
+        "recommended_temperature": ["warm"],
         "release_date": "2024-04-26",
         "runtime": 90,
         "age_rating": "12",
@@ -4794,6 +4805,7 @@
     "fields": {
         "title": "베놈",
         "weather" : ["Clear", "Rain"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2018-09-28",
         "runtime": 112,
         "age_rating": "15",
@@ -4820,6 +4832,7 @@
     "fields": {
         "title": "인사이드 아웃 2",
         "weather" : ["Clear"],
+        "recommended_temperature": ["warm", "cool", "hot", "cold"],
         "release_date": "2024-06-11",
         "runtime": 97,
         "age_rating": "ALL",
@@ -4848,7 +4861,8 @@
     "pk": 14,
     "fields": {
         "title": "아즈라엘",
-        "weather" : ["Clouds", "Thunderstorm"],
+        "weather" : ["Clouds", "Thunderstorm","Clear", "Rain", "Drizzle"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-09-27",
         "runtime": 86,
         "age_rating": "19",
@@ -4876,6 +4890,7 @@
     "fields": {
         "title": "베놈 2: 렛 데어 비 카니지",
         "weather" : ["Clear", "Rain"],
+        "recommended_temperature": ["hot", "warm", "cool"],
         "release_date": "2021-09-30",
         "runtime": 97,
         "age_rating": "15",
@@ -4903,6 +4918,7 @@
     "fields": {
         "title": "글래디에이터",
         "weather" : ["Clear", "Rain", "Mist"],
+        "recommended_temperature": ["hot", "warm", "cool"],
         "release_date": "2000-05-04",
         "runtime": 154,
         "age_rating": "15",
@@ -4930,6 +4946,7 @@
     "fields": {
         "title": "조커: 폴리 아 되",
         "weather" : ["Clouds", "Rain","Thunderstorm","Fog","Mist"],
+        "recommended_temperature": ["cold", "cool"],
         "release_date": "2024-10-01",
         "runtime": 138,
         "age_rating": "15",
@@ -4957,6 +4974,7 @@
     "fields": {
         "title": "씽: Thriller",
         "weather" : ["Clear","Drizzle", "Rain"],
+        "recommended_temperature": ["warm", "cool", "hot"],
         "release_date": "2024-10-16",
         "runtime": 11,
         "age_rating": "ALL",
@@ -4985,6 +5003,7 @@
     "fields": {
         "title": "렛 고",
         "weather" : ["Clear"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-11-01",
         "runtime": 110,
         "age_rating": "19",
@@ -5010,6 +5029,7 @@
     "fields": {
         "title": "출입금지",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog","Snow"],
+        "recommended_temperature": ["hot", "cool"],
         "release_date": "2024-08-06",
         "runtime": 85,
         "age_rating": "15",
@@ -5035,6 +5055,7 @@
     "fields": {
         "title": "스마일 2",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog","Snow"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-10-16",
         "runtime": 128,
         "age_rating": "19",
@@ -5061,6 +5082,7 @@
     "fields": {
         "title": "위키드",
         "weather" : ["Rain","Clear"],
+        "recommended_temperature": ["warm", "cool", "hot"],
         "release_date": "2024-11-20",
         "runtime": 161,
         "age_rating": "ALL",
@@ -5088,6 +5110,7 @@
     "fields": {
         "title": "비틀쥬스 비틀쥬스",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog"],
+        "recommended_temperature": ["cool","cold"],
         "release_date": "2024-09-04",
         "runtime": 105,
         "age_rating": "12",
@@ -5115,6 +5138,7 @@
     "fields": {
         "title": "나쁜 녀석들: 라이드 오어 다이",
         "weather" : ["Clear", "Rain"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-06-05",
         "runtime": 115,
         "age_rating": "15",
@@ -5141,6 +5165,7 @@
     "fields": {
         "title": "더 플랫폼 2",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog","Snow"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-09-27",
         "runtime": 100,
         "age_rating": "19",
@@ -5167,6 +5192,7 @@
     "fields": {
         "title": "돈 무브",
         "weather" : ["Clouds", "Rain", "Snow"],
+        "recommended_temperature": ["cold", "very_cold"],
         "release_date": "2024-10-24",
         "runtime": 92,
         "age_rating": "19",
@@ -5193,6 +5219,7 @@
     "fields": {
         "title": "나의 히어로 아카데미아 더 무비: 유어 넥스트",
         "weather" : ["Clear"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-08-02",
         "runtime": 110,
         "age_rating": "12",
@@ -5221,6 +5248,7 @@
     "fields": {
         "title": "타임 컷",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog","Snow"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-10-29",
         "runtime": 90,
         "age_rating": "15",
@@ -5248,6 +5276,7 @@
     "fields": {
         "title": "플로우",
         "weather" : ["Clear", "Snow"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-08-29",
         "runtime": 85,
         "age_rating": "ALL",
@@ -5269,6 +5298,7 @@
     "fields": {
         "title": "극장판 오버로드 성왕국편",
         "weather" : ["Clear", "Rain", "Fog"],
+        "recommended_temperature": ["cool"],
         "release_date": "2024-09-20",
         "runtime": 136,
         "age_rating": "15",
@@ -5297,6 +5327,7 @@
     "fields": {
         "title": "모아나 2",
         "weather" : ["Clear","Snow"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-11-27",
         "runtime": 100,
         "age_rating": "ALL",
@@ -5325,6 +5356,7 @@
     "fields": {
         "title": "탈출: 프로젝트 사일런스",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog"],
+        "recommended_temperature": ["cold","cool"],
         "release_date": "2024-07-11",
         "runtime": 96,
         "age_rating": "15",
@@ -5353,6 +5385,7 @@
     "fields": {
         "title": "인베이젼",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle"],
+        "recommended_temperature": ["hot", "cool"],
         "release_date": "2024-04-11",
         "runtime": 92,
         "age_rating": "15",
@@ -5380,6 +5413,7 @@
     "fields": {
         "title": "섀도우의 13",
         "weather" : ["Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Mist"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-09-10",
         "runtime": 145,
         "age_rating": "19",
@@ -5407,6 +5441,7 @@
     "fields": {
         "title": "우리가 끝이야",
         "weather" : ["Clear", "Clouds" ,"Drizzle","Snow", "Mist"],
+        "recommended_temperature": ["very_cold", "warm","cold","cool"],
         "release_date": "2024-08-07",
         "runtime": 131,
         "age_rating": "15",
@@ -5433,6 +5468,7 @@
     "fields": {
         "title": "쿵푸팬더 4",
         "weather" : ["Clear", "Drizzle","Snow","Mist"],
+        "recommended_temperature": ["warm", "cool", "hot"],
         "release_date": "2024-03-02",
         "runtime": 94,
         "age_rating": "ALL",
@@ -5461,6 +5497,7 @@
     "fields": {
         "title": "이프: 상상의 친구",
         "weather" : ["Clear","Drizzle","Snow"],
+        "recommended_temperature": ["warm", "cool", "very_cold"],
         "release_date": "2024-05-08",
         "runtime": 104,
         "age_rating": "ALL",
@@ -5488,6 +5525,7 @@
     "fields": {
         "title": "혹성탈출: 새로운 시대",
         "weather" : ["Clear", "Clouds", "Rain","Mist"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-05-08",
         "runtime": 145,
         "age_rating": "12",
@@ -5515,6 +5553,7 @@
     "fields": {
         "title": "가필드 더 무비",
         "weather" : ["Clear","Drizzle", "Snow"],
+        "recommended_temperature": ["warm", "cool", "very_cold", "cold"],
         "release_date": "2024-04-30",
         "runtime": 101,
         "age_rating": "ALL",
@@ -5544,6 +5583,7 @@
     "fields": {
         "title": "트위스터스",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Mist"],
+        "recommended_temperature": ["hot", "warm"],
         "release_date": "2024-07-10",
         "runtime": 123,
         "age_rating": "12",
@@ -5570,6 +5610,7 @@
     "fields": {
         "title": "인터스텔라",
         "weather" : ["Clear","Drizzle","Fog","Mist"],
+        "recommended_temperature": ["warm", "cool", "hot", "cold"],
         "release_date": "2014-11-05",
         "runtime": 169,
         "age_rating": "12",
@@ -5596,6 +5637,7 @@
     "pk": 42,
     "fields": {
         "title": "배드 가이즈: 오싹한 핼러윈",
+        "recommended_temperature": ["warm", "cool", "cold"],
         "weather" : ["Rain","Fog","Snow","Mist"],
         "release_date": "2024-10-02",
         "runtime": 24,
@@ -5623,6 +5665,7 @@
     "fields": {
         "title": "콰이어트 플레이스: 첫째 날",
         "weather" : ["Clouds", "Rain","Thunderstorm","Fog","Mist"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-06-26",
         "runtime": 99,
         "age_rating": "15",
@@ -5650,6 +5693,7 @@
     "fields": {
         "title": "고질라 X 콩: 뉴 엠파이어",
         "weather" : ["Clear", "Drizzle"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-03-27",
         "runtime": 115,
         "age_rating": "12",
@@ -5677,6 +5721,7 @@
     "fields": {
         "title": "핫 스노우맨",
         "weather" : ["Clear", "Drizzle", "Snow"],
+        "recommended_temperature": ["very_cold", "cold"],
         "release_date": "2024-11-12",
         "runtime": 92,
         "age_rating": "12",
@@ -5703,6 +5748,7 @@
     "fields": {
         "title": "밀수",
         "weather" : ["Clear", "Clouds", "Drizzle", "Mist"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2023-07-26",
         "runtime": 129,
         "age_rating": "15",
@@ -5729,6 +5775,7 @@
     "fields": {
         "title": "인투 더 월드",
         "weather" : ["Clear"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2023-12-06",
         "runtime": 83,
         "age_rating": "ALL",
@@ -5758,6 +5805,7 @@
     "fields": {
         "title": "아웃사이드",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog","Snow"],
+        "recommended_temperature": ["warm", "cool","hot"],
         "release_date": "2024-10-17",
         "runtime": 131,
         "age_rating": "19",
@@ -5784,6 +5832,7 @@
     "fields": {
         "title": "캐시트럭",
         "weather" : ["Clear", "Rain","Drizzle", "Thunderstorm"],
+        "recommended_temperature": ["hot","cool","cold"],
         "release_date": "2021-04-22",
         "runtime": 118,
         "age_rating": "19",
@@ -5811,6 +5860,7 @@
     "fields": {
         "title": "하이재킹",
         "weather" : ["Rain", "Drizzle", "Thunderstorm"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-06-21",
         "runtime": 100,
         "age_rating": "12",
@@ -5838,6 +5888,7 @@
     "fields": {
         "title": "퓨리오사: 매드맥스 사가",
         "weather" : ["Clear"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-05-22",
         "runtime": 149,
         "age_rating": "15",
@@ -5865,6 +5916,7 @@
     "fields": {
         "title": "스픽 노 이블",
         "weather" : ["Clear", "Clouds","Thunderstorm","Fog"],
+        "recommended_temperature": ["warm", "hot", "cold"],
         "release_date": "2024-09-11",
         "runtime": 110,
         "age_rating": "15",
@@ -5891,6 +5943,7 @@
     "fields": {
         "title": "에밀리아 페레스",
         "weather" : ["Clouds", "Rain"],
+        "recommended_temperature": ["cold", "cool"],
         "release_date": "2024-08-21",
         "runtime": 130,
         "age_rating": "15",
@@ -5917,6 +5970,7 @@
     "fields": {
         "title": "분노의 질주: 라이드 오어 다이",
         "weather" : ["Clear", "Thunderstorm"],
+        "recommended_temperature": ["warm", "cool", "hot"],
         "release_date": "2023-05-17",
         "runtime": 142,
         "age_rating": "15",
@@ -5944,6 +5998,7 @@
     "fields": {
         "title": "시빌 워: 분열의 시대",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["hot", "cool"],
         "release_date": "2024-04-10",
         "runtime": 110,
         "age_rating": "15",
@@ -5971,6 +6026,7 @@
     "fields": {
         "title": "더 라이언: 사막의 생존자들",
         "weather" : ["Clear", "Clouds","Mist"],
+        "recommended_temperature": ["warm", "hot", "cool"],
         "release_date": "2024-03-15",
         "runtime": 86,
         "age_rating": "15",
@@ -5998,6 +6054,7 @@
     "fields": {
         "title": "듄: 파트 2",
         "weather" : ["Clouds", "Drizzle", "Thunderstorm","Mist"],
+        "recommended_temperature": ["cold", "cool"],
         "release_date": "2024-02-27",
         "runtime": 167,
         "age_rating": "12",
@@ -6024,6 +6081,7 @@
     "fields": {
         "title": "어프렌티스",
         "weather" : ["Clouds", "Rain"],
+        "recommended_temperature": ["cold", "cool"],
         "release_date": "2024-10-09",
         "runtime": 122,
         "age_rating": "19",
@@ -6050,6 +6108,7 @@
     "fields": {
         "title": "Miraculous World : Paris, Les Aventures de Toxinelle et Griffe Noire",
         "weather" : ["Clear", "Snow"],
+        "recommended_temperature": ["cool", "very_cold"],
         "release_date": "2023-10-21",
         "runtime": 48,
         "age_rating": "ALL",
@@ -6080,6 +6139,7 @@
         "title": "다크 나이트",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
         "release_date": "2008-07-16",
+        "recommended_temperature": ["warm", "cool", "cold", "hot"],
         "runtime": 152,
         "age_rating": "15",
         "overview": "범죄와 부정부패를 제거하여 고담시를 지키려는 배트맨. 그는 짐 고든 형사와 패기 넘치는 고담시 지방 검사 하비 덴트와 함께 도시를 범죄 조직으로부터 영원히 구원하고자 한다. 세 명의 의기투합으로 위기에 처한 악당들이 모인 자리에 보라색 양복을 입고 얼굴에 짙게 화장을 한 괴이한 존재가 나타나 배트맨을 죽이자는 사상 초유의 제안을 한다. 그는 바로 어떠한 룰도, 목적도 없는 사상 최악의 악당 미치광이 살인광대 조커. 배트맨을 죽이고 고담시를 끝장내버리기 위한 조커의 광기 어린 행각에 도시는 혼란에 빠지는데...",
@@ -6107,6 +6167,7 @@
     "fields": {
         "title": "어벤져스: 인피니티 워",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["warm", "cool","very_cold","cold","hot"],
         "release_date": "2018-04-25",
         "runtime": 149,
         "age_rating": "12",
@@ -6134,6 +6195,7 @@
     "fields": {
         "title": "메이드",
         "weather" : ["Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["very_cold", "cool","cold"],
         "release_date": "2024-08-15",
         "runtime": 105,
         "age_rating": "19",
@@ -6161,6 +6223,7 @@
     "fields": {
         "title": "룩백",
         "weather" : ["Clear","Snow"],
+        "recommended_temperature": ["warm", "cool", "very_cold"],
         "release_date": "2024-06-28",
         "runtime": 62,
         "age_rating": "ALL",
@@ -6187,6 +6250,7 @@
     "fields": {
         "title": "킬",
         "weather" : ["Clouds", "Rain","Drizzle", "Thunderstorm", "Snow"],
+        "recommended_temperature": ["cool", "hot"],
         "release_date": "2024-07-03",
         "runtime": 105,
         "age_rating": "19",
@@ -6215,6 +6279,7 @@
     "fields": {
         "title": "데블스 배스",
         "weather" : ["Clear", "Clouds","Drizzle","Fog"],
+        "recommended_temperature": ["hot", "cold","cool"],
         "release_date": "2024-03-08",
         "runtime": 121,
         "age_rating": "19",
@@ -6242,6 +6307,7 @@
     "fields": {
         "title": "트랜스포머: 비스트의 서막",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2023-06-06",
         "runtime": 127,
         "age_rating": "12",
@@ -6269,6 +6335,7 @@
     "fields": {
         "title": "스파이더맨: 노 웨이 홈",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["warm", "cool","cold"],
         "release_date": "2021-12-15",
         "runtime": 148,
         "age_rating": "12",
@@ -6296,6 +6363,7 @@
     "fields": {
         "title": "'울프스' - Wolfs",
         "weather" : ["Clear", "Clouds", "Fog", "Snow", "Mist"],
+        "recommended_temperature": ["cool","very_cold"],
         "release_date": "2024-09-20",
         "runtime": 108,
         "age_rating": "15",
@@ -6323,6 +6391,7 @@
     "fields": {
         "title": "구룡성채: 무법지대",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle"],
+        "recommended_temperature": ["warm", "hot","cool"],
         "release_date": "2024-04-23",
         "runtime": 125,
         "age_rating": "15",
@@ -6351,6 +6420,7 @@
     "fields": {
         "title": "방콕 브레이킹: 천국과 지옥",
         "weather" : ["Clouds", "Rain", "Drizzle"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-09-26",
         "runtime": 147,
         "age_rating": "19",
@@ -6379,6 +6449,7 @@
     "fields": {
         "title": "전,란",
         "weather" : ["Clear","Rain","Thunderstorm","Mist"],
+        "recommended_temperature": ["cold","cool"],
         "release_date": "2024-10-02",
         "runtime": 126,
         "age_rating": "19",
@@ -6406,6 +6477,7 @@
     "fields": {
         "title": "10 라이브즈",
         "weather" : ["Clear","Mist"],
+        "recommended_temperature": ["warm", "cool","hot"],
         "release_date": "2024-04-18",
         "runtime": 87,
         "age_rating": "ALL",
@@ -6434,6 +6506,7 @@
     "fields": {
         "title": "빅 시티 그린 무비: 우주방학",
         "weather" : ["Clear", "Drizzle","Mist"],
+        "recommended_temperature": ["warm", "cool", "cold"],
         "release_date": "2024-06-06",
         "runtime": 82,
         "age_rating": "12",
@@ -6463,6 +6536,7 @@
     "fields": {
         "title": "다람이 무비: 비키니 시티를 구하라",
         "weather" : ["Clear", "Snow"],
+        "recommended_temperature": ["warm", "very_cold"],
         "release_date": "2024-10-18",
         "runtime": 86,
         "age_rating": "ALL",
@@ -6491,6 +6565,7 @@
     "fields": {
         "title": "디센던츠: 레드의 반항",
         "weather" : ["Clear","Fog"],
+        "recommended_temperature": ["warm"],
         "release_date": "2024-07-11",
         "runtime": 92,
         "age_rating": "12",
@@ -6519,6 +6594,7 @@
     "fields": {
         "title": "미스터 트러블",
         "weather" : ["Clouds", "Rain","Fog","Mist"],
+        "recommended_temperature": ["cool"],
         "release_date": "2024-10-02",
         "runtime": 98,
         "age_rating": "15",
@@ -6546,6 +6622,7 @@
     "fields": {
         "title": "어벤져스",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["warm", "hot"],
         "release_date": "2012-04-25",
         "runtime": 142,
         "age_rating": "12",
@@ -6573,6 +6650,7 @@
     "fields": {
         "title": "롱레그스",
         "weather" : ["Clear", "Clouds", "Drizzle", "Thunderstorm","Fog"],
+        "recommended_temperature": ["hot"],
         "release_date": "2024-05-31",
         "runtime": 101,
         "age_rating": "15",
@@ -6599,6 +6677,7 @@
     "fields": {
         "title": "레고 마블 어벤져스: 미션 데몰리션",
         "weather" : ["Clear", "Drizzle", "Mist"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-10-17",
         "runtime": 44,
         "age_rating": "ALL",
@@ -6626,6 +6705,7 @@
     "fields": {
         "title": "365일: 오늘",
         "weather" : ["Clear", "Drizzle","Snow"],
+        "recommended_temperature": ["hot", "very_cold"],
         "release_date": "2022-04-26",
         "runtime": 111,
         "age_rating": "19",
@@ -6652,6 +6732,7 @@
     "fields": {
         "title": "최후의 선택",
         "weather" : ["Clear", "Mist"],
+        "recommended_temperature": ["hot", "cool"],
         "release_date": "2024-09-20",
         "runtime": 81,
         "age_rating": "19",
@@ -6679,6 +6760,7 @@
     "fields": {
         "title": "여름을 향한 터널, 이별의 출구",
         "weather" : ["Clear","Snow","Mist"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2022-09-09",
         "runtime": 83,
         "age_rating": "12",
@@ -6707,6 +6789,7 @@
     "fields": {
         "title": "대부",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["cool","cold"],
         "release_date": "1972-03-14",
         "runtime": 175,
         "age_rating": "19",
@@ -6733,6 +6816,7 @@
     "fields": {
         "title": "메이즈 러너",
         "weather" : ["Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Mist"],
+        "recommended_temperature": ["cold", "cool"],
         "release_date": "2014-09-10",
         "runtime": 113,
         "age_rating": "12",
@@ -6761,6 +6845,7 @@
     "fields": {
         "title": "극장판 블루 록 -에피소드 나기-",
         "weather" : ["Clear","Drizzle","Mist"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-04-19",
         "runtime": 91,
         "age_rating": "12",
@@ -6788,6 +6873,7 @@
     "fields": {
         "title": "펌킨",
         "weather" : ["Clouds", "Rain","Thunderstorm","Fog","Mist"],
+        "recommended_temperature": ["hot"],
         "release_date": "2024-10-21",
         "runtime": 94,
         "age_rating": "19",
@@ -6814,6 +6900,7 @@
     "fields": {
         "title": "쇼생크 탈출",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["cool"],
         "release_date": "1994-09-23",
         "runtime": 142,
         "age_rating": "15",
@@ -6840,6 +6927,7 @@
     "fields": {
         "title": "아바타: 물의 길",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["warm"],
         "release_date": "2022-12-14",
         "runtime": 192,
         "age_rating": "12",
@@ -6867,6 +6955,7 @@
     "fields": {
         "title": "그린치",
         "weather" : ["Clear","Snow"],
+        "recommended_temperature": ["very_cold", "warm"],
         "release_date": "2018-11-08",
         "runtime": 85,
         "age_rating": "ALL",
@@ -6894,6 +6983,7 @@
     "pk": 90,
     "fields": {
         "title": "팀 버튼의 크리스마스 악몽",
+        "recommended_temperature": ["very_cold", "cold"],
         "weather" : ["Clear","Snow"],
         "release_date": "1993-10-09",
         "runtime": 76,
@@ -6922,6 +7012,7 @@
     "fields": {
         "title": "페드로 파라모",
         "weather" : ["Rain","Drizzle","Mist"],
+        "recommended_temperature": ["cool","cold"],
         "release_date": "2024-09-12",
         "runtime": 131,
         "age_rating": "19",
@@ -6951,6 +7042,7 @@
     "fields": {
         "title": "타이타닉",
         "weather" : ["Clear", "Clouds", "Rain","Drizzle", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "1997-11-18",
         "runtime": 194,
         "age_rating": "15",
@@ -6977,6 +7069,7 @@
     "fields": {
         "title": "위시",
         "weather" : ["Clear","Mist"],
+        "recommended_temperature": ["warm", "cool"],
         "release_date": "2023-11-13",
         "runtime": 95,
         "age_rating": "ALL",
@@ -7005,6 +7098,7 @@
     "fields": {
         "title": "나니아 연대기: 사자, 마녀 그리고 옷장",
         "weather" : ["Clear", "Fog","Snow","Mist"],
+        "recommended_temperature": ["cold", "very_cold"],
         "release_date": "2005-12-07",
         "runtime": 143,
         "age_rating": "ALL",
@@ -7032,6 +7126,7 @@
     "fields": {
         "title": "듄",
         "weather" : ["Clouds", "Rain","Drizzle", "Thunderstorm","Fog"],
+        "recommended_temperature": ["cool", "hot"],
         "release_date": "2021-09-15",
         "runtime": 155,
         "age_rating": "12",
@@ -7058,6 +7153,7 @@
     "fields": {
         "title": "이제 숨 쉬어",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog"],
+        "recommended_temperature": ["cold","cool"],
         "release_date": "2024-08-15",
         "runtime": 91,
         "age_rating": "15",
@@ -7083,6 +7179,7 @@
     "fields": {
         "title": "나 홀로 집에 2: 뉴욕을 헤매다",
         "weather" : ["Snow"],
+        "recommended_temperature": ["very_cold"],
         "release_date": "1992-11-15",
         "runtime": 115,
         "age_rating": "ALL",
@@ -7110,6 +7207,7 @@
     "fields": {
         "title": "그린치",
         "weather" : ["Clouds", "Rain", "Snow","Mist"],
+        "recommended_temperature": ["cold", "very_cold"],
         "release_date": "2000-11-17",
         "runtime": 104,
         "age_rating": "ALL",
@@ -7137,6 +7235,7 @@
     "fields": {
         "title": "조커",
         "weather" : ["Clouds", "Rain", "Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["hot", "cold"],
         "release_date": "2019-10-01",
         "runtime": 122,
         "age_rating": "15",
@@ -7164,6 +7263,7 @@
     "fields": {
         "title": "더 배트맨",
         "weather" : ["Rain","Thunderstorm","Fog","Snow","Mist"],
+        "recommended_temperature": ["very_cold", "cool"],
         "release_date": "2022-03-01",
         "runtime": 176,
         "age_rating": "15",

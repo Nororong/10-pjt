@@ -6,10 +6,16 @@ from .models import Award, Director, Genre
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.translation import gettext_lazy
 from movies.models import Genre
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 User = get_user_model()
 class CustomUserCreationForm(UserCreationForm):
-    birth_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label="생년월일")
+    birth_date = forms.DateField(
+        required=False, 
+        widget=forms.DateInput(attrs={'type': 'date'}), 
+        label="생년월일"
+    )
 
     class Meta:
         model = User
@@ -31,75 +37,132 @@ class CustomUserCreationForm(UserCreationForm):
             'birth_date': '생년월일',
         }
 
-    # 비밀번호 관련 기본 유효성 검사 메시지 없애기
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # 비밀번호 필드 메시지를 빈 메시지로 설정
-        self.fields['password1'].error_messages = {
-            'required': '', 
-            'too_common': '',
-            'too_similar': '',
-            'too_short': '',
-            'numeric': ''
-        }
-        self.fields['password2'].error_messages = {
-            'required': '', 
-            'password_mismatch': ''
+        # username 필드 에러 메시지
+        self.fields['username'].error_messages = {
+            'required': '아이디를 입력해주세요.',
+            'unique': '이미 사용중인 아이디입니다.',
+            'invalid': '올바른 아이디를 입력해주세요. 영문자, 숫자, @/./+/-/_ 만 사용 가능합니다.'
         }
 
-    # 다른 필드들에 대해서도 필요시 메시지 제거 가능
+        # 비밀번호 필드 에러 메시지
+        self.fields['password1'].error_messages = {
+            'required': '비밀번호를 입력해주세요.',
+            'too_common': '너무 일반적인 비밀번호입니다.',
+            'too_similar': '아이디와 비슷한 비밀번호는 사용할 수 없습니다.',
+            'too_short': '비밀번호는 최소 8자 이상이어야 합니다.',
+            'numeric': '비밀번호는 숫자로만 이루어질 수 없습니다.'
+        }
+        
+        self.fields['password2'].error_messages = {
+            'required': '비밀번호 확인을 입력해주세요.',
+            'password_mismatch': '비밀번호가 일치하지 않습니다.'
+        }
+
+        # email 필드 에러 메시지
+        self.fields['email'].error_messages = {
+            'required': '이메일을 입력해주세요.',
+            'invalid': '올바른 이메일 주소를 입력해주세요.'
+        }
+
+        # first_name 필드 에러 메시지
+        self.fields['first_name'].error_messages = {
+            'required': '이름을 입력해주세요.',
+            'max_length': '이름은 150자를 초과할 수 없습니다.'
+        }
+
+        # last_name 필드 에러 메시지
+        self.fields['last_name'].error_messages = {
+            'required': '성을 입력해주세요.',
+            'max_length': '성은 150자를 초과할 수 없습니다.'
+        }
+
+        # birth_date 필드 에러 메시지
+        self.fields['birth_date'].error_messages = {
+            'invalid': '올바른 날짜 형식으로 입력해주세요.'
+        }
+
     def clean_password1(self):
         password = self.cleaned_data.get("password1")
+        if not password:
+            raise forms.ValidationError("비밀번호를 입력해주세요.")
         return password
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("비밀번호 확인이 일치하지 않습니다.")
+            raise forms.ValidationError("비밀번호가 일치하지 않습니다.")
         return password2
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError("이메일을 입력해주세요.")
+        return email
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if not first_name:
+            raise forms.ValidationError("이름을 입력해주세요.")
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if not last_name:
+            raise forms.ValidationError("성을 입력해주세요.")
+        return last_name
+    
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data.get('birth_date')
+        if birth_date:
+            today = date.today()
+            if birth_date:
+                if birth_date > date.today():
+                    raise forms.ValidationError("당신은 미래에서 왔나요?")
+            max_age = 120
+            min_date = today - relativedelta(years=max_age)
+            if birth_date < min_date:
+                raise forms.ValidationError("올바른 생년월일을 입력해주세요.")
+        return birth_date
         
 
 class CustomUserChangeForm(UserChangeForm):
-    password = None
-    # favorite_directors = forms.ModelMultipleChoiceField(
-    #     queryset=Director.objects.all(),
-    #     widget=forms.CheckboxSelectMultiple,
-    #     required=False
-    # )
     favorite_genres = forms.ModelMultipleChoiceField(
         queryset=Genre.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    # favorite_awards = forms.ModelMultipleChoiceField(
-    #     queryset=Award.objects.all(),
-    #     widget=forms.CheckboxSelectMultiple,
-    #     required=False
-    # )
 
     class Meta(UserChangeForm.Meta):
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'birth_date', 'favorite_genres')
+        fields = ('first_name', 'last_name', 'email', 'birth_date', 'favorite_genres')
 
-
+    def clean_favorite_genres(self):
+        genres = self.cleaned_data.get('favorite_genres')
+        if genres and len(genres) > 3:
+            raise forms.ValidationError("장르는 최대 3개까지만 선택할 수 있습니다.")
+        return genres
+    
 class PreferenceForm(forms.ModelForm):
     favorite_genres = forms.ModelMultipleChoiceField(
-        queryset=Genre.objects.all(),  # 'Genre'를 movies의 Genre로 지정
+        queryset=Genre.objects.all(),
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=False,
+        label='선호하는 장르'
     )
 
     class Meta:
-        model = User  # User 모델을 accounts 앱에서 참조
+        model = get_user_model()
         fields = ['favorite_genres']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        if len(cleaned_data.get('favorite_genres', [])) > 3:
+    def clean_favorite_genres(self):
+        genres = self.cleaned_data.get('favorite_genres')
+        if genres and len(genres) > 3:
             raise forms.ValidationError("장르는 최대 3개까지만 선택할 수 있습니다.")
-        return cleaned_data
+        return genres
     
 class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
@@ -140,7 +203,7 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         # 이전 비밀번호와 새 비밀번호가 같은지 확인
         if old_password and new_password1 and old_password == new_password1:
             raise ValidationError(
-                _("새 비밀번호는 이전 비밀번호와 같을 수 없습니다."),
+                gettext_lazy("새 비밀번호는 이전 비밀번호와 같을 수 없습니다."),
                 code='password_unchanged'
             )
 
