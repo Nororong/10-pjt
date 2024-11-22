@@ -15,7 +15,7 @@
 </head>
 <body>
   {% csrf_token %}
-  <nav>
+  <nav class="container">
     <header class="base-main-text">
         <a href="{% url "movies:index" %}">WARM</a>
     </header>
@@ -30,7 +30,7 @@
           {% csrf_token %}
           <input type="submit" value="LOGOUT">
       </form>
-    <p class="nav-base-name">반가워요! <span>{{ user.username }}</span>님, 영화 보기 좋은 날이에요!</p>
+    <p class="nav-base-name">반가워요! <span>{{ user.username }}</span>님, 영화 보기 좋은 날이에요! 😊</p>
     {% else %}
     <a class="nav-user-login" href="{% url "accounts:login" %}">로그인</a>
     <a class="nav-user-signup" href="{% url "accounts:signup" %}">회원가입</a>

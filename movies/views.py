@@ -9,20 +9,68 @@ from django.conf import settings
 from django.urls import reverse
 from articles.models import Article, Comment
 import json
-# Create your views here.
+import random
+
 def index(request):
+    # 모든 영화 데이터를 리스트로 변환
+    all_movies = list(Movie.objects.all())
+
+    # 랜덤 영화 6개 선택
+    random_movies = random.sample(all_movies, min(len(all_movies), 6))
+
+    # 장르별 인기 영화 (좋아요 순으로 상위 6개, 다른 장르와 중복 제거)
+    genres = ['로맨스', '애니메이션', '액션', '드라마']
+    genre_movies = {}
+    seen_movies = set()  # 중복 제거를 위한 집합
+
+    for genre_name in genres:
+        genre = Genre.objects.filter(name=genre_name).first()
+        if genre:
+            # 이미 선택된 영화를 제외하고 좋아요 순으로 정렬
+            movies_in_genre = (
+                Movie.objects.filter(genres=genre)
+                .exclude(id__in=seen_movies)  # 중복 제거
+                .order_by('-like_users')
+            )
+            
+            # 6개의 고유한 영화 선택
+            selected_movies = []
+            for movie in movies_in_genre:
+                if movie.id not in seen_movies:
+                    selected_movies.append(movie)
+                    seen_movies.add(movie.id)
+                    if len(selected_movies) == 6:
+                        break
+            
+            genre_movies[genre_name] = selected_movies
+
+    # 사용자가 좋아요를 누른 영화 ID 목록
+    liked_movie_ids = []
     if request.user.is_authenticated:
-        favorite_directors = request.user.favorite_directors.all()
-        favorite_genres = request.user.favorite_genres.all()
-        favorite_awards = request.user.favorite_awards.all()
+        liked_movie_ids = request.user.like_movies.values_list('id', flat=True)
+
+    context = {
+        'random_movies': random_movies,
+        'genre_movies': genre_movies,
+        'liked_movie_ids': list(liked_movie_ids),  # 좋아요 누른 영화
+    }
+    return render(request, 'movies/index.html', context)
+
+# Create your views here.
+# def index(request):
+#     if request.user.is_authenticated:
+#         favorite_directors = request.user.favorite_directors.all()
+#         favorite_genres = request.user.favorite_genres.all()
+#         favorite_awards = request.user.favorite_awards.all()
         
-        context = {
-            'favorite_directors': favorite_directors,
-            'favorite_genres': favorite_genres,
-            'favorite_awards': favorite_awards,
-        }
-        return render(request, 'movies/index.html', context)
-    return render(request, 'movies/index.html')
+#         context = {
+#             'favorite_directors': favorite_directors,
+#             'favorite_genres': favorite_genres,
+#             'favorite_awards': favorite_awards,
+#         }
+#         return render(request, 'movies/index.html', context)
+#     return render(request, 'movies/index.html')
+
 
 # 영화 전체 리스트 페이지
 # def movie_list(request):
@@ -208,6 +256,7 @@ def weather_input(request):
     
     return render(request, 'movies/weather_input.html', context)
 
+@login_required
 def movie_record(request):
     # 1. 찜한 영화 목록
     liked_movies = request.user.like_movies.all()
@@ -228,3 +277,5 @@ def movie_record(request):
         'user_comments': user_comments,
     }
     return render(request, 'movies/movie_record.html', context)
+
+

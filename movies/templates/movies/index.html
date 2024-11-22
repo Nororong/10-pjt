@@ -1,5 +1,109 @@
 {% extends "base.html" %}
-
+{% load static %}
 
 {% block content %}
+<div class="container movie-list-container">
+
+  <div class="movie-main-img">
+    <p></p>
+  </div>
+
+  <div>
+    <p class="movie-main-title">오늘의 랜덤 영화! 😝</p>
+    <div id="random-movies" class="movies-container">
+      {% for movie in random_movies %}
+      <div class="movie" data-genre-ids="{% for genre in movie.genres.all %}{{ genre.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+        <div class="poster-with-heart">
+          <img class="heart-icon"
+          src="{% static 'img/heart-none.png' %}"
+          alt="icon"
+          data-movie-id="{{ movie.id }}"
+          {% if movie.id in liked_movie_ids %}
+          data-is-liked="true"
+          {% endif %}>
+          <div class="poster-overlay"></div>
+          <a href="{% url 'movies:movie_detail' movie.id %}">
+            <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
+          </a>
+        </div>
+        <h4 class="movie-title">{{ movie.title }}</h4>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="record"></div>
+
+  <div>
+    <a class="movie-main-title-genre"href="{% url 'movies:movie_list' %}">
+    <p class="movie-main-title">장르별 인기 영화 🎈 &gt;</p>
+    </a>
+    <p class="movie-main-title-1">장르별 인기 영화들을 만나보세요!</p>
+    {% for genre_name, movies in genre_movies.items %}
+    <div class="genre-section">
+      <p class="movie-main-title">{{ genre_name }} <span>TOP</span> ✨</p>
+      <div class="movies-container">
+        {% for movie in movies %}
+        <div class="movie" data-genre-ids="{% for genre in movie.genres.all %}{{ genre.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+          <div class="poster-with-heart">
+            <img class="heart-icon"
+            src="{% static 'img/heart-none.png' %}"
+            alt="icon"
+            data-movie-id="{{ movie.id }}"
+            {% if movie.id in liked_movie_ids %}
+            data-is-liked="true"
+            {% endif %}>
+            <div class="poster-overlay"></div>
+            <a href="{% url 'movies:movie_detail' movie.id %}">
+              <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
+            </a>
+          </div>
+          <h4 class="movie-title">{{ movie.title }}</h4>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 하트 버튼 찜하기 기능
+    const heartIcons = document.querySelectorAll('.heart-icon');
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    heartIcons.forEach(icon => {
+      if (icon.dataset.isLiked === "true") {
+        icon.src = "{% static 'img/heart-fill.png' %}";
+      }
+    });
+
+    const movieContainer = document.querySelector('.movie-list-container');
+    movieContainer.addEventListener('click', function(event) {
+      if (!event.target.classList.contains('heart-icon')) return;
+
+      event.preventDefault();
+      const movieId = event.target.dataset.movieId;
+
+      axios({
+        method: 'post',
+        url: `/movies/${movieId}/likes/`,
+        headers: { 'X-CSRFToken': csrftoken },
+      })
+        .then((response) => {
+          const isLiked = response.data.is_liked;
+          event.target.src = isLiked
+            ? "{% static 'img/heart-fill.png' %}"
+            : "{% static 'img/heart-none.png' %}";
+          event.target.dataset.isLiked = isLiked.toString();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  });
+</script>
 {% endblock content %}

@@ -3,9 +3,15 @@
 
 {% block content %}
 <div class="article-main-container container">
-  <div class="row article-main-title">
-    <p><span class="article-user-name">{{ user.username }}</span>님, <b>WARM</b>의 다른 사용자들과 이야기를 나누어 보세요!</p>
-  </div>
+  {% if request.user.is_authenticated %}
+    <div class="row article-main-title">
+      <p><span class="article-user-name">{{ user.username }}</span>님, <b>WARM</b>의 다른 사용자들과 이야기를 나누어 보세요! 🍀</p>
+    </div>
+  {% else %}
+    <div class="row article-main-title">
+      <p><b>로그인이 필요해요!</b> 💦</p>
+    </div>
+  {% endif %}
   <div class="row article-list-all">
     <div class="col-10 article-list-menu">
       <a href="{% url 'articles:category_list' 'MOVIE' %}">영화</a>
@@ -18,7 +24,9 @@
       <a href="{% url 'articles:create' %}">글쓰기</a>
     </div>
   </div>
-  <hr>
+
+  <div class="article-detail-line"></div>
+  
   {% for article in articles %}
   <div class="row article-list-detail">
     <div>

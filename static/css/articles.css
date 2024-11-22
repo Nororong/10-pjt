@@ -22,7 +22,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .article-list-btn {
@@ -48,8 +48,8 @@
 }
 
 .article-title {
-    font-size: 22px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 600;
 }
 
 .article-list-detail-text {
@@ -93,8 +93,14 @@
     width: 30px;
 }
 
+.article-detail-line {
+    border-bottom: 6px solid #f0f0f0;
+    margin-bottom: 30px;
+}
+
 
 /* 커뮤니티 디테일 페이지 - 상세글 조회 */
+
 .article-detail-user {
     display: flex;
     flex-direction: row;
@@ -146,6 +152,17 @@
     margin-right: 12px;
 }
 
+.article-detail-form {
+    display: flex; /* Flexbox로 가로 정렬 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: center; /* 세로 정렬 */
+    gap: 10px; /* 버튼 간격 */
+  }
+
+.article-detail-update-btn {
+    padding: 0;
+}
+
 .article-detail-update-btn input[type="submit"] {
     color: white; /* 텍스트 색상 */
     width: 70px;
@@ -153,7 +170,7 @@
     background-color: #000000; /* 버튼 배경색 */
     border-radius: 4px; /* 버튼 모서리를 둥글게 */
     border: none; /* 버튼 테두리 제거 */
-    padding: 2px 12px; /* 버튼 내부 여백 */
+    padding: 2px 0px; /* 버튼 내부 여백 */
     font-size: 14px;
     font-weight: 500; /* 버튼 글꼴 두께 */
 }
