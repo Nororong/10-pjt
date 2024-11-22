@@ -27,20 +27,20 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.favorite_genres.id_for_label }}">선호하는 장르</label>
-                <div class="checkbox-grid">
-                    {% for genre in form.favorite_genres %}
-                        <div class="checkbox-item">
-                            <label>
-                                {{ genre.tag }} {{ genre.choice_label }}
-                            </label>
-                        </div>
-                    {% endfor %}
-                </div>
+    <label for="{{ form.favorite_genres.id_for_label }}">선호하는 장르</label>
+    <div class="checkbox-grid">
+        {% for genre in form.favorite_genres %}
+            <div class="checkbox-item">
+                <label>
+                    {{ genre.tag }} {{ genre.choice_label }}
+                </label>
             </div>
-            
-            <hr>
-            <button type="submit" class="update-btn">저장</button>
+        {% endfor %}
+    </div>
+</div>
+
+<hr>
+<button type="submit" class="update-btn">저장</button>
             
         </form>
         {% if form.errors %}

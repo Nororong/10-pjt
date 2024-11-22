@@ -109,7 +109,7 @@
     width: 320px; /* 버튼과 동일한 너비로 설정 */
     height: 36px; /* 버튼과 동일한 높이로 설정 */
     padding: 0 10px; /* 텍스트가 입력 필드 안에서 너무 붙지 않도록 여백 추가 */
-    border: 1px solid rgb(110, 103, 103);
+    /* border: 1px solid rgb(110, 103, 103); */
     border-radius: 5px;
 }
 
@@ -155,6 +155,7 @@
 
 .submit-btn {
     background-color: #f439b5; /* 핑크색 */
+    border: 1px solid #f439b5;
     width: 420px; /* 버튼과 동일한 너비 */
     height: 36px; /* 버튼과 동일한 높이 */
     color: white;

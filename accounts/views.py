@@ -84,13 +84,10 @@ def update(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
-            # 폼에서 추출한 데이터 확인
-            favorite_genres = form.cleaned_data['favorite_genres']
-            print(f"전송된 favorite_genres: {favorite_genres}")  # 디버깅용 출력
-            
             user = form.save()
             
             # ManyToMany 관계 업데이트
+            favorite_genres = form.cleaned_data['favorite_genres']
             request.user.favorite_genres.set(favorite_genres)
             
             messages.success(request, "성공적으로 수정되었습니다!")
@@ -99,10 +96,11 @@ def update(request):
             messages.error(request, "수정에 실패했습니다. 다시 시도해주세요.")
     else:
         form = CustomUserChangeForm(instance=request.user)
+        # 초기값 설정
+        form.fields['favorite_genres'].initial = request.user.favorite_genres.all()
 
     context = {'form': form}
     return render(request, 'accounts/update.html', context)
-
 
 def set_preferences(request):
     if request.method == 'POST':

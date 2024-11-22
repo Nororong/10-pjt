@@ -3,10 +3,10 @@
 {% block content %}
     <div class="preference-form-container">
         <div>
-        <h2>나의 취향을 선택하고, 만들어요!</h2>
-        <hr>
+            <h2>나의 취향을 선택하고, 만들어요!</h2>
+            <hr>
         </div>
-        <form method="post">
+        <form method="post" id="preference-form">
             {% csrf_token %}
 
             <div class="preference-section">
@@ -30,7 +30,21 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sections = ['genres'];
-        
+            const form = document.getElementById('preference-form');
+            const checkboxes = document.querySelectorAll('#genresSection input[type="checkbox"]');
+            const submitButton = form.querySelector('button[type="submit"]');
+            
+            // '저장하기' 버튼 클릭 시 이벤트
+            submitButton.addEventListener('click', function(event) {
+                const checkedCount = document.querySelectorAll('#genresSection input[type="checkbox"]:checked').length;
+
+                // 최소 1개 이상의 장르가 선택되어야 함
+                if (checkedCount === 0) {
+                    event.preventDefault();  // 폼 제출을 막음
+                    alert('최소 1개 이상의 장르를 선택해야 합니다.');  // 경고 메시지
+                    return false;  // 더 이상 진행되지 않도록 함
+                }
+            });
             sections.forEach(section => {
                 const checkboxes = document.querySelectorAll(`#${section}Section input[type="checkbox"]`);
                 checkboxes.forEach(checkbox => {
