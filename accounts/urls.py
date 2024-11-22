@@ -10,5 +10,6 @@ urlpatterns = [
     path('preference/', views.preference, name='preference'),
     path('delete/', views.delete, name='delete'),
     path('update/', views.update, name='update'),
+    path('mypage/', views.mypage, name='mypage'),
     path('<int:user_pk>/password_change/', CustomPasswordChangeView.as_view(), name='password_change'),
 ]

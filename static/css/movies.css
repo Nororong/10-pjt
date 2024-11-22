@@ -283,6 +283,7 @@
 }
 
 
+
 /* 날씨 기반 영화 추천 페이지 */
 
 .weather-user-title > p {
@@ -293,4 +294,67 @@
 .weather-user-title > p > span {
     font-size: 20px;
     font-weight: 700;
+}
+
+.weather-user-city {
+    font-size: 14px;
+    color: #696969;
+}
+
+.weather-content-box  {
+    margin-top: 80px;
+    align-items: center;
+}
+
+.weather-uer-form {
+    display: flex;
+    flex-direction: row;
+}
+
+.weather-user-form-btn {
+    color: white;
+    width: 100px;
+    height: 34px;
+    background-color: #FF21A6;
+    border-radius: 4px; /* 버튼 모서리를 둥글게 */
+    padding: 2px 12px; /* 버튼 내부 여백 */
+    font-size: 16px;
+    font-weight: 400; /* 버튼 글꼴 두께 */
+    margin-left: 12px;
+    border: none;
+}
+
+#id_city {
+    height: 34px;
+    border-radius: 4px;
+    border: solid 0.5px black;
+}
+
+.weather-movie-genres {
+    font-size: 12px;
+    color: #696969;
+}
+
+
+/* 날씨 기반 영화 추천 결과 페이지 */
+
+.weather-movie-list {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    font-size: 18px;
+}
+
+.weather-movie-list-name {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#considerTemperature {
+    margin-bottom: 60px;
+    background-color: #FF21A6;
+    border-radius: 4px; /* 버튼 모서리를 둥글게 */
+    border: none;
+    color: white;
+    width: 250px;
+    height: 34px;
 }
