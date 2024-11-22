@@ -28,6 +28,11 @@ class Movie(models.Model):
     genres = models.ManyToManyField(Genre, related_name="movies")
     actors = models.ManyToManyField(Actor, related_name="movies")
     weather = models.JSONField(null=True, blank=True)
+    recommended_temperature = models.JSONField(
+        default=list,
+        blank=True,
+        null=True,
+    )  # 추천 온도를 리스트 형태로 저장. 예: ["hot", "cold"]
 
     def __str__(self):
         return self.title

@@ -42,30 +42,22 @@ def login(request):
     }
     return render(request, 'accounts/login.html', context)
 
+@login_required
 def preference(request):
     if request.method == 'POST':
         form = PreferenceForm(request.POST, instance=request.user)
         if form.is_valid():
-            # 먼저 사용자 정보 저장
-            user = form.save(commit=False)  # commit=False로 먼저 저장
-            user.save()  # 사용자 객체 저장
-
-            # 기존 선호 장르 초기화
-            user.favorite_genres.clear()
-
-            # 새로 선택된 장르 추가 (장르가 존재하는지 확인)
-            for genre in form.cleaned_data['favorite_genres']:
-                if Genre.objects.filter(id=genre.id).exists():  # 장르가 존재하는지 확인
-                    user.favorite_genres.add(genre.pk)  # genre의 pk 값을 사용
-                else:
-                    messages.error(request, f"선택한 장르 '{genre}'가 존재하지 않습니다.")
-                    return redirect('accounts:preference')
-
-            messages.success(request, '선호도가 성공적으로 저장되었습니다.')
+            user = form.save(commit=False)
+            user.save()
+            
+            # ManyToManyField 저장
+            form.save_m2m()  # 이 부분이 중요합니다!
+            
+            messages.success(request, '선호하는 장르가 성공적으로 저장되었습니다.')
             return redirect('movies:index')
     else:
         form = PreferenceForm(instance=request.user)
-
+    
     context = {
         'form': form,
     }
@@ -83,19 +75,34 @@ def delete(request):
     user.delete()
     return redirect('movies:index')
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 @login_required
 def update(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save()
+            # 폼에서 추출한 데이터 확인
+            favorite_genres = form.cleaned_data['favorite_genres']
+            print(f"전송된 favorite_genres: {favorite_genres}")  # 디버깅용 출력
+            
+            user = form.save()
+            
+            # ManyToMany 관계 업데이트
+            request.user.favorite_genres.set(favorite_genres)
+            
+            messages.success(request, "성공적으로 수정되었습니다!")
             return redirect('movies:index')
+        else:
+            messages.error(request, "수정에 실패했습니다. 다시 시도해주세요.")
     else:
         form = CustomUserChangeForm(instance=request.user)
-    context = {
-        'form': form,
-    }
+
+    context = {'form': form}
     return render(request, 'accounts/update.html', context)
+
 
 def set_preferences(request):
     if request.method == 'POST':

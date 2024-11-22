@@ -141,44 +141,37 @@ def get_weather_data(city):
         return response.json()
     return None
 
-# def weather_view(request, city):
-#     weather_data = get_weather_data(city)
-#     context = {}
-    
-#     if weather_data:
-#         # 날씨 정보
-#         weather_condition = weather_data['weather'][0]['main']
-#         description = weather_data['weather'][0]['description']
-#         temperature = weather_data['main']['temp']
-#         humidity = weather_data['main']['humidity']
-        
-#         context = {
-#             'city': city,
-#             'weather_condition': weather_condition,
-#             'description': description,
-#             'temperature': temperature,
-#             'humidity': humidity,
-#         }
-#     else:
-#         context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'
-    
-#     return render(request, 'movies/weather.html', context)
 
-from django.shortcuts import render
 from movies.models import Movie  # Movie 모델을 임포트
 
+@login_required
 def weather_view(request, city):
-    weather_data = get_weather_data(city)  # API에서 날씨 데이터 가져오기
+    weather_data = get_weather_data(city)
     context = {}
 
     if weather_data:
-        weather_condition = weather_data['weather'][0]['main']  # 예: "Clouds", "Rain" 등
+        weather_condition = weather_data['weather'][0]['main']
         description = weather_data['weather'][0]['description']
         temperature = weather_data['main']['temp']
         humidity = weather_data['main']['humidity']
 
-        # 날씨 조건과 일치하는 영화를 필터링
-        movies = Movie.objects.filter(weather__icontains=weather_condition)
+        user_genres = request.user.favorite_genres.all()
+
+        # 날씨와 선호 장르를 기반으로 영화 필터링
+        if user_genres.exists():
+            movies = Movie.objects.filter(genres__in=user_genres, weather__icontains=weather_condition).distinct()
+        else:
+            movies = Movie.objects.filter(weather__icontains=weather_condition).distinct()
+
+        movies_with_temp = []
+        for movie in movies:
+            movies_with_temp.append({
+                'id': movie.id,
+                'title': movie.title,
+                'poster_path': movie.poster_path,
+                'genres': movie.genres.all(),
+                'recommended_temperature': movie.recommended_temperature
+            })
 
         context = {
             'city': city,
@@ -186,12 +179,13 @@ def weather_view(request, city):
             'description': description,
             'temperature': temperature,
             'humidity': humidity,
-            'movies': movies,  # 영화 객체를 템플릿으로 전달
+            'movies': movies_with_temp,
         }
     else:
         context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'
 
     return render(request, 'movies/weather.html', context)
+
 
 @login_required
 def weather_input(request):
@@ -228,3 +222,4 @@ def movie_record(request):
         'user_comments': user_comments,
     }
     return render(request, 'movies/movie_record.html', context)
+

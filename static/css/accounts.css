@@ -215,3 +215,16 @@
     cursor: pointer;
     text-align: center; /* 텍스트 중앙 정렬 */
 }
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6열로 나눔 */
+    gap: 10px; /* 항목 간의 간격 */
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px; /* 텍스트 크기 */
+    justify-content: flex-start;
+}
