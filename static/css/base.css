@@ -117,6 +117,7 @@ footer {
     flex-direction: column;
     justify-content: center; /* 중앙에 위치할 요소를 정렬 */
     align-items: center; /* 수평 중앙 정렬 */
+    margin-top: 60px;
 }
 
 /* 푸터 텍스트 스타일 */

@@ -163,3 +163,5 @@ def password_change(request, user_pk):
     }
     return render(request, 'accounts/password_change.html', context)
 
+def mypage(request):
+    return render(request, 'accounts/mypage.html')

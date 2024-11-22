@@ -229,3 +229,22 @@
     font-size: 14px; /* 텍스트 크기 */
     justify-content: flex-start;
 }
+
+/* 마이페이지 */
+.mypage-cate {
+    margin-top: 60px;
+}
+
+.mypage-cate-line {
+    border-left: #ccc solid 2px;
+}
+
+.mypage-cate-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.mypage-cate-detail a {
+    text-decoration: none;
+    color: #212529;
+}

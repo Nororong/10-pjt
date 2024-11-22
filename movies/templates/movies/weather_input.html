@@ -5,18 +5,26 @@
   <div class="weather-user-title">
     <p><span>{{ user.username }}</span>님, 오늘 날씨에 어울리는 영화를 추천해 드릴게요! 🎨</p>
   </div>
-  <div>
-    <p>지금 계신 도시명을 입력해 주세요!</p>
-  </div>
-  <div>
-    <p>도시 입력 예시:(서울->Seoul) (광주->Gwangju)</p>
-  </div>
-  <div>
-    <form method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">날씨 확인</button>
-    </form>
+  <div class="weather-content-box row">
+    <div class="col-6">
+      <div>
+        <p>지금 계신 도시명을 입력해 주세요!</p>
+      </div>
+      <div>
+        <p class="weather-user-city">도시 입력 예시 : 서울 -> Seoul, 광주 -> Gwangju</p>
+      </div>
+    </div>
+    <div class="offset-1 col-5">
+      <form class="weather-uer-form " method="POST">
+        {% csrf_token %}
+        <div>
+          {{ form.as_p }}
+        </div>
+        <div>
+          <button class="weather-user-form-btn" type="submit">날씨 확인</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!--
