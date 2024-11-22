@@ -4,17 +4,18 @@
     <p><strong>{{ user.username }}</strong>님! 오늘 날씨에 어울리는 영화를 <strong>{{ user.username }}</strong>님의 선호도를 기반으로 추천해드릴게요!</p>
     
     {% if weather_condition %}
-        <p><strong>{{ city }}</strong>의 <strong>{{ weather_condition }}</strong>한 날씨와 어울리는 영화는?</p>
-        <p><strong>오늘의 온도</strong> : {{ temperature }}°C</p>        
+        <p><strong>{{ city }}</strong>의 <strong>{{ korean_weather_description }}</strong> 날씨와 어울리는 영화는?</p>
+        <p><strong>오늘의 온도</strong> : {{ temperature }}</p>        
         {% if user.favorite_genres.all %}
-            <p><strong>선호 장르</strong>:
+            <p>선호하시는 장르:
                 {% for genre in user.favorite_genres.all %}
                     {{ genre.name }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </p>
         {% endif %}
 
-        {% comment %} <button id="considerTemperature">온도까지 고려한 추천을 원해요!</button> {% endcomment %}
+        <!-- 온도까지 고려한 추천 버튼 -->
+        <button id="considerTemperature">온도까지 고려한 추천을 원해요!</button>
 
         {% if movies %}
             <div class="movies-container">
@@ -24,14 +25,13 @@
                             <a href="{% url 'movies:movie_detail' movie.id %}">
                                 <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
                             </a>
-                            <div class="temperature-overlay" style="display: none;">기온까지 고려한 추천이에요!</div>
                         </div>
                         <h4 class="movie-title">{{ movie.title }}</h4>
-                        {% comment %} <p class="movie-genres">
+                        <p class="movie-genres">
                             {% for genre in movie.genres.all %}
                                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
                             {% endfor %}
-                        </p> {% endcomment %}
+                        </p>
                     </div>
                 {% endfor %}
             </div>
@@ -44,15 +44,15 @@
 
     <script>
         document.getElementById('considerTemperature').addEventListener('click', function() {
-            var currentTemperature = "{{ current_temperature_category }}";
+            var currentTemperature = "{{ current_temperature_category }}";  // 현재 온도 카테고리
             var movies = document.querySelectorAll('.movie');
             var visibleMoviesCount = 0;
             
             movies.forEach(function(movie) {
                 var movieTemperatures = JSON.parse(movie.dataset.temperature);
                 
+                // 영화의 추천 온도가 현재 온도 카테고리와 일치하는지 확인
                 if (movieTemperatures.includes(currentTemperature)) {
-                    movie.querySelector('.temperature-overlay').style.display = 'block';
                     movie.style.display = 'block';
                     visibleMoviesCount++;
                 } else {
@@ -60,6 +60,7 @@
                 }
             });
 
+            // 온도에 맞는 영화가 없으면 메시지 표시
             var noMatchMessage = document.getElementById('noMatchMessage');
             if (visibleMoviesCount === 0) {
                 if (!noMatchMessage) {
@@ -73,11 +74,11 @@
                 noMatchMessage.style.display = 'none';
             }
 
+            // 버튼 텍스트 변경 및 이벤트 핸들러 수정
             this.textContent = '모든 영화 보기';
             this.onclick = function() {
                 movies.forEach(function(movie) {
                     movie.style.display = 'block';
-                    movie.querySelector('.temperature-overlay').style.display = 'none';
                 });
                 if (noMatchMessage) noMatchMessage.style.display = 'none';
                 this.textContent = '온도까지 고려한 추천을 원해요!';

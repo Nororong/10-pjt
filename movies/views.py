@@ -192,25 +192,96 @@ def get_weather_data(city):
 
 from movies.models import Movie  # Movie 모델을 임포트
 
+# @login_required
+# def weather_view(request, city):
+#     weather_data = get_weather_data(city)
+#     context = {}
+
+#     if weather_data:
+#         weather_condition = weather_data['weather'][0]['main']
+#         description = weather_data['weather'][0]['description']
+#         temperature = weather_data['main']['temp']
+#         humidity = weather_data['main']['humidity']
+
+#         user_genres = request.user.favorite_genres.all()
+
+#         # 날씨와 선호 장르를 기반으로 영화 필터링
+#         if user_genres.exists():
+#             movies = Movie.objects.filter(genres__in=user_genres, weather__icontains=weather_condition).distinct()
+#         else:
+#             movies = Movie.objects.filter(weather__icontains=weather_condition).distinct()
+
+#         movies_with_temp = []
+#         for movie in movies:
+#             movies_with_temp.append({
+#                 'id': movie.id,
+#                 'title': movie.title,
+#                 'poster_path': movie.poster_path,
+#                 'genres': movie.genres.all(),
+#                 'recommended_temperature': movie.recommended_temperature
+#             })
+
+#         context = {
+#             'city': city,
+#             'weather_condition': weather_condition,
+#             'description': description,
+#             'temperature': temperature,
+#             'humidity': humidity,
+#             'movies': movies_with_temp,
+#         }
+#     else:
+#         context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'
+
+#     return render(request, 'movies/weather.html', context)
 @login_required
 def weather_view(request, city):
     weather_data = get_weather_data(city)
     context = {}
+    weather_descriptions = {
+        'Clear': '맑은🌞',
+        'Clouds': '흐린☁',
+        'Rain': '비내리는🌨',
+        'Drizzle': '약한 비가 내리는☔',
+        'Thunderstorm': '천둥번개가 치는🌩',
+        'Snow': '눈이 내리는☃',
+        'Mist': '안개가 낀🌫',
+        'Fog': '짙은 안개가 끼는🌫',
+    }
 
     if weather_data:
         weather_condition = weather_data['weather'][0]['main']
         description = weather_data['weather'][0]['description']
         temperature = weather_data['main']['temp']
         humidity = weather_data['main']['humidity']
+        korean_weather_description = weather_descriptions.get(weather_condition, '알 수 없는 날씨')
+        # 온도 카테고리 분류
+
+        def get_temperature_category(temp):
+            if temp <= 0:
+                return 'very_cold'
+            elif 0 < temp <= 10:
+                return 'cold'
+            elif 10 < temp <= 20:
+                return 'cool'
+            elif 20 < temp < 30:
+                return 'warm'
+            else:
+                return 'hot'
+
+        current_temperature_category = get_temperature_category(temperature)
 
         user_genres = request.user.favorite_genres.all()
 
-        # 날씨와 선호 장르를 기반으로 영화 필터링
+        # 날씨와 선호 장르를 기반으로 기본 필터링
         if user_genres.exists():
-            movies = Movie.objects.filter(genres__in=user_genres, weather__icontains=weather_condition).distinct()
+            movies = Movie.objects.filter(
+                genres__in=user_genres,
+                weather__icontains=weather_condition
+            ).distinct()
         else:
             movies = Movie.objects.filter(weather__icontains=weather_condition).distinct()
 
+        # 기본 필터링된 영화 리스트
         movies_with_temp = []
         for movie in movies:
             movies_with_temp.append({
@@ -223,10 +294,12 @@ def weather_view(request, city):
 
         context = {
             'city': city,
+            'korean_weather_description': korean_weather_description,
             'weather_condition': weather_condition,
             'description': description,
             'temperature': temperature,
             'humidity': humidity,
+            'current_temperature_category': current_temperature_category,
             'movies': movies_with_temp,
         }
     else:
