@@ -180,7 +180,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .movie-comment-delete-text {
@@ -280,4 +280,17 @@
 .movie-main-title-genre {
     text-decoration: none;
     color: #212529;
+}
+
+
+/* 날씨 기반 영화 추천 페이지 */
+
+.weather-user-title > p {
+    margin-top: 60px;
+    font-size: 18px;
+}
+
+.weather-user-title > p > span {
+    font-size: 20px;
+    font-weight: 700;
 }

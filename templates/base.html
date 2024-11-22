@@ -23,6 +23,7 @@
       <a href="{% url "movies:movie_list" %}">장르별 영화</a>
       <a href="{% url "movies:movie_record" %}">나의 기록</a>
       <a href="{% url "articles:main_page" %}">커뮤니티</a>
+      <a href="{% url "movies:weather_input" %}">오늘 날씨, 오늘 영화 🌞</a>
     </div>
 
     {% if request.user.is_authenticated %}
