@@ -4,8 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 40px 0px 20px 0px;
-    width: 220px;
+    margin: 30px 0px 15px 0px;
     
 }
 .movie img {
@@ -18,13 +17,12 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-
     /* 원래 배열로 하려면 아래 코드 삭제 후 위 다른 class 코드 조정하기 */
-    gap: 10px; /* 아이템 간 간격 */
+    gap: 14px;
     width: 100%; /* 전체 너비 */
     max-width: 1600px; /* 최대 너비 제한 */
     margin: 0 auto; /* 중앙 정렬 */
-    min-height: 500px; /* 최소 높이 설정 */
+    min-height: 200px; /* 최소 높이 설정 */
 }
 
 .movie-title {
@@ -53,6 +51,7 @@
     bottom: 10px;
     right: 10px;
     z-index: 11;
+    cursor: pointer;
 }
 
 .poster-overlay {
@@ -74,7 +73,6 @@
 .genre-filter {
     /* position: absolute; */
     margin-top: 30px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    margin-left: 60px;
     margin-bottom: 40px;
 }
 
@@ -198,4 +196,88 @@
 .comment-name {
     font-weight: 600;
     font-size: 16px;
+}
+
+
+/* 나의 기록 페이지 */
+
+
+.no-liked-movies-message {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-top: 70px;
+  }
+
+.record-movie-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    
+}
+
+
+.record-container {
+    margin-top: 40px;
+}
+
+.record-movie-title-title {
+    color: #212529;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.record-movie-article a {
+    text-decoration: none;
+}
+
+.record-movie-article-comment a {
+    text-decoration: none;
+    color: #212529;
+}
+
+.record {
+    border-bottom: 6px solid #f0f0f0;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.record-movie-article-comment {
+    margin-bottom: 60px;
+}
+
+.record-movie-comment-detail {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+
+/* 메인 페이지 */
+
+.movie-main-img {
+    background-color: #ccc;
+    width: 1296px;
+    height: 460px;
+    border-radius: 16px;
+}
+
+.movie-main-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 70px;
+}
+
+.movie-main-title > span {
+    color: #FF21A6;
+}
+
+.movie-main-title-1 {
+    font-size: 16px;
+
+}
+
+.movie-main-title-genre {
+    text-decoration: none;
+    color: #212529;
 }

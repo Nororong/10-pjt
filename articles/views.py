@@ -8,11 +8,13 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.views.generic import ListView
 from django.views.decorators.http import require_POST
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class CategoryListView(ListView):
     model = Article
     template_name = 'articles/category_list.html'
     context_object_name = 'articles'
+    login_url = '/accounts/login/'
 
     def get_queryset(self):
         category = self.kwargs.get('category')
@@ -27,10 +29,12 @@ class MainPageView(ListView):
     model = Article
     template_name = 'articles/main_page.html'
     context_object_name = 'articles'
+    login_url = '/accounts/login/'
     
     def get_queryset(self):
         return Article.objects.all().order_by('-created_at')
-
+    
+@login_required
 def articles_list(request):
    keys_to_clear = [key for key in request.session.keys() if key.startswith('viewed_article_')]
    for key in keys_to_clear:
@@ -58,7 +62,7 @@ def create(request):
     }
     return render(request, 'articles/create.html', context)
 
-
+@login_required
 def articles_detail(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
 
@@ -152,7 +156,7 @@ def articles_delete(request, article_pk):
         return JsonResponse({'error': '권한이 없습니다.'}, status=403)  # 권한이 없음을 알리는 응답
 
     article.delete()  # 게시글 삭제
-    return JsonResponse({'success': True})
+    return redirect('articles:main_page')
 
 @login_required
 def articles_update(request, article_pk):

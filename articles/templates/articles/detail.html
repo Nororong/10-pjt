@@ -42,8 +42,11 @@
         <form class="article-detail-update-btn" action="{% url "articles:articles_update" article.pk %}">
           <input type="submit" value="글 수정">
         </form>
+    
+        <form class="article-detail-update-btn" action="{% url "articles:articles_delete" article.pk %}">
+          <input type="submit" value="글 삭제">
+        </form>
         {% endif %}
-
       </div>
     </div>
     <hr>

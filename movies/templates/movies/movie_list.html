@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="movie-list-container">
+<div class="movie-list-container container">
   <div class="genre-filter">
     <label for="genre-select">장르를 선택하세요! </label>
     <select id="genre-select">
@@ -13,7 +13,7 @@
     </select>
   </div>
 
-  <div>
+  <div class="container">
     {% comment %} <h1 class="movie-list-title">Movie List</h1> {% endcomment %}
     <div id="movies" class="movies-container">
       {% for movie in movies %}

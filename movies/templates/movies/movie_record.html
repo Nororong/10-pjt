@@ -2,58 +2,150 @@
 {% load static %}
 
 {% block content %}
-<h2>찜한 영화</h2>
-<div>
-  {% for movie in liked_movies %}
+<div class="container record-container">
+  <!--찜한 영화 섹션 원래 코드-->
+  <!--<div>
+    <p>찜한 영화</p>
     <div>
-      <a href="{% url 'movies:movie_detail' movie.id %}">
-        <img src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
-        <h3>{{ movie.title }}</h3>
-      </a>
+      {% for movie in liked_movies %}
+        <div>
+          <a href="{% url 'movies:movie_detail' movie.id %}">
+            <img src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
+            <p>{{ movie.title }}</p>
+          </a>
+        </div>
+      {% endfor %}
     </div>
-  {% endfor %}
+  </div>-->
+  <div class="record-movie-like">
+    <p class="record-movie-title">내가 찜한 <span>영화</span> 🎬</p>
+    <div id="movies" class="movies-container">
+      {% if liked_movies %}
+        {% for movie in liked_movies %}
+        <!-- 각 영화 요소에 데이터 속성으로 장르 ID 목록을 추가 -->
+        <div class="movie" data-genre-ids="{% for genre in movie.genres.all %}{{ genre.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+            <div class="poster-with-heart">
+              <img class="heart-icon"
+              src="{% static 'img/heart-fill.png' %}"
+              alt="icon"
+              data-movie-id="{{ movie.id }}"
+              {% if movie.id in liked_movies %}
+              data-is-liked="true"
+              {% endif %}>
+              <div class="poster-overlay"></div>
+              <a href="{% url 'movies:movie_detail' movie.id %}">
+                <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
+              </a>
+            </div>
+            <h4 class="movie-title">{{ movie.title }}</h4>
+        </div>
+        {% endfor %}
+      {% else %}
+          <p class="no-liked-movies-message">아직 찜한 영화가 없습니다.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="record"></div>
+
+  <div class="record-movie-comment">
+    <p class="record-movie-title">나의 영화 <span>댓글</span> 📍</p>
+    <div>
+      {% for comment in movie_comments %}
+        <div class="record-movie-comment-detail">
+          <!-- <p><strong>영화 </strong>{{ comment.movie.title }}</p> -->
+          <p><strong>{{ comment.movie.title }}&nbsp;&nbsp;&nbsp;</strong>{{ comment.content }}</p>
+          <p><small>{{ comment.created_at }}</small></p>
+        </div>
+        {% if not forloop.last %}
+          <hr>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="record"></div>
+
+  <div class="record-movie-article">
+    <p class="record-movie-title">나의 커뮤니티 <span>글</span> 📁</p>
+    <div>
+      {% for article in user_articles %}
+        <div class="record-movie-comment-detail">
+          <a href="{% url 'articles:articles_detail' article.pk %}">
+            <p class="record-movie-title-title">👉 {{ article.title }}</p>
+          </a>
+          <p><small>{{ article.created_at }}</small></p>
+        </div>
+        {% if not forloop.last %}
+          <hr>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="record"></div>
+
+  <div class="record-movie-article-comment">
+    <p class="record-movie-title">나의 커뮤니티 <span>댓글</span> 📝</p>
+    <div>
+      {% for comment in user_comments %}
+        <div class="record-movie-comment-detail">
+          <p><strong>게시글&nbsp;&nbsp;&nbsp;</strong>
+            <a href="{% url 'articles:articles_detail' comment.article.pk %}">
+              {{ comment.article.title }}
+            </a>
+          </p>
+          <p><strong>댓글&nbsp;&nbsp;&nbsp;</strong>{{ comment.content }}</p>
+          <p><small>{{ comment.created_at }}</small></p>
+        </div>
+        {% if not forloop.last %}
+          <hr>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
 </div>
 
-<hr>
 
-<h2>영화 댓글</h2>
-<div>
-  {% for comment in movie_comments %}
-    <div>
-      <p><strong>영화: </strong>{{ comment.movie.title }}</p>
-      <p><strong>댓글: </strong>{{ comment.content }}</p>
-      <p><small>{{ comment.created_at }}</small></p>
-    </div>
-  {% endfor %}
-</div>
-
-<hr>
-
-<h2>커뮤니티 글</h2>
-<div>
-  {% for article in user_articles %}
-    <div>
-      <a href="{% url 'articles:articles_detail' article.pk %}">
-        <h3>{{ article.title }}</h3>
-      </a>
-      <p>{{ article.content|truncatewords:20 }}</p>
-      <p><small>{{ article.created_at }}</small></p>
-    </div>
-  {% endfor %}
-</div>
-
-<hr>
-
-<h2>커뮤니티 댓글</h2>
-<div>
-  {% for comment in user_comments %}
-    <div>
-      <p><strong>게시글: </strong>{{ comment.article.title }}</p>
-      <p><strong>댓글: </strong>{{ comment.content }}</p>
-      <p><small>{{ comment.created_at }}</small></p>
-      <hr>
-    </div>
-  {% endfor %}
-</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  
+    // 하트 버튼 클릭 이벤트 처리
+    document.querySelector('.movies-container').addEventListener('click', function (event) {
+      if (!event.target.classList.contains('heart-icon')) return;
+  
+      const movieId = event.target.dataset.movieId;
+  
+      axios({
+        method: 'post',
+        url: `/movies/${movieId}/likes/`,
+        headers: { 'X-CSRFToken': csrftoken },
+      })
+        .then((response) => {
+          const isLiked = response.data.is_liked;
+  
+          // 하트 아이콘 상태 업데이트
+          event.target.src = isLiked
+            ? "{% static 'img/heart-fill.png' %}"
+            : "{% static 'img/heart-none.png' %}";
+          event.target.dataset.isLiked = isLiked.toString();
+  
+          // 찜 목록 DOM 업데이트
+          if (!isLiked) {
+            // 찜 해제된 경우 해당 영화 요소를 DOM에서 제거
+            const movieElement = event.target.closest('.movie');
+            if (movieElement.parentElement.id === 'movies') {
+              movieElement.remove();
+            }
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  });
+</script>  
 
 {% endblock content %}

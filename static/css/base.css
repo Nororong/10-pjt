@@ -55,7 +55,7 @@ nav {
 .nav-base-name {
     position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
     top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 150px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    right: 102px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
@@ -70,7 +70,7 @@ nav {
 .nav-logout-form {
     position: absolute;
     top: 17px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 60px;
+    right: 12px;
 }
 
 .nav-logout-form input[type="submit"] {
@@ -89,7 +89,7 @@ nav {
     text-decoration: none;
     position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
     top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 140px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    right: 92px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 700; /* 텍스트 두께 */
@@ -100,7 +100,7 @@ nav {
     text-decoration: none;
     position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
     top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 60px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    right: 12px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 700; /* 텍스트 두께 */

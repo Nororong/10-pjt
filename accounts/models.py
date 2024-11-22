@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 # from movies.models import Genre
+
 class Director(models.Model):
     name = models.CharField(max_length=100)
 
