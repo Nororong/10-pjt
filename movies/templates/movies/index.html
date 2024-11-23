@@ -4,10 +4,20 @@
 {% block content %}
 <div class="container movie-list-container">
 
+  <!-- 회원탈퇴 메시지 표시 -->
+  {% if messages %}
+    <div id="success-message" class="alert alert-success">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <div class="movie-main-img">
     <p></p>
   </div>
 
+  <!-- 영화 목록 -->
   <div>
     <p class="movie-main-title">오늘의 랜덤 영화! 😝</p>
     <div id="random-movies" class="movies-container">
@@ -32,11 +42,12 @@
     </div>
   </div>
 
+  <!-- 장르별 인기 영화 섹션 -->
   <div class="record"></div>
 
   <div>
-    <a class="movie-main-title-genre"href="{% url 'movies:movie_list' %}">
-    <p class="movie-main-title">장르별 인기 영화 🎈 &gt;</p>
+    <a class="movie-main-title-genre" href="{% url 'movies:movie_list' %}">
+      <p class="movie-main-title">장르별 인기 영화 🎈 &gt;</p>
     </a>
     <p class="movie-main-title-1">장르별 인기 영화들을 만나보세요!</p>
     {% for genre_name, movies in genre_movies.items %}
@@ -64,13 +75,20 @@
       </div>
     </div>
     {% endfor %}
-    </div>
   </div>
 
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // 회원탈퇴 메시지 자동 숨기기
+    const successMessage = document.getElementById('success-message');
+    if (successMessage) {
+      setTimeout(function() {
+        successMessage.style.display = 'none';  // 3초 후 메시지 숨기기
+      }, 3000);
+    }
+
     // 하트 버튼 찜하기 기능
     const heartIcons = document.querySelectorAll('.heart-icon');
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -106,4 +124,5 @@
     });
   });
 </script>
+
 {% endblock content %}

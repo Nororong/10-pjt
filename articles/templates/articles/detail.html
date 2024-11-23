@@ -159,7 +159,7 @@
       <li class="article-detail-comment-item" id="comment-{{ comment.id }}">
         <div class="article-detail-comment-box">
             <div class="article-detail-comment-text">
-                <span class="article-detail-comment-name">{{ comment.author.username }}</span>
+                <span class="article-detail-comment-name">{{ comment.author.nickname }}</span>
                 <span>{{ comment.content }}</span>
                 <!--<small class="article-detail-comment-time">{{ comment.created_at }}</small>-->
             </div>
@@ -180,7 +180,7 @@
           {% for reply in comment.replies.all %}
           <li class="article-detail-reply-item" id="reply-{{ reply.id }}">
             <div class="article-detail-reply-box">
-              <p><span class="article-detail-reply-name">{{ reply.author.username }}</span> {{ reply.content }}</p>
+              <p><span class="article-detail-reply-name">{{ reply.author.nickname }}</span> {{ reply.content }}</p>
               {% if request.user == reply.author %}
               <button class="article-detail-reply-delete" data-id="{{ reply.id }}">삭제</button>
               {% endif %}

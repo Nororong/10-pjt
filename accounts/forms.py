@@ -11,10 +11,52 @@ from dateutil.relativedelta import relativedelta
 
 User = get_user_model()
 class CustomUserCreationForm(UserCreationForm):
+    username = forms.CharField(
+        required=True,
+        max_length=15,  # 유저네임 최대 길이 15자로 설정
+        label="아이디",
+        error_messages={ 
+            'required': '아이디를 입력해주세요.',
+            'unique': '이미 사용중인 아이디입니다.',
+            'invalid': '올바른 아이디를 입력해주세요. 영문자, 숫자, @/./+/-/_ 만 사용 가능합니다.'
+        },
+    )
+    password1 = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput,
+        max_length=15,  # 비밀번호 최대 길이 15자로 설정
+        label="비밀번호",
+        error_messages={ 
+            'required': '비밀번호를 입력해주세요.',
+            'too_common': '너무 일반적인 비밀번호입니다.',
+            'too_similar': '아이디와 비슷한 비밀번호는 사용할 수 없습니다.',
+            'too_short': '비밀번호는 최소 8자 이상이어야 합니다.',
+            'numeric': '비밀번호는 숫자로만 이루어질 수 없습니다.'
+        },
+    )
+    password2 = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput,
+        max_length=15,  # 비밀번호 확인 최대 길이 15자로 설정
+        label="비밀번호 확인",
+        error_messages={
+            'required': '비밀번호 확인을 입력해주세요.',
+            'password_mismatch': '비밀번호가 일치하지 않습니다.'
+        },
+    )
     birth_date = forms.DateField(
         required=False, 
         widget=forms.DateInput(attrs={'type': 'date'}), 
         label="생년월일"
+    )
+    nickname = forms.CharField(
+        required=True,
+        max_length=50,
+        label="닉네임",
+        error_messages={
+            'required': '닉네임을 입력해주세요.',
+            'unique': '이미 사용중인 닉네임입니다.',
+        },
     )
 
     class Meta:
@@ -22,7 +64,7 @@ class CustomUserCreationForm(UserCreationForm):
         fields = [
             'username', 'password1', 'password2', 
             'first_name', 'last_name', 'email', 
-            'birth_date'
+            'birth_date', 'nickname'
         ]
         widgets = {
             'birth_date': forms.DateInput(attrs={'type': 'date'}),
@@ -35,6 +77,7 @@ class CustomUserCreationForm(UserCreationForm):
             'last_name': '성',
             'email': '이메일',
             'birth_date': '생년월일',
+            'nickname' : '닉네임',
         }
 
     def __init__(self, *args, **kwargs):

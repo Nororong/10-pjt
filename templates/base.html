@@ -32,7 +32,7 @@
           <input type="submit" value="LOGOUT">
       </form>
     <a href="{% url "accounts:mypage" %}">
-      <p class="nav-base-name">반가워요! <span>{{ user.username }}</span>님, 영화 보기 좋은 날이에요! 😊</p>
+      <p class="nav-base-name">반가워요! <span>{{ user.nickname }}</span>님, 영화 보기 좋은 날이에요! 😊</p>
     </a>
     {% else %}
     <a class="nav-user-login" href="{% url "accounts:login" %}">로그인</a>

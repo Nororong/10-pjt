@@ -1,27 +1,27 @@
 import openai
-
-# API 키 설정
-openai.api_key = "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"
-
-# GPT 모델을 사용한 텍스트 생성
+import os
+openai.api_key="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"
 response = openai.ChatCompletion.create(
-    model="gpt-4o-mini",  # 사용할 모델을 지정합니다.
+    model="gpt-4o-mini", 
     messages=[
         {"role": "user", "content":
-            "ㅎㅇㅎㅇ"
+            "현재 닐씨 추천을 하기 위해서는 현재 위치한 도시명을 입력해야해. 하지만 현재 도시명의 입력 형식은 영어의 형태를 가지고 있어. 예시로 서울은 Seoul, 수원은 Suwon의 형태아."+
+            "주요 사용자들이 한국인인만큼 영어로 입력하는 방식은 불편함을 가지고 있어. 때문에 입력하는 방식을 한글로도 가능하게 하고 싶어."+
+            "구글에 검색해본 결과 OPENWEATHERMAP API는  Geocoding API를 사용해 한글 도시명을 영어로 변환한 뒤 날씨 데이터를 요청합니다. Geocoding API는 한글 입력도 지원하고 있으니 이 방식을 사용해보면 좋을 것 같아."+
+            "현재 내가 사용하는 코드는 다음과 같으니까 이걸 참고해봐"+
+            "def get_weather_data(city):"+
+            "api_key = settings.OPENWEATHERMAP_API_KEY"+
+            "encoded_city = quote(city)"+
+            "url = f'http://api.openweathermap.org/data/2.5/weather?q={encoded_city}&appid={api_key}&units=metric&l'"+
+            "response = requests.get(url)"+
+            "if response.status_code == 200:"+
+            "return response.json()"+
+            "return None"
         }
     ],
     max_tokens=1000
 )
 
-# 생성된 텍스트 출력
 print(response['choices'][0]['message']['content'].strip())  # 'message'로 수정
 
-# "내가 지금 도시지역을 입력하면 해당 도시의 날씨를 확인해서 "
-#             "날씨 키워드를 Clear: 맑음, Clouds: 구름, Rain: 비, "
-#             "Drizzle: 가벼운 비, Thunderstorm: 천둥번개, Snow: 눈, "
-#             "Mist: 안개, Fog: 짙은 안개로 나눴어. 이후 데이터베이스에 "
-#             "영화 정보가 있는데 그중 데이터 중에 weather 필드가 있고 "
-#             "'weather_condition'과 일치하면 해당 영화들이 나오도록 하고 있어. "
-#             "그런데 영화를 추천하는 기준이 날씨만으로 되어 있는데 나는 이것뿐만 아니라 "
-#             "user가 가지고 있는 선호도 중 장르도 고려해서 선호하는 장르까지 있으면 추천하는 느낌으로 해보고 싶어."
+# openai.api_key = "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"

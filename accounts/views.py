@@ -70,9 +70,11 @@ def logout(request):
 
 @login_required
 def delete(request):
-    user= request.user
+    user = request.user
     logout(request)
     user.delete()
+
+    messages.success(request, "회원탈퇴가 이루어졌습니다.")  # First argument should be request
     return redirect('movies:index')
 
 import logging
@@ -99,7 +101,9 @@ def update(request):
         # 초기값 설정
         form.fields['favorite_genres'].initial = request.user.favorite_genres.all()
 
-    context = {'form': form}
+    context = {
+        'form': form
+        }
     return render(request, 'accounts/update.html', context)
 
 def set_preferences(request):

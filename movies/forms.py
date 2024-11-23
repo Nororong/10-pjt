@@ -7,4 +7,10 @@ class MovieCommentForm(forms.ModelForm):
         fields = ('content',)
 
 class CityForm(forms.Form):
-    city = forms.CharField(max_length=50, label="City Name")
+    city = forms.CharField(
+        max_length=50, 
+        label="City Name",
+        widget=forms.TextInput(attrs={
+            'placeholder': '도시명을 입력해주세요 (예: 서울, 부산)'
+        })
+    )

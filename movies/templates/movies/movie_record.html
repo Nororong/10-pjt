@@ -53,8 +53,13 @@
     <div>
       {% for comment in movie_comments %}
         <div class="record-movie-comment-detail">
-          <!-- <p><strong>영화 </strong>{{ comment.movie.title }}</p> -->
-          <p><strong>{{ comment.movie.title }}&nbsp;&nbsp;&nbsp;</strong>{{ comment.content }}</p>
+          <p><strong>{{ comment.movie.title }}&nbsp;&nbsp;&nbsp;</strong>
+            <span class="clickable" 
+                  onclick="location.href='{% url 'movies:movie_detail' comment.movie.pk %}'" 
+                  style="cursor: pointer;">
+              {{ comment.content }}
+            </span>
+          </p>
           <p><small>{{ comment.created_at }}</small></p>
         </div>
         {% if not forloop.last %}
