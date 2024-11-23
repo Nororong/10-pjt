@@ -10,11 +10,16 @@
     font-size: 18px;
 }
 
+
 .article-list-menu > a {
     text-decoration: none;
     color: #FF21A6;
     font-weight: 500;
     margin-right: 20px;
+}
+
+.article-list-menu-all {
+    font-weight: 800;
 }
 
 .article-list-all {
@@ -99,7 +104,12 @@
 }
 
 
+
 /* 커뮤니티 디테일 페이지 - 상세글 조회 */
+
+.article-detail-img-none {
+    color: #ccc;
+}
 
 .article-detail-user {
     display: flex;
@@ -183,7 +193,7 @@
 .article-detail-comment-form {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 10px;
     align-items: center;
 }
@@ -213,9 +223,10 @@
 /* 댓글 전체 컨테이너 중앙 정렬 */
 .article-detail-comment-container {
     max-width: 600px; /* 댓글 섹션의 최대 너비 */
-    margin: 0 auto; /* 수평 중앙 정렬 */
+    
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     gap: 20px; /* 댓글 간의 간격 */
 }
 
@@ -236,21 +247,21 @@
 .article-detail-comment-box {
     display: flex;
     justify-content: space-between; /* 내용과 버튼 간의 공간 배분 */
-    align-items: center; /* 수직 가운데 정렬 */
+    align-items: flex-start; /* 수직 가운데 정렬 */
     width: 100%; /* 부모 컨테이너에 맞춤 */
     border-radius: 6px;
-    padding: 0px;
+    padding: 5px 0;
     box-sizing: border-box;
     margin-bottom: 10px;
 }
 
+
 /* 댓글 내용 및 생성 날짜 */
 .article-detail-comment-text {
-    display: flex;
-    flex-direction: row; /* 내용과 날짜를 가로로 배치 */
-    gap: 10px; /* 내용과 날짜 사이 간격 추가 */
-    align-items: center;
     flex: 1; /* 남는 공간 차지 */
+    word-wrap: break-word;
+    overflow-wrap: break-word; /* 긴 단어 줄바꿈 */
+    white-space: normal;
 }
 
 /* 댓글 삭제 버튼 */
@@ -269,13 +280,12 @@
 .article-detail-reply-form {
     display: flex;
     flex-direction: row;
-    justify-content: center; /* 입력 필드와 버튼 사이 간격 유지 */
+    justify-content: flex-start; /* 입력 필드와 버튼 사이 간격 유지 */
     align-items: center; /* 수직 가운데 정렬 */
     gap: 8px; /* 필드와 버튼 사이 간격 */
     margin-top: 5px;
     max-width: 500px; /* 대댓글 폼 너비 제한 */
-    margin-left: auto; /* 중앙 정렬 */
-    margin-right: auto; /* 중앙 정렬 */
+    
 }
 
 .article-detail-reply-form textarea {
@@ -307,11 +317,11 @@
 /* 대댓글 목록 중앙 정렬 */
 .article-detail-replies-list {
     max-width: 390px; /* 대댓글 목록 최대 너비 */
-    margin: 0 auto; /* 가로 중앙 정렬 */
     padding-left: 0; /* 기본 목록 스타일 제거 */
     border-left: 2px solid #ddd; /* 대댓글 구분선 */
     padding-left: 10px; /* 구분선과의 간격 */
     margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .article-detail-reply-item {
@@ -323,7 +333,9 @@
 .article-detail-reply-box {
     display: flex; /* Flexbox로 가로 정렬 */
     justify-content: space-between; /* 요소 간의 공간 배분 */
-    align-items: center; /* 수직 가운데 정렬 */
+    align-items: flex-start; /* 버튼이 텍스트와 동일한 라인에 유지 */
+    box-sizing: border-box;
+    width: 100%; /* 박스 크기 고정 */
     border-radius: 6px; /* 둥근 모서리 */
     padding: 6px 0px; /* 내부 여백 */
     font-size: 12px; /* 작은 글씨 */
@@ -333,14 +345,10 @@
 
 /* 대댓글 텍스트 스타일 */
 .article-detail-reply-text {
-    display: flex;
-    flex-direction: row; /* 이름, 내용, 날짜를 가로 정렬 */
-    gap: 10px; /* 요소 간의 간격 */
-    align-items: center; /* 수직 가운데 정렬 */
-    flex: 1; /* 남은 공간 차지 */
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-    overflow: hidden; /* 넘치는 텍스트 숨김 */
-    text-overflow: ellipsis; /* 말줄임표 처리 */
+    flex: 1; /* 텍스트가 남는 공간을 차지 */
+    word-wrap: break-word; /* 줄바꿈 허용 */
+    overflow-wrap: break-word; /* 긴 단어 줄바꿈 */
+    white-space: normal; /* 텍스트 줄바꿈 */
 }
 
 /* 대댓글 삭제 버튼 */
@@ -352,6 +360,9 @@
     padding: 2px 6px;
     font-size: 10px; /* 작은 버튼 크기 */
     cursor: pointer;
+    flex-shrink: 0; /* 버튼 크기를 고정 */
+    margin-left: 10px; /* 텍스트와 간격 확보 */
+    align-self: flex-start; /* 버튼의 수직 정렬 고정 */
 }
 
 .article-detail-reply-name {
