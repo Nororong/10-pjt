@@ -10,6 +10,7 @@ from django.urls import reverse
 from articles.models import Article, Comment
 import json
 import random
+from urllib.parse import quote
 
 def index(request):
     # 모든 영화 데이터를 리스트로 변환
@@ -175,20 +176,39 @@ def movie_comments_delete(request, movie_pk, movie_comment_pk):
     return redirect('movies:movie_detail', movie.pk)
 
 # 날씨정보를 얻기 위한 view함수
-from django.shortcuts import render
-import requests
-from django.conf import settings
-from .forms import CityForm  # 이 부분에서 CityForm을 import한다고 가정
+
+# def get_weather_data(city):
+#     api_key = settings.OPENWEATHERMAP_API_KEY
+    
+#     # 한글 도시명을 URL 인코딩하고 한국어 응답을 위해 lang=ko 사용
+#     encoded_city = urllib.parse.quote(city)
+#     url = f"http://api.openweathermap.org/data/2.5/weather?q={encoded_city},kr&appid={api_key}&units=metric&lang=kr"
+    
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#         return response.json()
+#     return None
 
 def get_weather_data(city):
     api_key = settings.OPENWEATHERMAP_API_KEY
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=kr"
-    response = requests.get(url)
+    # 한글 도시명을 Geocoding API로 변환
+    geo_url = f"http://api.openweathermap.org/geo/1.0/direct?q={quote(city)}&limit=1&appid={api_key}"
+    geo_response = requests.get(geo_url)
     
-    if response.status_code == 200:
-        return response.json()
+    if geo_response.status_code == 200:
+        geo_data = geo_response.json()
+        if geo_data:
+            city_lat = geo_data[0]['lat']
+            city_lon = geo_data[0]['lon']
+            
+            # Weather API 호출
+            weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={city_lat}&lon={city_lon}&appid={api_key}&units=metric&lang=kr"
+            weather_response = requests.get(weather_url)
+            
+            if weather_response.status_code == 200:
+                return weather_response.json()
+    
     return None
-
 
 from movies.models import Movie  # Movie 모델을 임포트
 
@@ -254,8 +274,8 @@ def weather_view(request, city):
         temperature = weather_data['main']['temp']
         humidity = weather_data['main']['humidity']
         korean_weather_description = weather_descriptions.get(weather_condition, '알 수 없는 날씨')
-        # 온도 카테고리 분류
 
+        # 온도 카테고리 분류
         def get_temperature_category(temp):
             if temp <= 0:
                 return 'very_cold'
@@ -272,7 +292,6 @@ def weather_view(request, city):
 
         user_genres = request.user.favorite_genres.all()
 
-        # 날씨와 선호 장르를 기반으로 기본 필터링
         if user_genres.exists():
             movies = Movie.objects.filter(
                 genres__in=user_genres,
@@ -281,7 +300,6 @@ def weather_view(request, city):
         else:
             movies = Movie.objects.filter(weather__icontains=weather_condition).distinct()
 
-        # 기본 필터링된 영화 리스트
         movies_with_temp = []
         for movie in movies:
             movies_with_temp.append({
@@ -289,24 +307,23 @@ def weather_view(request, city):
                 'title': movie.title,
                 'poster_path': movie.poster_path,
                 'genres': movie.genres.all(),
-                'recommended_temperature': movie.recommended_temperature
+                'recommended_temperature': movie.recommended_temperature  # 영화 추천 온도
             })
 
         context = {
-            'city': city,
+            'city': city,  # 입력된 도시명 그대로 표시
             'korean_weather_description': korean_weather_description,
             'weather_condition': weather_condition,
             'description': description,
             'temperature': temperature,
             'humidity': humidity,
-            'current_temperature_category': current_temperature_category,
+            'current_temperature_category': current_temperature_category,  # 온도 카테고리
             'movies': movies_with_temp,
         }
     else:
         context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'
 
     return render(request, 'movies/weather.html', context)
-
 
 @login_required
 def weather_input(request):
@@ -318,7 +335,7 @@ def weather_input(request):
     else:
         form = CityForm()
     context = {
-        'form' : form,
+        'form': form,
     }
     
     return render(request, 'movies/weather_input.html', context)

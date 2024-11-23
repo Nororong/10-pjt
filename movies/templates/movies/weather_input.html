@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
   <div class="weather-user-title">
-    <p><span>{{ user.username }}</span>님, 오늘 날씨에 어울리는 영화를 추천해 드릴게요! 🎨</p>
+    <p><span>{{ user.nickname }}</span>님, 오늘 날씨에 어울리는 영화를 추천해 드릴게요! 🎨</p>
   </div>
   <div class="weather-content-box row">
     <div class="offset-2 col-4">
@@ -11,11 +11,12 @@
         <p>지금 계신 도시명을 입력해 주세요!</p>
       </div>
       <div>
-        <p class="weather-user-city">도시 입력 예시 : 서울 -> Seoul, 광주 -> Gwangju</p>
+        <p class="weather-user-city">도시명을 입력해주세요</p>
+        <p class="weather-user-city">예시: 서울, 부산, 대구, 광주</p>
       </div>
     </div>
     <div class="col-6">
-      <form class="weather-uer-form " method="POST">
+      <form class="weather-uer-form" method="POST">
         {% csrf_token %}
         <div>
           {{ form.as_p }}
@@ -26,6 +27,7 @@
       </form>
     </div>
   </div>
+</div>
 
   <!--
   {% if weather_condition %}

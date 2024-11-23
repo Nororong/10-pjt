@@ -83,7 +83,7 @@
 {% for movie_comment in movie_comments %}
 <div class="movie-comment-delete container">
   <div class="movie-comment-delete-text">
-    <p class="comment-name">{{ movie_comment.user.username }}</p>
+    <p class="comment-name">{{ movie_comment.user.nickname }}</p>
     <p>{{ movie_comment.content }}</p>
   </div>
   {% if request.user == movie_comment.user %}

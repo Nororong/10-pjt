@@ -21,7 +21,8 @@ class Award(models.Model):
         return f"{self.name}"
 
 class User(AbstractUser):
-
+    username = models.CharField(max_length=15, unique=True)
+    nickname = models.CharField(max_length=50, unique=True, null=True, blank=True, verbose_name="닉네임")
     favorite_directors = models.ManyToManyField('Director', blank=True)
     favorite_genres = models.ManyToManyField('movies.Genre', related_name='favorite_users', blank=True)
     favorite_awards = models.ManyToManyField('Award', blank=True)

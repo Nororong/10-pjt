@@ -5,7 +5,7 @@
 <div class="article-main-container container">
   {% if request.user.is_authenticated %}
     <div class="row article-main-title">
-      <p><span class="article-user-name">{{ user.username }}</span>님, <b>WARM</b>의 다른 사용자들과 이야기를 나누어 보세요! 🍀</p>
+      <p><span class="article-user-name">{{ user.nickname }}</span>님, <b>WARM</b>의 다른 사용자들과 이야기를 나누어 보세요! 🍀</p>
     </div>
   {% else %}
     <div class="row article-main-title">
@@ -45,7 +45,7 @@
       </div>
       <div class="article-list-detail-text">
         <div class="article-list-detail-text-text">
-          <p class="article-list-author">{{ article.author }}</p>
+          <p class="article-list-author">{{ article.author.nickname }}</p>
           <p>작성일 : {{ article.created_at|date:"Y-m-d H:i" }}</p>
         </div>
         <div>
