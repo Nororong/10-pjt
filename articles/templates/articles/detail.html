@@ -8,7 +8,7 @@
     </div>
     <div class="article-detail-user">
       <p>작성일: {{ article.created_at }}</p>
-      <p class="article-detail-user-name">{{ article.author }}</p>
+      <p class="article-detail-user-name">{{ request.user.nickname }}</p>
     </div>
     <hr>
     <div class="article-detail-img">
@@ -225,10 +225,10 @@ document.getElementById('comment-form').addEventListener('submit', function (eve
               newComment.id = `comment-${data.comment_id}`;
               newComment.innerHTML = `
                   <div class="article-detail-comment-box">
-                      <p><span class="article-detail-comment-name">${data.author}</span> ${data.content}</p>
+                      <p><span class="article-detail-comment-name">${data.nickname}</span> ${data.content}</p>
                     
                       ${
-                          data.author === currentUser
+                          data.nickname === "{{ request.user.nickname }}"
                               ? `<button class="article-detail-comment-delete" data-id="${data.comment_id}">삭제</button>`
                               : ""
                       }
@@ -280,9 +280,9 @@ document.addEventListener('click', function (event) {
                   newReply.id = `reply-${data.comment_id}`;
                   newReply.innerHTML = `
                       <div class="article-detail-reply-box">
-                          <p><span class="article-detail-reply-name">${data.author}</span> ${data.content}</p>
+                          <p><span class="article-detail-reply-name">${data.nickname}</span> ${data.content}</p>
                           ${
-                              data.author === currentUser
+                              data.author === "{{ request.user.nickname }}"
                                   ? `<button class="article-detail-reply-delete" data-id="${data.comment_id}">삭제</button>`
                                   : ""
                           }

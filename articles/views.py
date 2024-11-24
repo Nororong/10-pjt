@@ -108,6 +108,7 @@ def articles_detail(request, article_pk):
             return JsonResponse({
                 "success": True,
                 "comment_id": comment.id,
+                "nickname": comment.author.nickname,
                 "author": comment.author.username,
                 "content": comment.content,
                 "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M:%S"),

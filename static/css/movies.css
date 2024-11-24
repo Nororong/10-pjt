@@ -259,10 +259,10 @@
 /* 메인 페이지 */
 
 .movie-main-img {
-    background-color: #ccc;
-    width: 1296px;
-    height: 460px;
     border-radius: 16px;
+    margin-top: 20px;
+    width: 100%; /* 이미지가 부모 요소에 맞게 반응형으로 */
+    height: auto; /* 비율 유지 */
 }
 
 .movie-main-title {
@@ -375,3 +375,5 @@
 .poster-with-heart:hover {
     transform: scale(1.03); /* 이미지 확대 (1.1배) */
 }
+
+
