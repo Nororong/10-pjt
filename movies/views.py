@@ -274,8 +274,7 @@ def weather_view(request, city):
         temperature = weather_data['main']['temp']
         humidity = weather_data['main']['humidity']
         korean_weather_description = weather_descriptions.get(weather_condition, '알 수 없는 날씨')
-
-        # 온도 카테고리 분류
+        
         def get_temperature_category(temp):
             if temp <= 0:
                 return 'very_cold'
@@ -287,37 +286,44 @@ def weather_view(request, city):
                 return 'warm'
             else:
                 return 'hot'
-
+            
         current_temperature_category = get_temperature_category(temperature)
-
         user_genres = request.user.favorite_genres.all()
 
+        # title과 recommended_temperature가 있는 영화만 필터링
+        movies = Movie.objects.filter(
+            title__isnull=False,
+            recommended_temperature__isnull=False
+        )
+
         if user_genres.exists():
-            movies = Movie.objects.filter(
+            movies = movies.filter(
                 genres__in=user_genres,
                 weather__icontains=weather_condition
             ).distinct()
         else:
-            movies = Movie.objects.filter(weather__icontains=weather_condition).distinct()
+            movies = movies.filter(weather__icontains=weather_condition).distinct()
 
         movies_with_temp = []
         for movie in movies:
+            is_recommended = current_temperature_category in movie.recommended_temperature
             movies_with_temp.append({
                 'id': movie.id,
                 'title': movie.title,
                 'poster_path': movie.poster_path,
                 'genres': movie.genres.all(),
-                'recommended_temperature': movie.recommended_temperature  # 영화 추천 온도
+                'recommended_temperature': movie.recommended_temperature,
+                'is_recommended_for_current_temp': is_recommended
             })
 
         context = {
-            'city': city,  # 입력된 도시명 그대로 표시
+            'city': city,
             'korean_weather_description': korean_weather_description,
             'weather_condition': weather_condition,
             'description': description,
             'temperature': temperature,
             'humidity': humidity,
-            'current_temperature_category': current_temperature_category,  # 온도 카테고리
+            'current_temperature_category': current_temperature_category,
             'movies': movies_with_temp,
         }
     else:
@@ -361,4 +367,3 @@ def movie_record(request):
         'user_comments': user_comments,
     }
     return render(request, 'movies/movie_record.html', context)
-
