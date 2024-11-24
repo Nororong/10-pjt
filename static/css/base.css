@@ -4,8 +4,10 @@ body {
     font-family: 'Montserrat', 'Noto Sans KR', sans-serif !important; /* Bootstrap 덮어쓰기 */
 }
 
+
 /* 전체 페이지 레이아웃 설정 */
 html, body {
+    min-width: 540px;
     height: 100%; /* 페이지 전체 높이를 100%로 설정 */
     margin: 0;
     display: flex;
@@ -44,6 +46,8 @@ nav {
 .base-nav-menu {
     margin-left: 20px;
     margin-top: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 .base-nav-menu > a {
@@ -65,6 +69,10 @@ nav {
 .nav-base-name > span {
     font-weight: 600;
     font-size: 18px;
+}
+
+.nav-base-name-hidden {
+  display: none;
 }
 
 .nav-logout-form {
@@ -107,6 +115,10 @@ nav {
     white-space: nowrap;
 }
 
+.menu-toggle {
+  display: none;
+}
+
 /* 푸터 스타일 */
 footer {
     width: 100%;
@@ -139,4 +151,157 @@ footer {
     text-align: center; /* 텍스트 중앙 정렬 */
     margin-top: 0; /* 기본 여백 제거 */
     margin-bottom: 0; /* 기본 여백 제거 */
+}
+
+.menu-toggle {
+  display: none; /* 기본적으로 모든 화면 크기에서 숨김 */
+  background: none; /* 배경 제거 */
+  border: none; /* 테두리 제거 */
+  cursor: pointer; /* 클릭 가능 커서 */
+  padding: 0; /* 내부 여백 제거 */
+}
+
+.menu-toggle img {
+  width: 30px; /* 이미지 크기 */
+  height: 30px;
+  display: none; /* 이미지를 블록 요소로 설정 */
+}
+
+
+/* 반응형 웹 */
+/* 768px - 1200px (중간 화면 크기) */
+@media (max-width: 1200px) and (min-width: 1025px) {
+
+  .nav-base-name {
+    display: none;
+  }
+
+  .nav-base-name-hidden {
+    display: block;
+    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
+    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
+    right: 102px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    font-size: 16px; /* 텍스트 크기 */
+    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    font-weight: 400; /* 텍스트 두께 */
+    white-space: nowrap;
+  }
+  
+  .nav-base-name-hidden > span {
+    font-weight: 600;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+  .nav-base-name {
+    display: none;
+  }
+
+  .nav-base-name-hidden {
+    display: block;
+    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
+    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
+    right: 102px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    font-size: 16px; /* 텍스트 크기 */
+    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    font-weight: 400; /* 텍스트 두께 */
+    white-space: nowrap;
+  }
+  
+  .nav-base-name-hidden > span {
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  .base-nav-menu > a {
+    text-decoration: none;
+    color: black;
+    margin-left: 10px;
+    font-size: 14px;
+  }
+}
+
+/* 768px 이하 (작은 화면 크기) */
+@media (max-width: 768px) {
+  .nav-base-name {
+    display: none;
+  }
+
+  .nav-base-name-hidden {
+    display: block;
+    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
+    top: 8px; /* 네비게이션 바 상단에서 10px 떨어짐 */
+    right: 102px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    font-size: 16px; /* 텍스트 크기 */
+    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    font-weight: 400; /* 텍스트 두께 */
+    white-space: nowrap;
+  }
+  
+  .nav-base-name-hidden > span {
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  nav {
+      display: flex;
+      flex-direction: column; /* 세로 정렬 */
+      align-items: center; /* 왼쪽 정렬 */
+      padding: 0 20px;
+  }
+
+  .base-main-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+  }
+
+  .nav-base-name {
+    display: none; /* 기본적으로 숨김 */
+  }
+
+  .nav-base-name-hidden {
+      display: block; /* 닉네임 표시 */
+      font-size: 14px;
+      text-align: left;
+      margin-top: 10px;
+      margin-right: 30px;
+  }
+
+  .nav-logout-form {
+    margin-top: 0px; /* 로그아웃 버튼 아래 여백 */
+    margin-right: 40px;
+  }
+
+  .logged-in .menu-toggle {
+    display: block; /* 로그인 상태일 때만 햄버거 버튼 표시 */
+  }
+
+  .menu-toggle img {
+      width: 30px; /* 햄버거 버튼 이미지 크기 */
+      height: 30px;
+      display: block;
+  }
+
+  .base-nav-menu {
+      display: none; /* 기본적으로 메뉴 숨김 */
+      flex-direction: column;
+      width: 100%; /* 메뉴 전체 너비 */
+      margin-top: 20px;
+      align-items: end;
+  }
+
+  .menu-open .base-nav-menu {
+      display: flex; /* 햄버거 버튼 클릭 시 메뉴 표시 */
+  }
+
+  .base-nav-menu > a {
+      margin: 10px 0; /* 메뉴 항목 간 간격 */
+      text-decoration: none;
+      font-size: 16px;
+      color: black;
+      margin-right: 24px;
+  }
 }

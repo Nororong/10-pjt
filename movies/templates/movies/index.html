@@ -13,8 +13,14 @@
     </div>
   {% endif %}
 
-  <div class="movie-main-img">
+  <!--<div class="movie-main-img">
     <p></p>
+  </div>>-->
+
+  <div>
+    <a href="{% url "movies:weather_input" %}">
+      <img class="movie-main-img" src="{% static 'img/main.jpg' %}" alt="main-img">
+    </a>
   </div>
 
   <!-- 영화 목록 -->
@@ -123,6 +129,26 @@
         });
     });
   });
+
+  // 이미지 배너 크기 변경
+  function updateMainImage() {
+    const mainImg = document.querySelector('.movie-main-img');
+    const screenWidth = window.innerWidth;
+  
+    if (screenWidth <= 720) {
+      mainImg.src = "{% static 'img/main-720.jpg' %}";
+    } else if (screenWidth <= 960) {
+      mainImg.src = "{% static 'img/main-960.jpg' %}";
+    } else if (screenWidth <= 1140) {
+      mainImg.src = "{% static 'img/main-1140.jpg' %}";
+    } else {
+      mainImg.src = "{% static 'img/main.jpg' %}";
+    }
+  }
+  
+  window.addEventListener('resize', updateMainImage);
+  window.addEventListener('load', updateMainImage);
+  
 </script>
 
 {% endblock content %}

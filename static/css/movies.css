@@ -259,10 +259,10 @@
 /* 메인 페이지 */
 
 .movie-main-img {
-    background-color: #ccc;
-    width: 1296px;
-    height: 460px;
     border-radius: 16px;
+    margin-top: 20px;
+    width: 100%; /* 이미지가 부모 요소에 맞게 반응형으로 */
+    height: auto; /* 비율 유지 */
 }
 
 .movie-main-title {
@@ -390,3 +390,4 @@
     border-radius: 12px; /* 둥근 모서리 */
     transition: background-color 0.3s;
   }
+

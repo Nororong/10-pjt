@@ -135,6 +135,8 @@
           event.target.src = isLiked
             ? "{% static 'img/heart-fill.png' %}"
             : "{% static 'img/heart-none.png' %}";
+
+          // .toString() 을 붙이지 않아도 동작은 하지만, 해당 함수를 사용하면 코드를 읽는 사람에게 명시적으로 의도 전달이 가능함
           event.target.dataset.isLiked = isLiked.toString();
   
           // 찜 목록 DOM 업데이트
