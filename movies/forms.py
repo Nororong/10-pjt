@@ -11,6 +11,6 @@ class CityForm(forms.Form):
         max_length=50, 
         label="City Name",
         widget=forms.TextInput(attrs={
-            'placeholder': '도시명을 입력해주세요 (예: 서울, 부산)'
+            'placeholder': '도시명을 입력해주세요'
         })
     )

@@ -6,20 +6,18 @@
   <p class="weather-movie-list"><strong class="weather-movie-list-name">{{ user.nickname }}</strong>님의 선호도를 기반으로, 오늘 날씨에 어울리는 영화를 추천해 드릴게요! 🥰</p>
   {% if weather_condition %}
     <p><strong>{{ city }}</strong>의 <strong>{{ korean_weather_description }}</strong> 날씨와 어울리는 영화는?</p>
-    <p><strong>오늘의 온도</strong> : {{ temperature }}</p>
+    <p><strong>오늘의 온도</strong> : {{ temperature }}°C</p>
 
     {% if user.favorite_genres.all %}
-      <p>선호하시는 장르:
+      <p><strong>선호 장르</strong> :
         {% for genre in user.favorite_genres.all %}
           {{ genre.name }}{% if not forloop.last %}, {% endif %}
         {% endfor %}
       </p>
     {% endif %}
 
-    <!-- 온도까지 고려한 추천 버튼 -->
-    <button id="considerTemperature">온도까지 고려한 추천을 원해요!</button>
-    
-    <!-- 영화 리스트 -->
+    <button id="toggleRecommendedButton" class="custom-weather-button">추천 영화 보기</button>
+
     {% if movies %}
       <div class="movies-container">
         {% for movie in movies %}
@@ -43,6 +41,9 @@
                 {{ genre.name }}{% if not forloop.last %}, {% endif %}
               {% endfor %}
             </p>
+            {% if movie.is_recommended_for_current_temp %}
+              <p class="recommended-badge" style="color:#f439b5; display: none;"><strong>현재 온도에 추천!</strong></p>
+            {% endif %}
           </div>
         {% endfor %}
       </div>
@@ -55,133 +56,56 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // 기존 하트 버튼 찜하기 기능
-    const heartIcons = document.querySelectorAll('.heart-icon');
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  
-    heartIcons.forEach(icon => {
-      if (icon.dataset.isLiked === "true") {
-        icon.src = "{% static 'img/heart-fill.png' %}";
-      }
-    });
-  
-    const movieContainer = document.querySelector('.movies-container');
-    movieContainer.addEventListener('click', function (event) {
-      if (!event.target.classList.contains('heart-icon')) return;
-  
-      const movieId = event.target.dataset.movieId;
-  
-      axios({
-        method: 'post',
-        url: `/movies/${movieId}/likes/`,
-        headers: { 'X-CSRFToken': csrftoken },
+document.addEventListener('DOMContentLoaded', function () {
+  // 기존 하트 버튼 찜하기 기능
+  const heartIcons = document.querySelectorAll('.heart-icon');
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  heartIcons.forEach(icon => {
+    if (icon.dataset.isLiked === "true") {
+      icon.src = "{% static 'img/heart-fill.png' %}";
+    }
+  });
+
+  const movieContainer = document.querySelector('.movies-container');
+  movieContainer.addEventListener('click', function (event) {
+    if (!event.target.classList.contains('heart-icon')) return;
+
+    const movieId = event.target.dataset.movieId;
+
+    axios({
+      method: 'post',
+      url: `/movies/${movieId}/likes/`,
+      headers: { 'X-CSRFToken': csrftoken },
+    })
+      .then((response) => {
+        const isLiked = response.data.is_liked;
+        event.target.src = isLiked
+          ? "{% static 'img/heart-fill.png' %}"
+          : "{% static 'img/heart-none.png' %}";
+        event.target.dataset.isLiked = isLiked.toString();
       })
-        .then((response) => {
-          const isLiked = response.data.is_liked;
-          event.target.src = isLiked
-            ? "{% static 'img/heart-fill.png' %}"
-            : "{% static 'img/heart-none.png' %}";
-          event.target.dataset.isLiked = isLiked.toString();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
-  
-    // 온도에 따른 영화 필터링 기능
-    const temperatureButton = document.getElementById('considerTemperature');
-    if (temperatureButton) {
-      temperatureButton.addEventListener('click', function () {
-        const currentTemperature = "{{ current_temperature_category }}";
-        const movies = document.querySelectorAll('.movie');
-        let visibleMoviesCount = 0;
-  
-        movies.forEach(movie => {
-          const movieTemperatures = JSON.parse(movie.dataset.temperature);
-
-          // 영화의 추천 온도가 현재 온도 카테고리와 일치하는지 확인
-          if (movieTemperatures.includes(currentTemperature)) {
-            movie.style.display = 'block';
-            visibleMoviesCount++;
-          } else {
-            movie.style.display = 'none';
-          }
-        });
-        
-        // 온도에 맞는 영화가 없으면 메시지 표시
-        let noMatchMessage = document.getElementById('noMatchMessage');
-        if (visibleMoviesCount === 0) {
-          if (!noMatchMessage) {
-            noMatchMessage = document.createElement('p');
-            noMatchMessage.id = 'noMatchMessage';
-            noMatchMessage.textContent = '현재 온도에 맞는 영화가 없습니다.';
-            document.querySelector('.movies-container').appendChild(noMatchMessage);
-          }
-          noMatchMessage.style.display = 'block';
-        } else if (noMatchMessage) {
-          noMatchMessage.style.display = 'none';
-        }
-
-        // 버튼 텍스트 변경 및 이벤트 핸들러 수정
-        this.textContent = '모든 영화 보기';
-        this.onclick = function () {
-          movies.forEach(movie => {
-            movie.style.display = 'block';
-          });
-          if (noMatchMessage) noMatchMessage.style.display = 'none';
-          this.textContent = '온도까지 고려한 추천을 원해요!';
-          this.onclick = null;
-        };
+      .catch((error) => {
+        console.log(error);
       });
-    }
   });
 
-  // 기존 코드
-  {% comment %}
-  document.getElementById('considerTemperature').addEventListener('click', function() {
-    var currentTemperature = "{{ current_temperature_category }}";  // 현재 온도 카테고리
-    var movies = document.querySelectorAll('.movie');
-    var visibleMoviesCount = 0;
-    
-    movies.forEach(function(movie) {
-      var movieTemperatures = JSON.parse(movie.dataset.temperature);
-      
-      // 영화의 추천 온도가 현재 온도 카테고리와 일치하는지 확인
-      if (movieTemperatures.includes(currentTemperature)) {
-        movie.style.display = 'block';
-        visibleMoviesCount++;
-      } else {
-        movie.style.display = 'none';
+  // 추천 영화 토글 기능
+  const toggleRecommendedButton = document.getElementById('toggleRecommendedButton');
+  const movies = document.querySelectorAll('.movie');
+  let isRecommendedVisible = false;
+
+  toggleRecommendedButton.addEventListener('click', function() {
+    isRecommendedVisible = !isRecommendedVisible;
+    movies.forEach(movie => {
+      const badge = movie.querySelector('.recommended-badge');
+      if (badge) {
+        badge.style.display = isRecommendedVisible ? 'block' : 'none';
       }
+      movie.style.display = isRecommendedVisible && !badge ? 'none' : 'block';
     });
-
-    // 온도에 맞는 영화가 없으면 메시지 표시
-    var noMatchMessage = document.getElementById('noMatchMessage');
-    if (visibleMoviesCount === 0) {
-      if (!noMatchMessage) {
-        noMatchMessage = document.createElement('p');
-        noMatchMessage.id = 'noMatchMessage';
-        noMatchMessage.textContent = '현재 온도에 맞는 영화가 없습니다.';
-        document.querySelector('.movies-container').appendChild(noMatchMessage);
-      }
-      noMatchMessage.style.display = 'block';
-    } else if (noMatchMessage) {
-      noMatchMessage.style.display = 'none';
-    }
-
-    // 버튼 텍스트 변경 및 이벤트 핸들러 수정
-    this.textContent = '모든 영화 보기';
-    this.onclick = function() {
-      movies.forEach(function(movie) {
-        movie.style.display = 'block';
-      });
-      if (noMatchMessage) noMatchMessage.style.display = 'none';
-      this.textContent = '온도까지 고려한 추천을 원해요!';
-      this.onclick = null;
-    };
+    this.textContent = isRecommendedVisible ? '모든 영화 보기' : '추천 영화 보기';
   });
-  {% endcomment %}
-
+});
 </script>
 {% endblock %}

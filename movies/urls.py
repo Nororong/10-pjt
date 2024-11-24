@@ -11,6 +11,7 @@ urlpatterns = [
     path('<int:movie_pk>/movie_comments/<int:movie_comment_pk>/delete/', views.movie_comments_delete, name='movie_comments_delete'),
     path('weather_input/', views.weather_input, name='weather_input'),
     path('weather/<str:city>/', views.weather_view, name='weather'),
+    # path('weather/filter/', views.filtered_movies, name='filtered_movies'),
     path('movie_record/', views.movie_record, name='movie_record'),
     # path('create/', views.create, name='create'),
     # path('<int:pk>/delete/', views.delete, name='delete'),
