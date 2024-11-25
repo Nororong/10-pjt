@@ -17,6 +17,9 @@ from email.mime.multipart import MIMEMultipart
 from django.conf import settings
 import requests
 from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+from smtplib import SMTPException
+from user_agent import generate_user_agent
 # from .utils import send_id_email
 def signup(request):
     if request.method == 'POST':
@@ -203,32 +206,3 @@ def send_id_email(user, email):
     except Exception as e:
         print(f"이메일 전송 실패: {e}")
         return False
-
-def find_id(request):
-    context = {}
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        try:
-            user = User.objects.get(email=email)
-            context['success_message'] = f'가입된 이메일입니다. 아이디는 "{user.username}"입니다.'
-        except User.DoesNotExist:
-            context['error_message'] = '해당 이메일로 가입된 계정을 찾을 수 없습니다.'
-        
-    return render(request, 'accounts/find_id.html', context)
-
-def password_reset(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        new_password = request.POST.get('new_password')
-
-        try:
-            user = User.objects.get(username=username, email=email)
-            user.password = make_password(new_password)
-            user.save()
-            messages.success(request, '비밀번호가 성공적으로 변경되었습니다.')
-            return redirect('accounts:login')  # 로그인 페이지로 리다이렉트
-        except User.DoesNotExist:
-            messages.error(request, '입력하신 정보와 일치하는 계정을 찾을 수 없습니다.')
-        
-    return render(request, 'accounts/password_reset.html')
