@@ -3,8 +3,9 @@
 
 {% block content %}
 
-<<<<<<< Updated upstream
+
 {% comment %} 검색 창 구현 {% endcomment %}
+
 <form action="{% url "movies:movie_list" %}" method="GET">
   <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
   <button>검색</button>
@@ -18,7 +19,13 @@
     <option value="{{ genre.id }}">{{ genre.name }}</option>
     {% endfor %}
   </select>
-=======
+{% comment %} <div class="container movie-list-search-form">
+  <form action="{% url "movies:movie_list" %}" method="GET">
+    <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
+    <button>검색</button>
+  </form>
+</div> {% endcomment %}
+
 <div class="container movie-list-search-form">
   <div class="genre-filter">
     <label for="genre-select">장르를 선택하세요! </label>
@@ -33,7 +40,7 @@
     <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
     <button>검색</button>
   </form>
->>>>>>> Stashed changes
+
 </div>
 
 <div class="movie-list-container container">
