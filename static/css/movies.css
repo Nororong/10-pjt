@@ -377,17 +377,27 @@
 }
 
 .custom-weather-button {
-    background-color: #4CAF50; /* 초록색 배경 */
+    margin-bottom: 60px;
+    background-color: #FF21A6;
+    border-radius: 4px; /* 버튼 모서리를 둥글게 */
     border: none;
     color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 12px; /* 둥근 모서리 */
-    transition: background-color 0.3s;
+    width: 160px;
+    height: 34px;
+    margin-top: 30px;
   }
 
+.weather-movie-genres {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.recommended-badge {
+    text-align: center;
+    font-size: 14px;
+}
+
+/* 반응형 */
+/* @media (max-width: 768px) {
+
+} */
