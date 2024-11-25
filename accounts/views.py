@@ -19,7 +19,7 @@ import requests
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from smtplib import SMTPException
-from user_agent import generate_user_agent
+# from user_agent import generate_user_agent
 # from .utils import send_id_email
 def signup(request):
     if request.method == 'POST':
