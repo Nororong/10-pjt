@@ -2,6 +2,48 @@
 {% load static %}
 
 {% block content %}
+<!--모달!-->
+<div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">WARM</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>로그인이 필요한 페이지예요.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'accounts:login' %}">
+        <button class="modal-btn" type="button" class="btn btn-primary">로그인</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %} 검색 창 구현 {% endcomment %}
+
+{% comment %} <form action="{% url "movies:movie_list" %}" method="GET">
+  <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
+  <button>검색</button>
+</form>
+
+<div class="genre-filter">
+  <label for="genre-select">장르를 선택하세요! </label>
+  <select id="genre-select">
+    <option value="all">전체</option>
+    {% for genre in genres %}
+    <option value="{{ genre.id }}">{{ genre.name }}</option>
+    {% endfor %}
+  </select> {% endcomment %}
+{% comment %} <div class="container movie-list-search-form">
+  <form action="{% url "movies:movie_list" %}" method="GET">
+    <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
+    <button>검색</button>
+  </form>
+</div> {% endcomment %}
+  
 <div class="container movie-list-search-form">
   <div class="genre-filter">
     <label for="genre-select">장르를 선택하세요! </label>
@@ -94,13 +136,42 @@
         const movieGenres = movie.dataset.genreIds.split(',');
         if (selectedGenre === 'all' || movieGenres.includes(selectedGenre)) {
           visibleMovies.push(movie);
-        }
       });
   
       // 필터링된 영화에 애니메이션 적용
       setTimeout(() => { // 약간의 딜레이 후 애니메이션 시작
         animateMovies(visibleMovies);
       }, 100); 
+      }
+    });
+  });
+
+  // 하트 버튼 찜하기 기능 구현
+  const heartIcons = document.querySelectorAll('.heart-icon');
+
+  heartIcons.forEach(icon => {
+    if (icon.dataset.isLiked === "true") {
+      icon.src = "{% static 'img/heart-fill.png' %}";
+    }
+  });
+
+  const movieContainer = document.querySelector('.movies-container');
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  movieContainer.addEventListener('click', function (event) {
+    if (!event.target.classList.contains('heart-icon')) return;
+
+    event.preventDefault();
+
+    // 모달 동작 코드
+    const myModal = new bootstrap.Modal(document.querySelector('.modal'));
+    const myInput = document.querySelector('input');
+
+    if (!isUserLoggedIn) {
+      myModal.show()
+      myModal.addEventListener('shown.bs.modal', () => {
+        myInput.focus()
+      })
     }
   
     // 드롭다운 변경 시 장르별 필터링
