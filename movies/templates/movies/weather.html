@@ -2,10 +2,17 @@
 {% load static %}
 
 {% block content %}
-<div class="movie-list-container container">
+
+<div>
   <p class="weather-movie-list"><strong class="weather-movie-list-name">{{ user.nickname }}</strong>님의 선호도를 기반으로, 오늘 날씨에 어울리는 영화를 추천해 드릴게요! 🥰</p>
+  <form action="{% url "movies:movie_list" %}" method="GET">
+    <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
+    <button>검색</button>
+  </form>
+</div>
+<div class="movie-list-container container">
   {% if weather_condition %}
-    <p><strong>{{ city }}</strong>의 <strong>{{ korean_weather_description }}</strong> 날씨와 어울리는 영화는?</p>
+  <p><strong>{{ city }}</strong>의 <strong>{{ korean_weather_description }}</strong> 날씨와 어울리는 영화는?</p>
     <p><strong>오늘의 온도</strong> : {{ temperature }}°C</p>
 
     {% if user.favorite_genres.all %}
@@ -24,12 +31,12 @@
           <div class="movie" data-temperature="{{ movie.recommended_temperature|safe }}">
             <div class="poster-with-heart">
               <img class="heart-icon"
-               src="{% static 'img/heart-none.png' %}"
-               alt="icon"
-               data-movie-id="{{ movie.id }}"
-               {% if movie.id in liked_movie_ids %}
-               data-is-liked="true"
-               {% endif %}>
+                   src="{% static 'img/heart-none.png' %}"
+                   alt="icon"
+                   data-movie-id="{{ movie.id }}"
+                   {% if movie.id in liked_movie_ids %}
+                   data-is-liked="true"
+                   {% endif %}>
               <div class="poster-overlay"></div>
               <a href="{% url 'movies:movie_detail' movie.id %}">
                 <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
@@ -56,56 +63,87 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  // 기존 하트 버튼 찜하기 기능
-  const heartIcons = document.querySelectorAll('.heart-icon');
-  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-  heartIcons.forEach(icon => {
-    if (icon.dataset.isLiked === "true") {
-      icon.src = "{% static 'img/heart-fill.png' %}";
+  document.addEventListener('DOMContentLoaded', function () {
+    const heartIcons = document.querySelectorAll('.heart-icon');
+    const movieContainer = document.querySelector('.movies-container');
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  
+    // localStorage에서 좋아요 상태 불러오기
+    function getLikedMovies() {
+      return JSON.parse(localStorage.getItem('likedMovies')) || {};
     }
-  });
-
-  const movieContainer = document.querySelector('.movies-container');
-  movieContainer.addEventListener('click', function (event) {
-    if (!event.target.classList.contains('heart-icon')) return;
-
-    const movieId = event.target.dataset.movieId;
-
-    axios({
-      method: 'post',
-      url: `/movies/${movieId}/likes/`,
-      headers: { 'X-CSRFToken': csrftoken },
-    })
-      .then((response) => {
-        const isLiked = response.data.is_liked;
-        event.target.src = isLiked
-          ? "{% static 'img/heart-fill.png' %}"
-          : "{% static 'img/heart-none.png' %}";
-        event.target.dataset.isLiked = isLiked.toString();
-      })
-      .catch((error) => {
-        console.log(error);
+  
+    // localStorage에 좋아요 상태 저장하기
+    function saveLikedMovies(likedMovies) {
+      localStorage.setItem('likedMovies', JSON.stringify(likedMovies));
+    }
+  
+    // 초기 상태 설정
+    function initializeHeartIcons() {
+      const likedMovies = getLikedMovies();
+      heartIcons.forEach(icon => {
+        const movieId = icon.dataset.movieId;
+        if (likedMovies[movieId]) {
+          icon.src = "{% static 'img/heart-fill.png' %}";
+          icon.dataset.isLiked = "true";
+        } else {
+          icon.src = "{% static 'img/heart-none.png' %}";
+          icon.dataset.isLiked = "false";
+        }
       });
-  });
-
-  // 추천 영화 토글 기능
-  const toggleRecommendedButton = document.getElementById('toggleRecommendedButton');
-  const movies = document.querySelectorAll('.movie');
-  let isRecommendedVisible = false;
-
-  toggleRecommendedButton.addEventListener('click', function() {
-    isRecommendedVisible = !isRecommendedVisible;
-    movies.forEach(movie => {
-      const badge = movie.querySelector('.recommended-badge');
-      if (badge) {
-        badge.style.display = isRecommendedVisible ? 'block' : 'none';
+    }
+  
+    // 초기화 실행
+    initializeHeartIcons();
+  
+    // 클릭 이벤트 처리 -> 좋아요, 좋아요 해제
+    movieContainer.addEventListener('click', function (event) {
+      if (!event.target.classList.contains('heart-icon')) return;
+  
+      event.preventDefault();
+  
+      // 비로그인 상태에서 하트 클릭 시, 알럿 + 로그인 페이지로 이동
+      if (!isUserLoggedIn) {
+        alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.')
+        window.location.href = "{% url 'accounts:login' %}"
+        return
       }
-      movie.style.display = isRecommendedVisible && !badge ? 'none' : 'block';
+  
+      const movieId = event.target.dataset.movieId;
+  
+      // 통통 튀는 애니메이션 추가
+      event.target.classList.add('bounce');
+  
+      // 애니메이션이 끝난 후 클래스 제거
+      event.target.addEventListener('animationend', function() {
+        event.target.classList.remove('bounce');
+      });
+  
+      axios({
+        method: 'post',
+        url: `/movies/${movieId}/likes/`,
+        headers: { 'X-CSRFToken': csrftoken },
+      })
+        .then((response) => {
+          const isLiked = response.data.is_liked;
+          event.target.src = isLiked
+            ? "{% static 'img/heart-fill.png' %}" // 좋아요 상태
+            : "{% static 'img/heart-none.png' %}"; // 좋아요 해제 상태
+          event.target.dataset.isLiked = isLiked.toString(); // `data-is-liked` 동기화
+  
+          // localStorage 업데이트
+          const likedMovies = getLikedMovies();
+          if (isLiked) {
+            likedMovies[movieId] = true;
+          } else {
+            delete likedMovies[movieId];
+          }
+          saveLikedMovies(likedMovies);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
-    this.textContent = isRecommendedVisible ? '모든 영화 보기' : '추천 영화 보기';
   });
-});
 </script>
 {% endblock %}

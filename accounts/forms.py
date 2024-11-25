@@ -181,7 +181,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm.Meta):
         model = User
-        fields = ('first_name', 'last_name', 'email', 'birth_date', 'favorite_genres')
+        fields = ('first_name', 'last_name','nickname', 'email', 'birth_date', 'favorite_genres')
 
     def clean_favorite_genres(self):
         genres = self.cleaned_data.get('favorite_genres')

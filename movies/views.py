@@ -11,6 +11,7 @@ from articles.models import Article, Comment
 import json
 import random
 from urllib.parse import quote
+from django.db.models import Q
 
 def index(request):
     # 모든 영화 데이터를 리스트로 변환
@@ -57,41 +58,18 @@ def index(request):
     }
     return render(request, 'movies/index.html', context)
 
-# Create your views here.
-# def index(request):
-#     if request.user.is_authenticated:
-#         favorite_directors = request.user.favorite_directors.all()
-#         favorite_genres = request.user.favorite_genres.all()
-#         favorite_awards = request.user.favorite_awards.all()
-        
-#         context = {
-#             'favorite_directors': favorite_directors,
-#             'favorite_genres': favorite_genres,
-#             'favorite_awards': favorite_awards,
-#         }
-#         return render(request, 'movies/index.html', context)
-#     return render(request, 'movies/index.html')
-
-
-# 영화 전체 리스트 페이지
-# def movie_list(request):
-#     movies = Movie.objects.all()  # 데이터베이스에서 모든 영화 가져오기
-
-#     liked_movie = []
-#     if request.user.is_authenticated:
-#         liked_movie = request.user.like_movies.values_list('id', flat=True)
-    
-#     context = {
-#         'movies': movies,
-#         'liked_movie': list(liked_movie)
-#     }
-#     return render(request, 'movies/movie_list.html', context)
-
 def movie_list(request):
+    searched_movies=request.GET.get('searched_movies', '')
     # 모든 영화와 관련된 장르를 미리 가져온다 -> 쿼리 최적화
     movies = Movie.objects.all().prefetch_related('genres')
+    if searched_movies:
+        movies = movies.filter(
+            Q(title__icontains=searched_movies)
+        ).distinct()
+
     # 모든 장르를 가져온다
     genres = Genre.objects.all()
+    # seached_movies = Movie.ob
 
     # 사용자가 좋아요를 누른 영화 ID 목록
     liked_movie_ids = []
@@ -103,6 +81,7 @@ def movie_list(request):
         'movies': movies,
         'liked_movie_ids': list(liked_movie_ids),
         'genres': genres,
+        'searched_movies':searched_movies
     }
     return render(request, 'movies/movie_list.html', context)
 
@@ -175,20 +154,6 @@ def movie_comments_delete(request, movie_pk, movie_comment_pk):
         movie_comment.delete()
     return redirect('movies:movie_detail', movie.pk)
 
-# 날씨정보를 얻기 위한 view함수
-
-# def get_weather_data(city):
-#     api_key = settings.OPENWEATHERMAP_API_KEY
-    
-#     # 한글 도시명을 URL 인코딩하고 한국어 응답을 위해 lang=ko 사용
-#     encoded_city = urllib.parse.quote(city)
-#     url = f"http://api.openweathermap.org/data/2.5/weather?q={encoded_city},kr&appid={api_key}&units=metric&lang=kr"
-    
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#         return response.json()
-#     return None
-
 def get_weather_data(city):
     api_key = settings.OPENWEATHERMAP_API_KEY
     # 한글 도시명을 Geocoding API로 변환
@@ -210,49 +175,6 @@ def get_weather_data(city):
     
     return None
 
-from movies.models import Movie  # Movie 모델을 임포트
-
-# @login_required
-# def weather_view(request, city):
-#     weather_data = get_weather_data(city)
-#     context = {}
-
-#     if weather_data:
-#         weather_condition = weather_data['weather'][0]['main']
-#         description = weather_data['weather'][0]['description']
-#         temperature = weather_data['main']['temp']
-#         humidity = weather_data['main']['humidity']
-
-#         user_genres = request.user.favorite_genres.all()
-
-#         # 날씨와 선호 장르를 기반으로 영화 필터링
-#         if user_genres.exists():
-#             movies = Movie.objects.filter(genres__in=user_genres, weather__icontains=weather_condition).distinct()
-#         else:
-#             movies = Movie.objects.filter(weather__icontains=weather_condition).distinct()
-
-#         movies_with_temp = []
-#         for movie in movies:
-#             movies_with_temp.append({
-#                 'id': movie.id,
-#                 'title': movie.title,
-#                 'poster_path': movie.poster_path,
-#                 'genres': movie.genres.all(),
-#                 'recommended_temperature': movie.recommended_temperature
-#             })
-
-#         context = {
-#             'city': city,
-#             'weather_condition': weather_condition,
-#             'description': description,
-#             'temperature': temperature,
-#             'humidity': humidity,
-#             'movies': movies_with_temp,
-#         }
-#     else:
-#         context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'
-
-#     return render(request, 'movies/weather.html', context)
 @login_required
 def weather_view(request, city):
     weather_data = get_weather_data(city)
@@ -267,6 +189,11 @@ def weather_view(request, city):
         'Mist': '안개가 낀🌫',
         'Fog': '짙은 안개가 끼는🌫',
     }
+    searched_movies=request.GET.get('searched_movies', '')
+    if searched_movies:
+        movies = movies.filter(
+            Q(title__icontains=searched_movies)
+        ).distinct()
 
     if weather_data:
         weather_condition = weather_data['weather'][0]['main']
@@ -325,6 +252,7 @@ def weather_view(request, city):
             'humidity': humidity,
             'current_temperature_category': current_temperature_category,
             'movies': movies_with_temp,
+            'searched_movies' : searched_movies,
         }
     else:
         context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'

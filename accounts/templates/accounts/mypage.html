@@ -12,8 +12,16 @@
     <div class="mypage-cate-detail col-9">
       <a href="{% url "accounts:update" %}"><p>회원정보 수정</p></a>
       <a href="{% url "accounts:password_change" user.pk %}"><p>비밀번호 변경</p></a>
-      <a href="{% url "accounts:delete" %}"><p>회원탈퇴</p></a>
+      <a href="{% url "accounts:delete" %}" id="delete-btn"><p>회원탈퇴</p></a>
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById('delete-btn').addEventListener('click', function() {
+    if (confirm('정말 탈퇴하시겠습니까?')) {
+      window.location.href = "{% url 'accounts:delete' %}";
+    }
+  });
+</script>
 {% endblock content %}

@@ -111,6 +111,14 @@
 
       event.preventDefault();
       const movieId = event.target.dataset.movieId;
+      
+      event.target.classList.add('bounce');
+
+      // 애니메이션이 끝난 후 클래스 제거
+      event.target.addEventListener('animationend', function() {
+        event.target.classList.remove('bounce');
+      });
+
 
       axios({
         method: 'post',
