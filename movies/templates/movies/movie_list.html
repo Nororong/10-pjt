@@ -6,7 +6,7 @@
 
 {% comment %} 검색 창 구현 {% endcomment %}
 
-<form action="{% url "movies:movie_list" %}" method="GET">
+{% comment %} <form action="{% url "movies:movie_list" %}" method="GET">
   <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
   <button>검색</button>
 </form>
@@ -18,7 +18,7 @@
     {% for genre in genres %}
     <option value="{{ genre.id }}">{{ genre.name }}</option>
     {% endfor %}
-  </select>
+  </select> {% endcomment %}
 {% comment %} <div class="container movie-list-search-form">
   <form action="{% url "movies:movie_list" %}" method="GET">
     <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
