@@ -2,6 +2,27 @@
 {% load static %}
 
 {% block content %}
+
+<!--모달!-->
+<div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">WARM</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>로그인이 필요한 페이지예요.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'accounts:login' %}">
+        <button class="modal-btn" type="button" class="btn btn-primary">로그인</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container movie-list-container">
 
   <!-- 회원탈퇴 메시지 표시 -->
@@ -116,12 +137,16 @@
 
       event.preventDefault();
 
-      if (!isUserLoggedIn) {  // 비회원 상태 확인
-        alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.');
-        window.location.href = "{% url 'accounts:login' %}";
-        return;
+      // 모달 동작 코드
+      const myModal = new bootstrap.Modal(document.querySelector('.modal'));
+      const myInput = document.querySelector('input');
+
+      if (!isUserLoggedIn) {
+        myModal.show()
+        myModal.addEventListener('shown.bs.modal', () => {
+          myInput.focus()
+        })
       }
-      
       const movieId = event.target.dataset.movieId;
       
       event.target.classList.add('bounce');
