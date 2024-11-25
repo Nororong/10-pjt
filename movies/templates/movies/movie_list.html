@@ -15,35 +15,13 @@
       </div>
       <div class="modal-footer">
         <a href="{% url 'accounts:login' %}">
-        <button class="modal-btn" type="button" class="btn btn-primary">로그인</button>
+          <button class="modal-btn" type="button" class="btn btn-primary">로그인</button>
         </a>
       </div>
     </div>
   </div>
 </div>
 
-{% comment %} 검색 창 구현 {% endcomment %}
-
-{% comment %} <form action="{% url "movies:movie_list" %}" method="GET">
-  <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
-  <button>검색</button>
-</form>
-
-<div class="genre-filter">
-  <label for="genre-select">장르를 선택하세요! </label>
-  <select id="genre-select">
-    <option value="all">전체</option>
-    {% for genre in genres %}
-    <option value="{{ genre.id }}">{{ genre.name }}</option>
-    {% endfor %}
-  </select> {% endcomment %}
-{% comment %} <div class="container movie-list-search-form">
-  <form action="{% url "movies:movie_list" %}" method="GET">
-    <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
-    <button>검색</button>
-  </form>
-</div> {% endcomment %}
-  
 <div class="container movie-list-search-form">
   <div class="genre-filter">
     <label for="genre-select">장르를 선택하세요! </label>
@@ -54,34 +32,32 @@
       {% endfor %}
     </select>
   </div>
-  <form action="{% url "movies:movie_list" %}" method="GET">
+  <form action="{% url 'movies:movie_list' %}" method="GET">
     <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
     <button>검색</button>
   </form>
 </div>
 
 <div class="movie-list-container container">
-  <div class="container">
-    <div id="movies" class="movies-container">
-      {% for movie in movies %}
-      <div class="movie" data-genre-ids="{% for genre in movie.genres.all %}{{ genre.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
-        <div class='poster-with-heart'>
-          <img class='heart-icon'
-            src="{% static 'img/heart-none.png' %}"
-            alt="icon"
-            data-movie-id="{{ movie.id }}"
-            {% if movie.id in liked_movie_ids %}
-            data-is-liked="true"
-            {% endif %}>
-          <div class="poster-overlay"></div>
-          <a href="{% url 'movies:movie_detail' movie.id %}">
-            <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
-          </a>
-        </div>
-        <h4 class="movie-title">{{ movie.title }}</h4>
+  <div id="movies" class="movies-container">
+    {% for movie in movies %}
+    <div class="movie" data-genre-ids="{% for genre in movie.genres.all %}{{ genre.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+      <div class='poster-with-heart'>
+        <img class='heart-icon'
+             src="{% static 'img/heart-none.png' %}"
+             alt="icon"
+             data-movie-id="{{ movie.id }}"
+             {% if movie.id in liked_movie_ids %}
+             data-is-liked="true"
+             {% endif %}>
+        <div class="poster-overlay"></div>
+        <a href="{% url 'movies:movie_detail' movie.id %}">
+          <img class="movie-poster" src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}" alt="{{ movie.title }}">
+        </a>
       </div>
-      {% endfor %}
+      <h4 class="movie-title">{{ movie.title }}</h4>
     </div>
+    {% endfor %}
   </div>
 </div>
 
@@ -94,56 +70,59 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const moviesContainer = document.getElementById('movies');
-    const genreSelect = document.getElementById('genre-select');
-    const allMovies = Array.from(moviesContainer.children);
-  
-    // 애니메이션 함수
-    function animateMovies(movies) {
-      // 모든 영화 초기 상태로 설정
-      movies.forEach(movie => {
-        movie.style.opacity = '0';
-        movie.style.transform = 'translateY(30px)';
-        movie.style.display = 'block'; // display를 block으로 설정
+document.addEventListener('DOMContentLoaded', function () {
+  const moviesContainer = document.getElementById('movies');
+  const genreSelect = document.getElementById('genre-select');
+  const allMovies = Array.from(moviesContainer.children);
+
+  // 애니메이션 함수
+  function animateMovies(movies) {
+    movies.forEach(movie => {
+      movie.style.opacity = '0';
+      movie.style.transform = 'translateY(30px)';
+      movie.style.display = 'block'; // display를 block으로 설정
+    });
+
+    // 애니메이션 적용
+    setTimeout(() => {
+      movies.forEach((movie, index) => {
+        movie.style.transition = 'opacity 0.6s, transform 0.6s';
+        movie.style.transitionDelay = `${index * 0.15}s`;
+        movie.style.opacity = '1';
+        movie.style.transform = 'translateY(0)';
       });
-  
-      // 애니메이션 적용
-      setTimeout(() => {
-        movies.forEach((movie, index) => {
-          movie.style.transition = 'opacity 0.6s, transform 0.6s';
-          movie.style.transitionDelay = `${index * 0.15}s`;
-          movie.style.opacity = '1';
-          movie.style.transform = 'translateY(0)';
-        });
-      }, 50); // display를 변경한 뒤 약간의 딜레이 후 시작
-    }
-  
-    // 초기 로드 시 모든 영화에 애니메이션 적용
-    animateMovies(allMovies);
-  
-    // 검색 또는 필터링 기능
-    function filterMovies(selectedGenre) {
-      // 모든 영화의 display를 'none'으로 설정해 완전히 숨김
-      allMovies.forEach(movie => {
-        movie.style.display = 'none';
-      });
-  
-      const visibleMovies = [];
-  
-      // 필터링된 영화만 배열에 추가
-      allMovies.forEach(movie => {
-        const movieGenres = movie.dataset.genreIds.split(',');
-        if (selectedGenre === 'all' || movieGenres.includes(selectedGenre)) {
-          visibleMovies.push(movie);
-      });
-  
-      // 필터링된 영화에 애니메이션 적용
-      setTimeout(() => { // 약간의 딜레이 후 애니메이션 시작
-        animateMovies(visibleMovies);
-      }, 100); 
+    }, 50); // display를 변경한 뒤 약간의 딜레이 후 시작
+  }
+
+  // 초기 로드 시 모든 영화에 애니메이션 적용
+  animateMovies(allMovies);
+
+  // 검색 또는 필터링 기능
+  function filterMovies(selectedGenre) {
+    // 모든 영화의 display를 'none'으로 설정해 완전히 숨김
+    allMovies.forEach(movie => {
+      movie.style.display = 'none';
+    });
+
+    const visibleMovies = [];
+
+    // 필터링된 영화만 배열에 추가
+    allMovies.forEach(movie => {
+      const movieGenres = movie.dataset.genreIds.split(',');
+      if (selectedGenre === 'all' || movieGenres.includes(selectedGenre)) {
+        visibleMovies.push(movie);
+        movie.style.display = 'block'; // Show matching movies
       }
     });
+
+    // 필터링된 영화에 애니메이션 적용
+    animateMovies(visibleMovies);
+  }
+
+  // 드롭다운 변경 시 장르별 필터링
+  genreSelect.addEventListener('change', function () {
+    const selectedGenre = genreSelect.value;
+    filterMovies(selectedGenre);
   });
 
   // 하트 버튼 찜하기 기능 구현
@@ -155,88 +134,46 @@
     }
   });
 
-  const movieContainer = document.querySelector('.movies-container');
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-  movieContainer.addEventListener('click', function (event) {
+  moviesContainer.addEventListener('click', function (event) {
     if (!event.target.classList.contains('heart-icon')) return;
 
     event.preventDefault();
 
     // 모달 동작 코드
     const myModal = new bootstrap.Modal(document.querySelector('.modal'));
-    const myInput = document.querySelector('input');
-
+    
     if (!isUserLoggedIn) {
-      myModal.show()
-      myModal.addEventListener('shown.bs.modal', () => {
-        myInput.focus()
-      })
+      myModal.show();
+      return; // Stop further execution if user is not logged in
     }
-  
-    // 드롭다운 변경 시 장르별 필터링
-    genreSelect.addEventListener('change', function () {
-      const selectedGenre = genreSelect.value;
-      filterMovies(selectedGenre);
+
+    const movieId = event.target.dataset.movieId;
+
+    event.target.classList.add('bounce');
+
+    event.target.addEventListener('animationend', function () {
+      event.target.classList.remove('bounce');
     });
-  
-    // 검색 결과에 애니메이션 적용 (검색 폼 제출 시 실행)
-    const searchForm = document.querySelector('.movie-list-search-form form');
-    searchForm.addEventListener('submit', function (event) {
-      setTimeout(() => {
-        const searchResultMovies = Array.from(moviesContainer.children).filter(movie => {
-          return movie.style.display === 'block';
-        });
-        animateMovies(searchResultMovies);
-      }, 100); // 검색 후 약간의 딜레이를 주고 애니메이션 시작
-    });
-  
-    // 하트 버튼 찜하기 기능
-    const heartIcons = document.querySelectorAll('.heart-icon');
-  
-    heartIcons.forEach(icon => {
-      if (icon.dataset.isLiked === "true") {
-        icon.src = "{% static 'img/heart-fill.png' %}";
-      }
-    });
-  
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  
-    moviesContainer.addEventListener('click', function (event) {
-      if (!event.target.classList.contains('heart-icon')) return;
-  
-      event.preventDefault();
-  
-      if (!isUserLoggedIn) {
-        alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.');
-        window.location.href = "{% url 'accounts:login' %}";
-        return;
-      }
-  
-      const movieId = event.target.dataset.movieId;
-  
-      event.target.classList.add('bounce');
-  
-      event.target.addEventListener('animationend', function () {
-        event.target.classList.remove('bounce');
-      });
-  
-      axios({
-        method: 'post',
-        url: `/movies/${movieId}/likes/`,
-        headers: { 'X-CSRFToken': csrftoken },
+
+    axios({
+      method: 'post',
+      url: `/movies/${movieId}/likes/`,
+      headers: { 'X-CSRFToken': csrftoken },
+    })
+      .then((response) => {
+        const isLiked = response.data.is_liked;
+        event.target.src = isLiked
+          ? "{% static 'img/heart-fill.png' %}"
+          : "{% static 'img/heart-none.png' %}";
+        event.target.dataset.isLiked = isLiked.toString();
       })
-        .then((response) => {
-          const isLiked = response.data.is_liked;
-          event.target.src = isLiked
-            ? "{% static 'img/heart-fill.png' %}"
-            : "{% static 'img/heart-none.png' %}";
-          event.target.dataset.isLiked = isLiked.toString();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
+      .catch((error) => {
+        console.log(error);
+      });
   });
+});
 </script>
+
 {% endblock content %}
