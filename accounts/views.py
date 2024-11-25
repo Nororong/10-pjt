@@ -17,6 +17,9 @@ from email.mime.multipart import MIMEMultipart
 from django.conf import settings
 import requests
 from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+from smtplib import SMTPException
+from user_agent import generate_user_agent
 # from .utils import send_id_email
 def signup(request):
     if request.method == 'POST':
@@ -202,6 +205,9 @@ def send_id_email(user, email):
         return True
     except Exception as e:
         print(f"이메일 전송 실패: {e}")
+<<<<<<< HEAD
+        return False
+=======
         return False
 
 # def find_id(request):
@@ -231,3 +237,4 @@ def send_id_email(user, email):
 #     return render(request, 'accounts/find_id.html')
 
 
+>>>>>>> d1c5b0e9a9f51d54e75aa7d70a1d9be8fc44be2d
