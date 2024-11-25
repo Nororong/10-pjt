@@ -3,6 +3,25 @@
 
 {% block content %}
 
+<!--모달!-->
+<div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">WARM</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>로그인이 필요한 페이지예요.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'accounts:login' %}">
+        <button class="modal-btn" type="button" class="btn btn-primary">로그인</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% comment %} 검색 창 구현 {% endcomment %}
 
@@ -118,10 +137,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     event.preventDefault();
 
+    // 모달 동작 코드
+    const myModal = new bootstrap.Modal(document.querySelector('.modal'));
+    const myInput = document.querySelector('input');
+
     if (!isUserLoggedIn) {
-      alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.')
-      window.location.href = "{% url 'accounts:login' %}"
-      return
+      myModal.show()
+      myModal.addEventListener('shown.bs.modal', () => {
+        myInput.focus()
+      })
     }
     
     const movieId = event.target.dataset.movieId;
