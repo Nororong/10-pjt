@@ -2,16 +2,23 @@
 {% load static %}
 
 {% block content %}
+
+{% comment %} 검색 창 구현 {% endcomment %}
+<form action="{% url "movies:movie_list" %}" method="GET">
+  <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
+  <button>검색</button>
+</form>
+
+<div class="genre-filter">
+  <label for="genre-select">장르를 선택하세요! </label>
+  <select id="genre-select">
+    <option value="all">전체</option>
+    {% for genre in genres %}
+    <option value="{{ genre.id }}">{{ genre.name }}</option>
+    {% endfor %}
+  </select>
+</div>
 <div class="movie-list-container container">
-  <div class="genre-filter">
-    <label for="genre-select">장르를 선택하세요! </label>
-    <select id="genre-select">
-      <option value="all">전체</option>
-      {% for genre in genres %}
-        <option value="{{ genre.id }}">{{ genre.name }}</option>
-      {% endfor %}
-    </select>
-  </div>
 
   <div class="container">
     {% comment %} <h1 class="movie-list-title">Movie List</h1> {% endcomment %}
@@ -99,7 +106,14 @@
         return
       }
       const movieId = event.target.dataset.movieId;
-  
+      
+      event.target.classList.add('bounce');
+
+      // 애니메이션이 끝난 후 클래스 제거
+      event.target.addEventListener('animationend', function() {
+        event.target.classList.remove('bounce');
+      });
+
       axios({
         method: 'post',
         url: `/movies/${movieId}/likes/`,

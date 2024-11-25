@@ -17,6 +17,11 @@
             </div>
 
             <div class="form-group">
+                <label for="{{ form.nickname.id_for_label }}">닉네임</label>
+                <input type="text" name="nickname" value="{{ form.nickname.value }}" id="{{ form.nickname.id_for_label }}" class="form-control">
+            </div>
+
+            <div class="form-group">
                 <label for="{{ form.email.id_for_label }}">이메일</label>
                 <input type="email" name="email" value="{{ form.email.value }}" id="{{ form.email.id_for_label }}" class="form-control">
             </div>

@@ -27,6 +27,6 @@ class User(AbstractUser):
     favorite_genres = models.ManyToManyField('movies.Genre', related_name='favorite_users', blank=True)
     favorite_awards = models.ManyToManyField('Award', blank=True)
     birth_date = models.DateField(null=True, blank=True)  # 생년월일 추가
-
+    username = models.CharField(max_length=30, unique=True)
     def __str__(self):
         return self.username

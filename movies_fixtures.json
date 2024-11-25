@@ -4522,7 +4522,7 @@
     "model": "movies.movie",
     "pk": 2,
     "fields": {
-        "title": "와일드 로봇",
+        "title": ["와일드 로봇", "wild robot"],
         "weather": ["Clear"],
         "recommended_temperature": ["cool"],
         "release_date": "2024-09-12",
@@ -4550,7 +4550,7 @@
     "model": "movies.movie",
     "pk": 3,
     "fields": {
-        "title": "글래디에이터 II",
+        "title": ["글래디에이터 II", "gladiator II"],
         "weather": ["Clear"],
         "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-11-13",
@@ -4578,7 +4578,7 @@
     "model": "movies.movie",
     "pk": 4,
     "fields": {
-        "title": "데드풀과 울버린",
+        "title": ["데드풀과 울버린", "Deadpool & Wolverine"],
         "weather": ["Clouds", "Mist"],
         "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-07-24",
@@ -4606,7 +4606,7 @@
     "model": "movies.movie",
     "pk": 5,
     "fields": {
-        "title": "서브스턴스",
+        "title": ["서브스턴스", "The Substance"],
         "weather": ["Mist", "Drizzle"],
         "recommended_temperature": ["cool"],
         "release_date": "2024-09-07",
@@ -4634,7 +4634,7 @@
     "model": "movies.movie",
     "pk": 6,
     "fields": {
-        "title": "트랜스포머 ONE",
+        "title": ["트랜스포머 ONE", "Transformers One"],
         "weather": ["Clear"],
         "recommended_temperature": ["warm", "hot"],
         "release_date": "2024-09-11",
@@ -4663,7 +4663,7 @@
     "model": "movies.movie",
     "pk": 7,
     "fields": {
-        "title": "레드 원",
+        "title": ["레드 원", "Red One"],
         "weather": ["Snow"],
         "recommended_temperature": ["cold", "very_cold"],
         "release_date": "2024-10-31",
@@ -4691,7 +4691,7 @@
     "model": "movies.movie",
     "pk": 8,
     "fields": {
-        "title": "에이리언: 로물루스",
+        "title": ["에이리언: 로물루스", "Alien: Romulus"],
         "weather": ["Fog","Thunderstorm","Clouds","Rain"],
         "recommended_temperature": ["hot"],
         "release_date": "2024-08-13",
@@ -4718,7 +4718,7 @@
     "model": "movies.movie",
     "pk": 9,
     "fields": {
-        "title": "슈퍼배드 4",
+        "title": ["슈퍼배드 4", "Despicable Me 4"],
         "weather" : ["Clear"],
         "recommended_temperature": ["warm", "cool"],
         "release_date": "2024-06-20",
@@ -4747,7 +4747,7 @@
     "model": "movies.movie",
     "pk": 10,
     "fields": {
-        "title": "아카디안",
+        "title": ["아카디안", "Arcadian"],
         "weather" : ["Clear", "Drizzle"],
         "recommended_temperature": ["cool"],
         "release_date": "2024-04-12",
