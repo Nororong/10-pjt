@@ -58,7 +58,14 @@ class CustomUserCreationForm(UserCreationForm):
             'unique': '이미 사용중인 닉네임입니다.',
         },
     )
-
+    email = forms.EmailField(
+        required=True,
+        label="이메일",
+        error_messages={
+            'required': '이메일을 입력해주세요.',
+            'invalid': '올바른 이메일 주소를 입력해주세요.'
+        }
+    )
     class Meta:
         model = User
         fields = [
@@ -171,7 +178,11 @@ class CustomUserCreationForm(UserCreationForm):
                 raise forms.ValidationError("올바른 생년월일을 입력해주세요.")
         return birth_date
         
-
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("이미 존재하는 이메일입니다.")
+        return email
 class CustomUserChangeForm(UserChangeForm):
     favorite_genres = forms.ModelMultipleChoiceField(
         queryset=Genre.objects.all(),
@@ -181,7 +192,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm.Meta):
         model = User
-        fields = ('first_name', 'last_name','nickname', 'email', 'birth_date', 'favorite_genres')
+        fields = ('first_name', 'last_name','nickname', 'email', 'birth_date', 'favorite_genres', 'email')
 
     def clean_favorite_genres(self):
         genres = self.cleaned_data.get('favorite_genres')
