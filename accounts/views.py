@@ -206,28 +206,41 @@ def send_id_email(user, email):
         print(f"이메일 전송 실패: {e}")
         return False
 
+# def find_id(request):
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         try:
+#             user = User.objects.get(email=email)
+            
+#             try:
+#                 send_mail(
+#                     '아이디 찾기 결과',
+#                     f'안녕하세요, 요청하신 아이디는 "{user.username}"입니다.',
+#                     settings.DEFAULT_FROM_EMAIL,
+#                     [email],
+#                     fail_silently=False,
+#                 )
+#                 messages.success(request, '아이디가 이메일로 발송되었습니다.')
+#             except Exception as e:
+#                 messages.error(request, f'이메일 발송 중 오류가 발생했습니다: {str(e)}')
+                
+#         except User.DoesNotExist:
+#             messages.error(request, '해당 이메일로 가입된 계정을 찾을 수 없습니다.')
+#         except Exception as e:
+#             messages.error(request, f'오류가 발생했습니다: {str(e)}')
+        
+#         return redirect('accounts:find_id')
+#     return render(request, 'accounts/find_id.html')
+
+# 이메일로 아이디 찾기
 def find_id(request):
+    context = {}
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
             user = User.objects.get(email=email)
-            
-            try:
-                send_mail(
-                    '아이디 찾기 결과',
-                    f'안녕하세요, 요청하신 아이디는 "{user.username}"입니다.',
-                    settings.DEFAULT_FROM_EMAIL,
-                    [email],
-                    fail_silently=False,
-                )
-                messages.success(request, '아이디가 이메일로 발송되었습니다.')
-            except Exception as e:
-                messages.error(request, f'이메일 발송 중 오류가 발생했습니다: {str(e)}')
-                
+            context['success_message'] = f'가입된 이메일입니다. 아이디는 "{user.username}"입니다.'
         except User.DoesNotExist:
-            messages.error(request, '해당 이메일로 가입된 계정을 찾을 수 없습니다.')
-        except Exception as e:
-            messages.error(request, f'오류가 발생했습니다: {str(e)}')
+            context['error_message'] = '해당 이메일로 가입된 계정을 찾을 수 없습니다.'
         
-        return redirect('accounts:find_id')
-    return render(request, 'accounts/find_id.html')
+    return render(request, 'accounts/find_id.html', context)

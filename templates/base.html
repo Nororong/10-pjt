@@ -40,16 +40,18 @@
           <p class="nav-base-name-hidden"><span>{{ user.nickname }}</span>님</p>
         </a>
         <form action="{% url 'accounts:logout' %}" method="POST" class="nav-logout-form">
-          {% csrf_token %}
-          <input type="submit" value="LOGOUT">
+            {% csrf_token %}
+            <input type="submit" value="LOGOUT">
         </form>
       </div>
       {% else %}
-      <a class="nav-user-login" href="{% url "accounts:login" %}">로그인</a>
-      <a class="nav-user-signup" href="{% url "accounts:signup" %}">회원가입</a>
-      {% endif %}
+      <div class="nav-main-none-user">
+        <a class="nav-user-login" href="{% url "accounts:login" %}">로그인</a>
+        <a class="nav-user-signup" href="{% url "accounts:signup" %}">회원가입</a>
       </div>
-    </nav>
+      {% endif %}
+    </div>
+  </nav>
   <hr>
  
   {% comment %} <main>
@@ -122,7 +124,29 @@
 </body>
 </html>
 
+<button id="scrollToTopButton" title="Go to top">▲</button>
+
 <script>
+  // 최상단으로 이동 버튼 관련 스크립트
+  document.addEventListener('DOMContentLoaded', function () {
+    const scrollToTopButton = document.getElementById('scrollToTopButton');
+
+    // 스크롤 이벤트에 따라 버튼 표시/숨김
+    window.onscroll = function () {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollToTopButton.style.display = "block";
+      } else {
+        scrollToTopButton.style.display = "none";
+      }
+    };
+
+    // 버튼 클릭 시 부드럽게 최상단으로 이동
+    scrollToTopButton.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // 반응형 햄버거 버튼 관련 코드
   document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.querySelector('.menu-toggle')
     const nav = document.querySelector('nav')
