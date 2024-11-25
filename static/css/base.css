@@ -35,7 +35,7 @@ nav {
   left: 0; /* 왼쪽에서의 거리 */
   width: 100%; /* 화면 전체 너비 */
   z-index: 1000; /* 다른 요소 위에 표시되도록 */
-  background-color: white; /* 배경색 추가 (투명하면 콘텐츠와 겹침) */
+  background-color: rgb(255, 255, 255); /* 배경색 추가 (투명하면 콘텐츠와 겹침) */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가로 구분감 */
 }
 
@@ -55,6 +55,17 @@ nav {
   flex-direction: row;
   justify-content: flex-end;
 
+}
+
+.nav-main-none-user {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: -24px;
+}
+
+.nav-user-signup {
+  margin-left: 20px;
 }
 
 .base-nav-menu {
@@ -115,9 +126,6 @@ nav {
 
 .nav-user-login {
     text-decoration: none;
-    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
-    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 92px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 700; /* 텍스트 두께 */
@@ -126,9 +134,6 @@ nav {
 
 .nav-user-signup {
     text-decoration: none;
-    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
-    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 12px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 700; /* 텍스트 두께 */
@@ -326,5 +331,27 @@ footer {
       color: black;
       margin-right: 24px;
   }
+}
 
+/* 상단 이동 버튼 스타일 */
+#scrollToTopButton {
+  display: none; /* 초기에는 숨김 */
+  position: fixed;
+  bottom: 26px;
+  right: 30px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  background-color: #FF21A6;
+  color: white;
+  cursor: pointer;
+  border-radius: 100px;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.08);
+}
+
+#scrollToTopButton:hover {
+  background-color: #000000;
 }
