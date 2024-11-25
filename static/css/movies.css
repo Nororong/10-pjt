@@ -306,7 +306,7 @@
 
 .weather-content-box  {
     background-color: #f9f9f9;
-    width: 1300px;
+    width: 100%;
     height: 300px;
     margin-top: 80px;
     border-radius: 10px;
@@ -397,7 +397,165 @@
     font-size: 14px;
 }
 
-/* 반응형 */
-/* @media (max-width: 768px) {
+/* 반응형 영화 디테일 */
+@media (max-width: 990px) {
+    .movie-detail-container {
+        flex-direction: column; /* 세로 정렬 */
+        align-items: center; /* 가운데 정렬 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+    }
 
-} */
+    .row.gx-5 {
+        flex-direction: column; /* 행을 세로로 배치 */
+    }
+
+    .col {
+        width: 100%; /* 열을 화면 너비에 맞춤 */
+    }
+
+    .detail-poster {
+        max-width: 100%; /* 이미지 크기를 화면 너비에 맞춤 */
+        margin: 0 auto; /* 가운데 정렬 */
+    }
+
+    .movie-detail-text {
+        margin-top: 40px; /* 포스터 아래로 여백 추가 */
+        text-align: left; /* 텍스트는 왼쪽 정렬 유지 */
+        width: 90%; /* 화면에 맞도록 텍스트 그룹 너비 조정 */
+    }
+
+    .movie-detail-title {
+        font-size: 22px; /* 제목 크기 약간 축소 */
+    }
+}
+
+
+/* 반응형 날씨 검색 페이지 */
+/* 1025px - 1200px (중간 화면 크기) */
+@media (max-width: 1200px) and (min-width: 1025px) {
+    .weather-content-box {
+        width: 1000px; /* 폭 조정 */
+        height: 250px; /* 높이 조정 */
+        padding: 0px; /* 내부 여백 추가 */
+    }
+
+    .offset-2 {
+        margin-left: 70px;
+    }
+
+    .weather-uer-form {
+        gap: 8px; /* 폼 요소 간 간격 축소 */
+    }
+
+    .weather-user-title > p {
+        font-size: 16px; /* 글자 크기 축소 */
+    }
+}
+
+/* 768px - 1024px (중간 화면 크기) */  
+@media (max-width: 1024px) and (min-width: 768px) {
+    .weather-content-box {
+        width: 100%; /* 폭을 화면 비율에 맞게 조정 */
+        height: 250px; /* 높이를 자동으로 조정 */
+        padding: 16px; /* 내부 여백 축소 */
+    }
+
+    .weather-user-title > p {
+        font-size: 16px; /* 제목 글자 크기 축소 */
+    }
+
+    .weather-uer-form {
+        gap: 6px; /* 폼 요소 간 간격 축소 */
+    }
+
+    .weather-user-form-btn {
+        width: 80px; /* 버튼 크기 축소 */
+        font-size: 14px; /* 버튼 글자 크기 축소 */
+        margin-top: 20px;
+    }
+
+    #id_city {
+        height: 30px; /* 입력창 높이 축소 */
+    }
+
+    .offset-2 {
+        margin-left: 20px;
+        margin-right: 40px;
+    }
+}
+
+/* 768px 이하 (작은 화면 크기) */
+@media (max-width: 768px) {
+    .weather-content-box {
+        width: 100%; /* 폭을 화면 비율에 맞게 조정 */
+        height: 320px; /* 높이를 자동으로 조정 */
+        padding: 30px; /* 내부 여백 축소 */
+        
+        display: flex;
+        flex-direction: column; /* 세로 정렬 */
+    }
+
+    .weather-user-title > p {
+        font-size: 16px; /* 제목 글자 크기 축소 */
+    }
+
+    .weather-uer-form {
+        flex-direction: column; /* 세로 정렬 */
+        gap: 10px; /* 폼 요소 간 간격 */
+    }
+
+    .weather-user-form-btn {
+        width: 100%; /* 버튼이 부모 요소를 채우도록 */
+        font-size: 14px; /* 버튼 글자 크기 */
+        margin: 0px;
+    }
+
+    #id_city {
+        width: 100%; /* 입력창이 부모 요소를 채우도록 */
+        height: 30px; /* 입력창 높이 축소 */
+    }
+
+    .row {
+        flex-direction: column; /* 행을 세로로 배치 */
+        align-items: center; /* 중앙 정렬 */
+    }
+
+    .col-6 {
+        margin-top: 20px; /* 세로 정렬 시 상단 간격 */
+    }
+
+    .offset-2 {
+        margin: 0px;
+    }
+
+    .weather-content-box .col-4 {
+        text-align: center; /* 텍스트 중앙 정렬 */
+        width: 100%; /* 폭 제한 해제 */
+    }
+}
+
+/* 메인페이지 배너 */
+.movie-main-img {
+    display: none;
+    width: 100%;
+    height: auto;
+  }
+  
+.main-default {
+display: block;
+}
+
+@media (max-width: 1200px) {
+  .main-default { display: none; }
+  .main-1140 { display: block; }
+}
+
+@media (max-width: 991px) {
+  .main-1140 { display: none; }
+  .main-960 { display: block; }
+}
+
+@media (max-width: 768px) {
+  .main-960 { display: none; }
+  .main-720 { display: block; }
+}
