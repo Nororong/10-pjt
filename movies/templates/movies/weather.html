@@ -144,6 +144,21 @@
           console.log(error);
         });
     });
+    const toggleRecommendedButton = document.getElementById('toggleRecommendedButton');
+    const movies = document.querySelectorAll('.movie');
+    let isRecommendedVisible = false;
+  
+    toggleRecommendedButton.addEventListener('click', function() {
+      isRecommendedVisible = !isRecommendedVisible;
+      movies.forEach(movie => {
+        const badge = movie.querySelector('.recommended-badge');
+        if (badge) {
+          badge.style.display = isRecommendedVisible ? 'block' : 'none';
+        }
+        movie.style.display = isRecommendedVisible && !badge ? 'none' : 'block';
+      });
+      this.textContent = isRecommendedVisible ? '모든 영화 보기' : '추천 영화 보기';
+    });
   });
 </script>
 {% endblock %}
