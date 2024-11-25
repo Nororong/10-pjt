@@ -11,13 +11,6 @@
   </form>
 </div>
 
-{% comment %} <div class="container weather-search-form">
-  <form action="{% url "movies:movie_list" %}" method="GET">
-    <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
-    <button>검색</button>
-  </form>
-</div> {% endcomment %}
-
 <div class="movie-list-container container">
   {% if weather_condition %}
   <p><strong>{{ city }}</strong>의 <strong>{{ korean_weather_description }}</strong> 날씨와 어울리는 영화는?</p>
@@ -69,11 +62,18 @@
     <p>{{ error }}</p>
   {% endif %}
 </div>
+
 <button id="scrollToTopButton" title="Go to top">▲</button>
 
 <style>
+  .movie {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+
   #scrollToTopButton {
-    display: none; /* 초기에는 숨김 */
+    display: none;
     position: fixed;
     bottom: 20px;
     right: 30px;
@@ -92,118 +92,167 @@
     background-color: #333;
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const heartIcons = document.querySelectorAll('.heart-icon');
-    const movieContainer = document.querySelector('.movies-container');
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  
-    // localStorage에서 좋아요 상태 불러오기
-    function getLikedMovies() {
-      return JSON.parse(localStorage.getItem('likedMovies')) || {};
-    }
-  
-    // localStorage에 좋아요 상태 저장하기
-    function saveLikedMovies(likedMovies) {
-      localStorage.setItem('likedMovies', JSON.stringify(likedMovies));
-    }
-  
-    // 초기 상태 설정
-    function initializeHeartIcons() {
-      const likedMovies = getLikedMovies();
-      heartIcons.forEach(icon => {
-        const movieId = icon.dataset.movieId;
-        if (likedMovies[movieId]) {
-          icon.src = "{% static 'img/heart-fill.png' %}";
-          icon.dataset.isLiked = "true";
-        } else {
-          icon.src = "{% static 'img/heart-none.png' %}";
-          icon.dataset.isLiked = "false";
-        }
-      });
-    }
-  
-    // 초기화 실행
-    initializeHeartIcons();
-  
-    // 클릭 이벤트 처리 -> 좋아요, 좋아요 해제
-    movieContainer.addEventListener('click', function (event) {
-      if (!event.target.classList.contains('heart-icon')) return;
-  
-      event.preventDefault();
-  
-      // 비로그인 상태에서 하트 클릭 시, 알럿 + 로그인 페이지로 이동
-      if (!isUserLoggedIn) {
-        alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.')
-        window.location.href = "{% url 'accounts:login' %}"
-        return
-      }
-  
-      const movieId = event.target.dataset.movieId;
-  
-      // 통통 튀는 애니메이션 추가
-      event.target.classList.add('bounce');
-  
-      // 애니메이션이 끝난 후 클래스 제거
-      event.target.addEventListener('animationend', function() {
-        event.target.classList.remove('bounce');
-      });
-  
-      axios({
-        method: 'post',
-        url: `/movies/${movieId}/likes/`,
-        headers: { 'X-CSRFToken': csrftoken },
-      })
-        .then((response) => {
-          const isLiked = response.data.is_liked;
-          event.target.src = isLiked
-            ? "{% static 'img/heart-fill.png' %}" // 좋아요 상태
-            : "{% static 'img/heart-none.png' %}"; // 좋아요 해제 상태
-          event.target.dataset.isLiked = isLiked.toString(); // `data-is-liked` 동기화
-  
-          // localStorage 업데이트
-          const likedMovies = getLikedMovies();
-          if (isLiked) {
-            likedMovies[movieId] = true;
-          } else {
-            delete likedMovies[movieId];
-          }
-          saveLikedMovies(likedMovies);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
-    const toggleRecommendedButton = document.getElementById('toggleRecommendedButton');
-    const movies = document.querySelectorAll('.movie');
-    let isRecommendedVisible = false;
-  
-    toggleRecommendedButton.addEventListener('click', function() {
-      isRecommendedVisible = !isRecommendedVisible;
-      movies.forEach(movie => {
-        const badge = movie.querySelector('.recommended-badge');
-        if (badge) {
-          badge.style.display = isRecommendedVisible ? 'block' : 'none';
-        }
-        movie.style.display = isRecommendedVisible && !badge ? 'none' : 'block';
-      });
-      this.textContent = isRecommendedVisible ? '모든 영화 보기' : '추천 영화 보기';
-    });
-    const scrollToTopButton = document.getElementById('scrollToTopButton');
 
-    window.onscroll = function() { scrollFunction() };
-  
-    function scrollFunction() {
-      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        scrollToTopButton.style.display = "block";
-      } else {
-        scrollToTopButton.style.display = "none";
-      }
-    }
-  
-    scrollToTopButton.addEventListener('click', function() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const heartIcons = document.querySelectorAll('.heart-icon');
+  const movieContainer = document.querySelector('.movies-container');
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  const allMovies = Array.from(movieContainer.children);
+
+  // 애니메이션 함수
+  function animateMovies(movies) {
+    movies.forEach(movie => {
+      movie.style.opacity = '0';
+      movie.style.transform = 'translateY(30px)';
+      movie.style.display = 'block';
     });
+
+    setTimeout(() => {
+      movies.forEach((movie, index) => {
+        movie.style.transition = 'opacity 0.6s, transform 0.6s';
+        movie.style.transitionDelay = `${index * 0.15}s`;
+        movie.style.opacity = '0.9';
+        movie.style.transform = 'translateY(0)';
+      });
+    },20);
+  }
+
+  // 초기 로드 시 모든 영화에 애니메이션 적용
+  animateMovies(allMovies);
+
+  // localStorage에서 좋아요 상태 불러오기
+  function getLikedMovies() {
+    return JSON.parse(localStorage.getItem('likedMovies')) || {};
+  }
+  
+  // localStorage에 좋아요 상태 저장하기
+  function saveLikedMovies(likedMovies) {
+    localStorage.setItem('likedMovies', JSON.stringify(likedMovies));
+  }
+  
+  // 초기 상태 설정
+  function initializeHeartIcons() {
+    const likedMovies = getLikedMovies();
+    heartIcons.forEach(icon => {
+      const movieId = icon.dataset.movieId;
+      if (likedMovies[movieId]) {
+        icon.src = "{% static 'img/heart-fill.png' %}";
+        icon.dataset.isLiked = "true";
+      } else {
+        icon.src = "{% static 'img/heart-none.png' %}";
+        icon.dataset.isLiked = "false";
+      }
+    });
+  }
+  
+  // 초기화 실행
+  initializeHeartIcons();
+  
+  // 클릭 이벤트 처리 -> 좋아요, 좋아요 해제
+  movieContainer.addEventListener('click', function (event) {
+    if (!event.target.classList.contains('heart-icon')) return;
+
+    event.preventDefault();
+
+    // 비로그인 상태에서 하트 클릭 시, 알럿 + 로그인 페이지로 이동
+    if (!isUserLoggedIn) {
+      alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.')
+      window.location.href = "{% url 'accounts:login' %}"
+      return
+    }
+
+    const movieId = event.target.dataset.movieId;
+
+    // 통통 튀는 애니메이션 추가
+    event.target.classList.add('bounce');
+
+    // 애니메이션이 끝난 후 클래스 제거
+    event.target.addEventListener('animationend', function() {
+      event.target.classList.remove('bounce');
+    });
+
+    axios({
+      method: 'post',
+      url: `/movies/${movieId}/likes/`,
+      headers: { 'X-CSRFToken': csrftoken },
+    })
+      .then((response) => {
+        const isLiked = response.data.is_liked;
+        event.target.src = isLiked
+          ? "{% static 'img/heart-fill.png' %}"
+          : "{% static 'img/heart-none.png' %}";
+        event.target.dataset.isLiked = isLiked.toString();
+
+        // localStorage 업데이트
+        const likedMovies = getLikedMovies();
+        if (isLiked) {
+          likedMovies[movieId] = true;
+        } else {
+          delete likedMovies[movieId];
+        }
+        saveLikedMovies(likedMovies);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   });
+
+   const toggleRecommendedButton = document.getElementById('toggleRecommendedButton');
+   let isRecommendedVisible = false;
+
+   toggleRecommendedButton.addEventListener('click', function() {
+     isRecommendedVisible = !isRecommendedVisible;
+
+     // Hide all movies immediately
+     allMovies.forEach(movie => {
+       movie.style.display = 'none';
+     });
+
+     // Delay for a second before showing movies again
+     setTimeout(() => {
+       const visibleMovies = [];
+
+       allMovies.forEach(movie => {
+         const badge = movie.querySelector('.recommended-badge');
+         if (isRecommendedVisible) {
+           if (badge) {
+             visibleMovies.push(movie);
+             movie.style.display = 'block'; // Show recommended movies
+           }
+         } else {
+           visibleMovies.push(movie);
+           movie.style.display = 'block'; // Show all movies
+         }
+
+         if (badge) {
+           badge.style.display = isRecommendedVisible ? 'block' : 'none';
+         }
+       });
+
+       // Apply animation to the visible movies after the delay
+       animateMovies(visibleMovies);
+     }, 1000); // Delay of one second
+
+     this.textContent = isRecommendedVisible ? '모든 영화 보기' : '추천 영화 보기';
+   });
+
+   const scrollToTopButton = document.getElementById('scrollToTopButton');
+
+   window.onscroll = function() { scrollFunction() };
+  
+   function scrollFunction() {
+     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+       scrollToTopButton.style.display = "block";
+     } else {
+       scrollToTopButton.style.display = "none";
+     }
+   }
+  
+   scrollToTopButton.addEventListener('click', function() {
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+   });
+});
 </script>
+
 {% endblock %}
