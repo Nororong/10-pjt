@@ -205,4 +205,36 @@ def send_id_email(user, email):
         return True
     except Exception as e:
         print(f"이메일 전송 실패: {e}")
+<<<<<<< HEAD
         return False
+=======
+        return False
+
+# def find_id(request):
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         try:
+#             user = User.objects.get(email=email)
+            
+#             try:
+#                 send_mail(
+#                     '아이디 찾기 결과',
+#                     f'안녕하세요, 요청하신 아이디는 "{user.username}"입니다.',
+#                     settings.DEFAULT_FROM_EMAIL,
+#                     [email],
+#                     fail_silently=False,
+#                 )
+#                 messages.success(request, '아이디가 이메일로 발송되었습니다.')
+#             except Exception as e:
+#                 messages.error(request, f'이메일 발송 중 오류가 발생했습니다: {str(e)}')
+                
+#         except User.DoesNotExist:
+#             messages.error(request, '해당 이메일로 가입된 계정을 찾을 수 없습니다.')
+#         except Exception as e:
+#             messages.error(request, f'오류가 발생했습니다: {str(e)}')
+        
+#         return redirect('accounts:find_id')
+#     return render(request, 'accounts/find_id.html')
+
+
+>>>>>>> d1c5b0e9a9f51d54e75aa7d70a1d9be8fc44be2d

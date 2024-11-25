@@ -115,6 +115,13 @@
       if (!event.target.classList.contains('heart-icon')) return;
 
       event.preventDefault();
+
+      if (!isUserLoggedIn) {  // 비회원 상태 확인
+        alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.');
+        window.location.href = "{% url 'accounts:login' %}";
+        return;
+      }
+      
       const movieId = event.target.dataset.movieId;
       
       event.target.classList.add('bounce');
