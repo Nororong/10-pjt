@@ -19,8 +19,12 @@
 
 <script>
   document.getElementById('delete-btn').addEventListener('click', function() {
-    if (confirm('정말 탈퇴하시겠습니까?')) {
+    var result = confirm('정말 탈퇴하시겠습니까?')
+   
+    if (result) {
       window.location.href = "{% url 'accounts:delete' %}";
+    } else {
+      return
     }
   });
 </script>

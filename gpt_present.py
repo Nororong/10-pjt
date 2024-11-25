@@ -1,5 +1,5 @@
 import openai
-import os
+
 openai.api_key="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"
 response = openai.ChatCompletion.create(
     model="gpt-4o-mini", 
@@ -16,7 +16,8 @@ response = openai.ChatCompletion.create(
             "response = requests.get(url)"+
             "if response.status_code == 200:"+
             "return response.json()"+
-            "return None"
+            "return None"+
+            "get_weather_data 하나의 함수로 동작하도록 작성해줘"
         }
     ],
     max_tokens=1000
