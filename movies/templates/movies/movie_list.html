@@ -3,13 +3,29 @@
 
 {% block content %}
 
+
 {% comment %} 검색 창 구현 {% endcomment %}
+
+<form action="{% url "movies:movie_list" %}" method="GET">
+  <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
+  <button>검색</button>
+</form>
+
+<div class="genre-filter">
+  <label for="genre-select">장르를 선택하세요! </label>
+  <select id="genre-select">
+    <option value="all">전체</option>
+    {% for genre in genres %}
+    <option value="{{ genre.id }}">{{ genre.name }}</option>
+    {% endfor %}
+  </select>
 {% comment %} <div class="container movie-list-search-form">
   <form action="{% url "movies:movie_list" %}" method="GET">
     <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
     <button>검색</button>
   </form>
 </div> {% endcomment %}
+
 <div class="container movie-list-search-form">
   <div class="genre-filter">
     <label for="genre-select">장르를 선택하세요! </label>
@@ -24,14 +40,14 @@
     <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
     <button>검색</button>
   </form>
+
 </div>
+
 <div class="movie-list-container container">
 
   <div class="container">
-    {% comment %} <h1 class="movie-list-title">Movie List</h1> {% endcomment %}
     <div id="movies" class="movies-container">
       {% for movie in movies %}
-      <!-- 각 영화 요소에 데이터 속성으로 장르 ID 목록을 추가 -->
       <div class="movie" data-genre-ids="{% for genre in movie.genres.all %}{{ genre.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
           <div class='poster-with-heart'>
             <img class='heart-icon'
@@ -52,92 +68,138 @@
     </div>
   </div>
 </div>
+
+<button id="scrollToTopButton" title="Go to top">▲</button>
+
+<style>
+  .movie-list-container {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  .movie-list-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #scrollToTopButton {
+    display: none; /* 초기에는 숨김 */
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: #555;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 4px;
+  }
+
+  #scrollToTopButton:hover {
+    background-color: #333;
+  }
+</style>
+
 <script>
-  // 초기 페이지 로드 시 자동 실행
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
+  // 영화 목록 애니메이션 효과
+  const movieListContainer = document.querySelector('.movie-list-container');
+  
+  // 페이지 로드 시 애니메이션 효과 적용
+  window.addEventListener('load', function() {
+    movieListContainer.classList.add('visible');
+  });
 
-    // 1. 장르 선택 기능 구현
-    const genreSelect = document.getElementById('genre-select');
-    const moviesContainer = document.getElementById('movies');
-    const allMovies = Array.from(moviesContainer.children);
+  // 장르 선택 기능 구현
+  const genreSelect = document.getElementById('genre-select');
+  const moviesContainer = document.getElementById('movies');
+  const allMovies = Array.from(moviesContainer.children);
 
-    // 장르 선택 이벤트 처리
-    genreSelect.addEventListener('change', function () {
-      const selectedGenre = genreSelect.value;
-    
-      allMovies.forEach(movie => {
-        // 전체 보기 선택 시 모든 영화 표시
-        if (selectedGenre === 'all') {
+  genreSelect.addEventListener('change', function () {
+    const selectedGenre = genreSelect.value;
+
+    allMovies.forEach(movie => {
+      if (selectedGenre === 'all') {
+        movie.style.display = 'block';
+      } else {
+        const movieGenres = movie.dataset.genreIds.split(',');
+        if (movieGenres.includes(selectedGenre)) {
           movie.style.display = 'block';
         } else {
-          // 선택된 장르에 해당하는 영화 필터링
-          // 데이터 속성에서 장르 ID 배열로 변환
-          const movieGenres = movie.dataset.genreIds.split(',');
-          // 선택된 장르가 영화의 장르 목록에 포함된 경우 표시
-          if (movieGenres.includes(selectedGenre)) {
-            movie.style.display = 'block';
-          } else {
-            // 선택된 장르가 포함되지 않는 경우 숨김
-            movie.style.display = 'none';
-          }
+          movie.style.display = 'none';
         }
-      });
-    });
-    // 2. 하트 버튼 찜하기 기능 구현
-    const heartIcons = document.querySelectorAll('.heart-icon');
-    
-    // 초기 상태 설정 -> 좋아요 누른 영화 아이콘 채워진 하트로 설정
-    heartIcons.forEach(icon => {
-      if (icon.dataset.isLiked === "true") {
-        icon.src = "{% static 'img/heart-fill.png' %}";
       }
-    });
-  
-    // 클릭 이벤트 처리 -> 좋아요, 좋아요 해제
-    const movieContainer = document.querySelector('.movies-container');
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    
-    // Django 템플릿 태그 사용
-    // 아래 인증 코드 사용 X -> 베이스 템플릿에서 인증 script 추가
-    // const isUserLoggedIn = {{ request.user.is_authenticated|yesno:"true,false" }};
-    
-    movieContainer.addEventListener('click', function (event) {
-      if (!event.target.classList.contains('heart-icon')) return;
-      
-      event.preventDefault();
-
-      // 비로그인 상태에서 하트 클릭 시, 알럿 + 로그인 페이지로 이동
-      if (!isUserLoggedIn) {
-        alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.')
-        window.location.href = "{% url 'accounts:login' %}"
-        return
-      }
-      const movieId = event.target.dataset.movieId;
-      
-      event.target.classList.add('bounce');
-
-      // 애니메이션이 끝난 후 클래스 제거
-      event.target.addEventListener('animationend', function() {
-        event.target.classList.remove('bounce');
-      });
-
-      axios({
-        method: 'post',
-        url: `/movies/${movieId}/likes/`,
-        headers: {'X-CSRFToken': csrftoken},
-      })
-        .then((response) => {
-          const isLiked = response.data.is_liked;
-          event.target.src = isLiked 
-            ? "{% static 'img/heart-fill.png' %}" 
-            : "{% static 'img/heart-none.png' %}";
-          // 확장성을 위한 코드!!! -> data-is-liked 속성 업데이트
-          event.target.dataset.isLiked = isLiked.toString();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     });
   });
+
+  // 하트 버튼 찜하기 기능 구현
+  const heartIcons = document.querySelectorAll('.heart-icon');
+
+  heartIcons.forEach(icon => {
+    if (icon.dataset.isLiked === "true") {
+      icon.src = "{% static 'img/heart-fill.png' %}";
+    }
+  });
+
+  const movieContainer = document.querySelector('.movies-container');
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  movieContainer.addEventListener('click', function (event) {
+    if (!event.target.classList.contains('heart-icon')) return;
+
+    event.preventDefault();
+
+    if (!isUserLoggedIn) {
+      alert('로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.')
+      window.location.href = "{% url 'accounts:login' %}"
+      return
+    }
+    
+    const movieId = event.target.dataset.movieId;
+
+    event.target.classList.add('bounce');
+
+    event.target.addEventListener('animationend', function() {
+      event.target.classList.remove('bounce');
+    });
+
+    axios({
+      method: 'post',
+      url: `/movies/${movieId}/likes/`,
+      headers: {'X-CSRFToken': csrftoken},
+    })
+      .then((response) => {
+        const isLiked = response.data.is_liked;
+        event.target.src = isLiked 
+          ? "{% static 'img/heart-fill.png' %}" 
+          : "{% static 'img/heart-none.png' %}";
+        event.target.dataset.isLiked = isLiked.toString();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+
+  // 최상단으로 이동 버튼 기능
+  const scrollToTopButton = document.getElementById('scrollToTopButton');
+
+  window.onscroll = function() { scrollFunction() };
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      scrollToTopButton.style.display = "block";
+    } else {
+      scrollToTopButton.style.display = "none";
+    }
+  }
+
+  scrollToTopButton.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
 </script>
 {% endblock content %}
