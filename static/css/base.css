@@ -2,7 +2,8 @@
 
 body {
     font-family: 'Montserrat', 'Noto Sans KR', sans-serif !important; /* Bootstrap 덮어쓰기 */
-}
+    padding-top: 90px;
+  }
 
 
 /* 전체 페이지 레이아웃 설정 */
@@ -28,42 +29,48 @@ main {
 
 /* base.html css */
 nav {
-    margin-top: 36px;
-    margin-left: 60px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    position: relative;
+  position: fixed; /* 화면 상단에 고정 */
+  height: 110px;
+  top: 0; /* 상단에서의 거리 */
+  left: 0; /* 왼쪽에서의 거리 */
+  width: 100%; /* 화면 전체 너비 */
+  z-index: 1000; /* 다른 요소 위에 표시되도록 */
+  background-color: white; /* 배경색 추가 (투명하면 콘텐츠와 겹침) */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가로 구분감 */
 }
 
 .base-main-text > a {
-    text-decoration: none;
-    color: black;
-    font-weight: 700;
-    font-size: 36px;
+  text-decoration: none;
+  color: black;
+  font-weight: 700;
+  font-size: 36px;
+}
+
+.base-main-text {
+  margin-top: 32px;
+}
+
+.nav-main-user-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
 }
 
 .base-nav-menu {
-    margin-left: 20px;
-    margin-top: 10px;
+    margin-left: 140px;
+    margin-top: -32px;
     display: flex;
     flex-direction: row;
 }
 
-.base-nav-menu > a {
-    text-decoration: none;
-    color: black;
-    margin-left: 20px;
-}
-
 .nav-base-name {
-    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
-    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 102px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
+    text-decoration: none;
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
     white-space: nowrap;
+    margin-right: 20px;
 }
 
 .nav-base-name > span {
@@ -71,14 +78,27 @@ nav {
     font-size: 18px;
 }
 
+.nav-main-user-info > a {
+  text-decoration: none;
+}
+
+.nav-main-user-info {
+  margin-top: -26px;
+}
+
+.base-nav-menu a {
+  text-decoration: none;
+  color: black;
+  margin-left: 20px;
+}
+
 .nav-base-name-hidden {
   display: none;
 }
 
 .nav-logout-form {
-    position: absolute;
-    top: 17px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 12px;
+    top: 50px; /* 네비게이션 바 상단에서 10px 떨어짐 */
+    right: 138px;
 }
 
 .nav-logout-form input[type="submit"] {
@@ -118,6 +138,8 @@ nav {
 .menu-toggle {
   display: none;
 }
+
+
 
 /* 푸터 스타일 */
 footer {
@@ -178,15 +200,13 @@ footer {
 
   .nav-base-name-hidden {
     display: block;
-    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
-    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 102px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
     white-space: nowrap;
+    margin-right: 20px;
   }
-  
+
   .nav-base-name-hidden > span {
     font-weight: 600;
     font-size: 18px;
@@ -201,15 +221,14 @@ footer {
 
   .nav-base-name-hidden {
     display: block;
-    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
-    top: 18px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 102px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
     white-space: nowrap;
+    margin-right: 20px;
   }
-  
+
+
   .nav-base-name-hidden > span {
     font-weight: 600;
     font-size: 18px;
@@ -231,19 +250,18 @@ footer {
 
   .nav-base-name-hidden {
     display: block;
-    position: absolute; /* 네비게이션 바 내부에서 절대 위치 */
-    top: 8px; /* 네비게이션 바 상단에서 10px 떨어짐 */
-    right: 102px; /* 네비게이션 바 오른쪽 끝에서 10px 떨어짐 */
     font-size: 16px; /* 텍스트 크기 */
     color: rgb(0, 0, 0); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
     white-space: nowrap;
+    margin-right: 20px;
   }
   
   .nav-base-name-hidden > span {
     font-weight: 600;
     font-size: 18px;
   }
+
 
   nav {
       display: flex;
@@ -263,17 +281,13 @@ footer {
     display: none; /* 기본적으로 숨김 */
   }
 
-  .nav-base-name-hidden {
-      display: block; /* 닉네임 표시 */
-      font-size: 14px;
-      text-align: left;
-      margin-top: 10px;
-      margin-right: 30px;
-  }
-
-  .nav-logout-form {
-    margin-top: 0px; /* 로그아웃 버튼 아래 여백 */
-    margin-right: 40px;
+  .nav-main-user-info {
+    z-index: 2000; /* 햄버거 메뉴보다 위에 표시 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 48px;
+    margin-top: -38px;
   }
 
   .logged-in .menu-toggle {
@@ -287,11 +301,18 @@ footer {
   }
 
   .base-nav-menu {
-      display: none; /* 기본적으로 메뉴 숨김 */
-      flex-direction: column;
-      width: 100%; /* 메뉴 전체 너비 */
-      margin-top: 20px;
-      align-items: end;
+    position: absolute; /* 메뉴를 절대 위치로 설정 */
+    top: 140px; /* 네비게이션 바 아래에 표시 */
+    right: 0; /* 오른쪽 끝에 정렬 */
+    background-color: white; /* 메뉴 배경색 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    width: 100%; /* 전체 너비를 차지 */
+    height: 200px;
+    display: none; /* 기본적으로 숨김 */
+    flex-direction: column; /* 세로 정렬 */
+    align-items: end;
+    padding: 10px 20px; /* 메뉴 내부 여백 */
+    z-index: 1500; /* 닉네임 및 버튼보다 아래 */
   }
 
   .menu-open .base-nav-menu {
@@ -305,4 +326,5 @@ footer {
       color: black;
       margin-right: 24px;
   }
+
 }
