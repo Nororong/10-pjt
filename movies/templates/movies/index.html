@@ -19,7 +19,12 @@
 
   <div>
     <a href="{% url "movies:weather_input" %}">
-      <img class="movie-main-img" src="{% static 'img/main.jpg' %}" alt="main-img">
+      <div class="main-image-container">
+        <img class="movie-main-img main-default" src="{% static 'img/main.jpg' %}" alt="main-img">
+        <img class="movie-main-img main-1140" src="{% static 'img/main-1140.jpg' %}" alt="main-img">
+        <img class="movie-main-img main-960" src="{% static 'img/main-960.jpg' %}" alt="main-img">
+        <img class="movie-main-img main-720" src="{% static 'img/main-720.jpg' %}" alt="main-img">
+      </div>
     </a>
   </div>
 
@@ -139,23 +144,23 @@
   });
 
   // 이미지 배너 크기 변경
-  function updateMainImage() {
+  {% comment %} function updateMainImage() {
     const mainImg = document.querySelector('.movie-main-img');
     const screenWidth = window.innerWidth;
   
-    if (screenWidth <= 720) {
-      mainImg.src = "{% static 'img/main-720.jpg' %}";
-    } else if (screenWidth <= 960) {
-      mainImg.src = "{% static 'img/main-960.jpg' %}";
-    } else if (screenWidth <= 1140) {
-      mainImg.src = "{% static 'img/main-1140.jpg' %}";
-    } else {
+    if (screenWidth > 1140) {
       mainImg.src = "{% static 'img/main.jpg' %}";
+    } else if (screenWidth > 960) {
+      mainImg.src = "{% static 'img/main-1140.jpg' %}";
+    } else if (screenWidth > 720) {
+      mainImg.src = "{% static 'img/main-960.jpg' %}";
+    } else {
+      mainImg.src = "{% static 'img/main-720.jpg' %}";
     }
   }
   
   window.addEventListener('resize', updateMainImage);
-  window.addEventListener('load', updateMainImage);
+  window.addEventListener('load', updateMainImage); {% endcomment %}
   
 </script>
 
