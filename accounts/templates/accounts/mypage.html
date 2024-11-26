@@ -1,6 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<!--모달!-->
+<div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">WARM</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>정말 회원탈퇴를 하시겠어요?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'accounts:delete' %}">
+          <button class="modal-btn" type="button" class="btn btn-primary">탈퇴하기</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="mypage-cate container">
   <div class="row">
     <div class="mypage-cate-title col-2">
@@ -18,13 +39,28 @@
 </div>
 
 <script>
-  document.getElementById('delete-btn').addEventListener('click', function(event) {
+  {% comment %} document.getElementById('delete-btn').addEventListener('click', function(event) {
     event.preventDefault();  // 링크 기본 동작 중단
 
     var result = confirm('정말 탈퇴하시겠습니까?');
     if (result) {
       window.location.href = "{% url 'accounts:delete' %}"; // 확인 클릭 시 회원탈퇴 URL로 이동
     }
+
+  }); {% endcomment %}
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // 회원탈퇴 버튼 클릭 이벤트
+    const deleteBtn = document.getElementById('delete-btn');
+  
+    deleteBtn.addEventListener('click', function (event) {
+      event.preventDefault(); // 기본 동작 중단
+  
+      // 모달 동작 코드
+      const modal = new bootstrap.Modal(document.querySelector('.modal'));
+      modal.show();
+
+    });
   });
 </script>
 {% endblock content %}
