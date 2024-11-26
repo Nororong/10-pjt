@@ -68,13 +68,20 @@
 
 1) 회원가입
 
-* 개인정보 처리방침 약관 동의 여부를 추가
+* django의 기본 유저모델을 상속한 CustomUserModel 생성
   
-* 개인정보보호종합포탈에서 생성
+* CustomUserModel을 통해 CustomUserCreationForm을 생성
+  * CustomUserCreationForm에서 회원 가입에 필요한 Username. password1, password2, nickname, email, name 의 설정을 진행
+
+    * required=True, 최대 길이. label의 이름, 에러 메시지 등을 설정     
   
-  * 미동의 시 가입 불가 경고창 처리
+  * 각 필드의 에러메시지를 설정하여 한글 오류 메시지가 등장하도록 설정하였음
   
-* 입력한 정보가 올바르지 않을 경우 경고창 띄우기
+  * 위와 같이 생성한 CustomUserCreationForm 형태에 맞게 데이터를 입력하여 회원 가입 진행.
+  * 회원가입 관련 에러 종류
+    * 이메일과 비밀번호 유사성
+    * 비밀번호1과 비밀번호2 불일치
+    * 
 
   
 
