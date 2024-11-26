@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!--모달-->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        정말로 삭제하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteButton">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="container">
   <div>
     <div class="article-detail-title">
@@ -301,8 +321,60 @@ document.addEventListener('click', function (event) {
   }
 });
 
-// 댓글 및 대댓글 삭제
-document.addEventListener('click', function (event) {
+document.addEventListener('DOMContentLoaded', function () {
+  // 모달 요소와 버튼 참조
+  const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+  const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+
+  let deleteTargetElement = null; // 삭제할 요소를 저장
+  let commentId = null; // 삭제할 댓글/대댓글 ID
+
+  // 댓글/대댓글 삭제 버튼 클릭 이벤트 처리
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('article-detail-comment-delete') ||
+        event.target.classList.contains('article-detail-reply-delete')) {
+      
+      // 클릭된 요소와 관련 정보를 저장
+      deleteTargetElement = event.target.closest('li');
+      commentId = event.target.getAttribute('data-id');
+
+      // 모달 표시
+      deleteModal.show();
+    }
+  });
+
+  // 모달에서 삭제 버튼 클릭 시 동작
+  confirmDeleteButton.addEventListener('click', function () {
+    if (!commentId) return;
+
+    // 삭제 요청 전송
+    fetch("{% url 'articles:comment_delete' '0' %}".replace('0', commentId), {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success && deleteTargetElement) {
+          deleteTargetElement.remove(); // DOM에서 요소 삭제
+          deleteModal.hide(); // 모달 닫기
+        } else {
+          alert(data.error || "삭제에 실패했습니다.");
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert("삭제 중 오류가 발생했습니다.");
+      });
+  });
+});
+
+
+// 댓글 및 대댓글 삭제 원래 코드
+{% comment %} document.addEventListener('click', function (event) {
   if (event.target.classList.contains('article-detail-comment-delete') || event.target.classList.contains('article-detail-reply-delete')) {
       const isReply = event.target.classList.contains('article-detail-reply-delete');
       const commentId = event.target.getAttribute('data-id');
@@ -334,7 +406,7 @@ document.addEventListener('click', function (event) {
               });
       }
   }
-});
+}); {% endcomment %}
 
 // 좋아요 처리
 document.getElementById('like-button').addEventListener('click', function() {

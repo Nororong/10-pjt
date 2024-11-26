@@ -3,7 +3,7 @@
 body {
     font-family: 'Montserrat', 'Noto Sans KR', sans-serif !important; /* Bootstrap 덮어쓰기 */
     padding-top: 90px;
-    background-color: #141414;
+    background-color: #252525;
   }
 
 
@@ -36,13 +36,13 @@ nav {
   left: 0; /* 왼쪽에서의 거리 */
   width: 100%; /* 화면 전체 너비 */
   z-index: 1000; /* 다른 요소 위에 표시되도록 */
-  background-color: rgb(255, 255, 255); /* 배경색 추가 (투명하면 콘텐츠와 겹침) */
+  background-color: rgb(5, 5, 5); /* 배경색 추가 (투명하면 콘텐츠와 겹침) */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가로 구분감 */
 }
 
 .base-main-text > a {
   text-decoration: none;
-  color: black;
+  color: rgb(255, 255, 255);
   font-weight: 700;
   font-size: 36px;
 }
@@ -79,7 +79,7 @@ nav {
 .nav-base-name {
     text-decoration: none;
     font-size: 16px; /* 텍스트 크기 */
-    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    color: rgb(255, 255, 255); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
     white-space: nowrap;
     margin-right: 20px;
@@ -100,7 +100,7 @@ nav {
 
 .base-nav-menu a {
   text-decoration: none;
-  color: black;
+  color: rgb(255, 255, 255);
   margin-left: 20px;
 }
 
@@ -117,8 +117,8 @@ nav {
     padding: 3px 8px; /* 버튼 내부 여백 */
     font-size: 12px; /* 버튼 글꼴 크기 */
     font-weight: 400; /* 버튼 글꼴 두께 */
-    color: white; /* 텍스트 색상 */
-    background-color: #000000; /* 버튼 배경색 */
+    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    background-color: #ffffff; /* 버튼 배경색 */
     border: none; /* 버튼 테두리 제거 */
     border-radius: 4px; /* 버튼 모서리를 둥글게 */
     cursor: pointer; /* 마우스를 올리면 포인터 커서 표시 */
@@ -225,7 +225,7 @@ footer {
   .nav-base-name-hidden {
     display: block;
     font-size: 16px; /* 텍스트 크기 */
-    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    color: rgb(255, 255, 255); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
     white-space: nowrap;
     margin-right: 20px;
@@ -246,7 +246,7 @@ footer {
   .nav-base-name-hidden {
     display: block;
     font-size: 16px; /* 텍스트 크기 */
-    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    color: rgb(255, 255, 255); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
     white-space: nowrap;
     margin-right: 20px;
@@ -260,7 +260,7 @@ footer {
 
   .base-nav-menu > a {
     text-decoration: none;
-    color: black;
+    color: rgb(255, 255, 255);
     margin-left: 10px;
     font-size: 14px;
   }
@@ -275,7 +275,7 @@ footer {
   .nav-base-name-hidden {
     display: block;
     font-size: 16px; /* 텍스트 크기 */
-    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    color: rgb(255, 255, 255); /* 텍스트 색상 */
     font-weight: 400; /* 텍스트 두께 */
     white-space: nowrap;
     margin-right: 20px;
@@ -328,7 +328,7 @@ footer {
     position: absolute; /* 메뉴를 절대 위치로 설정 */
     top: 140px; /* 네비게이션 바 아래에 표시 */
     right: 0; /* 오른쪽 끝에 정렬 */
-    background-color: white; /* 메뉴 배경색 */
+    background-color: rgb(0, 0, 0); /* 메뉴 배경색 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
     width: 100%; /* 전체 너비를 차지 */
     height: 200px;
@@ -347,7 +347,7 @@ footer {
       margin: 10px 0; /* 메뉴 항목 간 간격 */
       text-decoration: none;
       font-size: 16px;
-      color: black;
+      color: rgb(255, 255, 255);
       margin-right: 24px;
   }
 }
