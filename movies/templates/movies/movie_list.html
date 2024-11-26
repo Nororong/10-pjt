@@ -101,7 +101,12 @@ document.addEventListener('DOMContentLoaded', function () {
   function filterMovies(selectedGenre) {
     // 모든 영화의 display를 'none'으로 설정해 완전히 숨김
     allMovies.forEach(movie => {
-      movie.style.display = 'none';
+      movie.style.opacity = '0';
+      movie.style.transform = 'translateY(30px)';
+      movie.style.transition = ''; // 이전 transition 제거
+      setTimeout(() => {
+        movie.style.display = 'none'; // 완전히 숨기기
+      }, 200); // 약간의 지연 후 display를 'none'으로 설정
     });
 
     const visibleMovies = [];
@@ -111,12 +116,21 @@ document.addEventListener('DOMContentLoaded', function () {
       const movieGenres = movie.dataset.genreIds.split(',');
       if (selectedGenre === 'all' || movieGenres.includes(selectedGenre)) {
         visibleMovies.push(movie);
-        movie.style.display = 'block'; // Show matching movies
       }
     });
 
-    // 필터링된 영화에 애니메이션 적용
-    animateMovies(visibleMovies);
+    // 필터링된 영화 다시 나타내기
+    setTimeout(() => {
+    visibleMovies.forEach(movie => {
+      movie.style.display = 'block'; // 표시
+    });
+
+      // 애니메이션 적용
+      setTimeout(() => {
+        animateMovies(visibleMovies);
+      }, 50); // display 변경 후 애니메이션 실행
+    }, 300); // 이전 애니메이션이 완료된 뒤 렌더링
+
   }
 
   // 드롭다운 변경 시 장르별 필터링
