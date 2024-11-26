@@ -1,6 +1,6 @@
 import openai
-
-openai.api_key="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"
+from decouple import config
+openai.api_key=config('OPENAI_API_KEY')
 response = openai.ChatCompletion.create(
     model="gpt-4o-mini", 
     messages=[
