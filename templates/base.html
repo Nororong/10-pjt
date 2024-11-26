@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
@@ -12,12 +12,11 @@
     <link rel="stylesheet" href="{% static 'css/movies.css' %}">
     <link rel="stylesheet" href="{% static 'css/articles.css' %}">
     <title>WARM</title>
-  </head>
-  <body>
-    {% csrf_token %}
-    <nav>
-      <div class="container">
-      <button id="toggleBackgroundColorButton">Toggle Background Color</button>
+</head>
+<body>
+  {% csrf_token %}
+  <nav>
+    <div class="container">
       <header class="base-main-text">
           <a href="{% url "movies:index" %}">WARM</a>
           <button class="menu-toggle">
@@ -54,74 +53,49 @@
     </div>
   </nav>
   <hr>
-
+ 
   <main>
     {% block content %}
     {% endblock content %}
   </main>
-
-  <!-- Button to toggle background color -->
-
+  
   <footer>
     <div class="footer-container">
       <p class="footer-text1">&copy; SSAFY 12 / 2024 My Website</p>
       <p class="footer-text2">WARM</p>
     </div>
   </footer>
-
-  <!-- JavaScript for background color toggle -->
   <script>
     window.isUserLoggedIn = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
 
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleBackgroundColorButton = document.getElementById('toggleBackgroundColorButton');
-      let isBlackBackground = false;
+<button id="scrollToTopButton" title="Go to top">▲</button>
 
-      toggleBackgroundColorButton.addEventListener('click', function() {
-        if (isBlackBackground) {
-          document.body.style.backgroundColor = 'white';
-          document.body.style.color = 'black'; // Change text color for readability
-          isBlackBackground = false;
-        } else {
-          document.body.style.backgroundColor = 'black';
-          document.body.style.color = 'white'; // Change text color for readability
-          isBlackBackground = true;
-        }
-      });
+<script>
+  // 최상단으로 이동 버튼 관련 스크립트
+  document.addEventListener('DOMContentLoaded', function () {
+    const scrollToTopButton = document.getElementById('scrollToTopButton');
 
-      // 최상단으로 이동 버튼 관련 스크립트
-      const scrollToTopButton = document.getElementById('scrollToTopButton');
-
-      // 스크롤 이벤트에 따라 버튼 표시/숨김
-      window.onscroll = function () {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-          scrollToTopButton.style.display = "block";
-        } else {
-          scrollToTopButton.style.display = "none";
-        }
-      };
-
-      // 버튼 클릭 시 부드럽게 최상단으로 이동
-      scrollToTopButton.addEventListener('click', function () {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-
-      // 반응형 햄버거 버튼 관련 코드
-      const menuToggle = document.querySelector('.menu-toggle');
-      const nav = document.querySelector('nav');
-
-      if (!isUserLoggedIn) {
-        // 비로그인 상태에서는 햄버거 버튼 숨김
-        menuToggle.style.display = 'none';
+    // 스크롤 이벤트에 따라 버튼 표시/숨김
+    window.onscroll = function () {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollToTopButton.style.display = "block";
       } else {
-        // 로그인 상태에서는 햄버거 버튼 보임
-        menuToggle.style.display = 'block';
+        scrollToTopButton.style.display = "none";
       }
+    };
 
-      menuToggle.addEventListener('click', () => {
-        nav.classList.toggle('menu-open');
-      });
+    // 버튼 클릭 시 부드럽게 최상단으로 이동
+    scrollToTopButton.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+  });
+
   // 반응형 햄버거 버튼 관련 코드
   document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.querySelector('.menu-toggle')
@@ -142,15 +116,3 @@
   })
   
 </script>
-
-  <!-- Scroll to Top Button -->
-  <button id="scrollToTopButton" title="Go to top">▲</button>
-
-  <!-- External scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-</body>
-</html>
-
