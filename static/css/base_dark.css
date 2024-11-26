@@ -67,6 +67,7 @@ nav {
 
 .nav-user-signup {
   margin-left: 20px;
+  color: #ffffff;
 }
 
 .base-nav-menu {
@@ -128,7 +129,7 @@ nav {
 .nav-user-login {
     text-decoration: none;
     font-size: 16px; /* 텍스트 크기 */
-    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    color: rgb(255, 255, 255); /* 텍스트 색상 */
     font-weight: 700; /* 텍스트 두께 */
     white-space: nowrap;
 }
@@ -136,7 +137,7 @@ nav {
 .nav-user-signup {
     text-decoration: none;
     font-size: 16px; /* 텍스트 크기 */
-    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    color: rgb(255, 255, 255); /* 텍스트 색상 */
     font-weight: 700; /* 텍스트 두께 */
     white-space: nowrap;
 }
