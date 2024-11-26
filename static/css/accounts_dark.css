@@ -21,6 +21,10 @@
     margin: 0 auto;
 }
 
+.form-container h2 {
+    color: #ffffff;
+}
+
 .input-container {
     width: 100%;
 }
@@ -43,11 +47,12 @@
 }
 
 .btn.btn-dark {
-  background-color: black;
+  background-color: #f439b5;
 }
 
 .form-group {
     margin-bottom: 5px; /* 라벨과 입력 필드 간의 간격을 줄임 */
+    color: #ffffff;
 }
 
 .login-label {
@@ -128,8 +133,8 @@
 .signup-btn-light {
     width: 100%; /* 버튼과 동일한 너비 */
     height: 36px; /* 버튼과 동일한 높이 */
-    border: 1px solid black;
-    background-color: black;
+    border: none;
+    background-color: #f439b5;
     color: white;
     border-radius: 5px;
     cursor: pointer;
@@ -187,10 +192,12 @@
     display: flex;
     justify-content: center; /* 버튼을 가로로 중앙 정렬 */
     align-items: center; /* 버튼을 세로로 중앙 정렬 */
-    background-color: black;
+    background-color: #f439b5;
+    border: none;
     color: white;
     border-radius: 5px;
     width: 100%;
+    height: 36px;
     margin-top: 20px; /* 버튼과 입력 필드 간의 간격 */
 }
 
@@ -218,11 +225,13 @@
     width: 320px;
     height: 36px;
     border: 1px solid rgb(110, 103, 103);
-    background-color: black;
+    background-color: #f439b5;
     color: white;
     border-radius: 5px;
     cursor: pointer;
     text-align: center; /* 텍스트 중앙 정렬 */
+    border: none;
+    margin-top: 20px; /* 버튼과 입력 필드 간의 간격 */
 }
 
 .checkbox-grid {
