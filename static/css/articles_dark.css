@@ -11,6 +11,9 @@
     color: white;
 }
 
+.article-main-container {
+    color: #ffffff;
+}
 
 .article-list-menu > a {
     text-decoration: none;
@@ -110,6 +113,10 @@
 
 
 /* 커뮤니티 디테일 페이지 - 상세글 조회 */
+
+.article-create-form {
+    color: #ffffff;
+}
 
 .article-detail-img-none {
     color: #ccc;
@@ -414,4 +421,8 @@
 .confirmDeleteButton {
     background-color: #FF21A6;
     border: none;
+}
+
+.article-update-form {
+    color: #ffffff;
 }
