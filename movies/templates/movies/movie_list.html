@@ -70,29 +70,27 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const moviesContainer = document.getElementById('movies');
-  const genreSelect = document.getElementById('genre-select');
-  const allMovies = Array.from(moviesContainer.children);
-
-  // 애니메이션 함수
-  function animateMovies(movies) {
-    movies.forEach(movie => {
-      movie.style.opacity = '0';
-      movie.style.transform = 'translateY(30px)';
-      movie.style.display = 'block'; // display를 block으로 설정
-    });
-
-    // 애니메이션 적용
-    setTimeout(() => {
-      movies.forEach((movie, index) => {
-        movie.style.transition = 'opacity 0.6s, transform 0.6s';
-        movie.style.transitionDelay = `${index * 0.15}s`;
-        movie.style.opacity = '1';
-        movie.style.transform = 'translateY(0)';
+  document.addEventListener('DOMContentLoaded', function () {
+    const moviesContainer = document.getElementById('movies');
+    const genreSelect = document.getElementById('genre-select');
+    const allMovies = Array.from(moviesContainer.children);
+  
+    function animateMovies(movies) {
+      movies.forEach(movie => {
+        movie.style.opacity = '0';
+        movie.style.transform = 'translateY(30px)';
+        movie.style.display = 'block';
       });
-    }, 50); // display를 변경한 뒤 약간의 딜레이 후 시작
-  }
+  
+      setTimeout(() => {
+        movies.forEach((movie, index) => {
+          movie.style.transition = 'opacity 0.6s, transform 0.6s';
+          movie.style.transitionDelay = `${index * 0.15}s`;
+          movie.style.opacity = '1';
+          movie.style.transform = 'translateY(0)';
+        });
+      }, 50);
+    }
 
   // 초기 로드 시 모든 영화에 애니메이션 적용
   animateMovies(allMovies);
