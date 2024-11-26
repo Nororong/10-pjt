@@ -66,11 +66,21 @@ class CustomUserCreationForm(UserCreationForm):
             'invalid': '올바른 이메일 주소를 입력해주세요.'
         }
     )
+
+    name = forms.CharField(
+        required=True,
+        max_length=50,
+        label="이름",
+        error_messages={
+            'required': '이름을 입력해주세요.',
+            'max_length': '이름은 50자를 초과할 수 없습니다.'
+        }
+    )
     class Meta:
         model = User
         fields = [
             'username', 'password1', 'password2', 
-            'first_name', 'last_name', 'email', 
+            'name', 'email', 
             'birth_date', 'nickname'
         ]
         widgets = {
@@ -80,8 +90,7 @@ class CustomUserCreationForm(UserCreationForm):
             'username': '아이디',
             'password1': '비밀번호',
             'password2': '비밀번호 확인',
-            'first_name': '이름',
-            'last_name': '성',
+            'name': '이름',
             'email': '이메일',
             'birth_date': '생년월일',
             'nickname' : '닉네임',
@@ -116,19 +125,6 @@ class CustomUserCreationForm(UserCreationForm):
             'required': '이메일을 입력해주세요.',
             'invalid': '올바른 이메일 주소를 입력해주세요.'
         }
-
-        # first_name 필드 에러 메시지
-        self.fields['first_name'].error_messages = {
-            'required': '이름을 입력해주세요.',
-            'max_length': '이름은 150자를 초과할 수 없습니다.'
-        }
-
-        # last_name 필드 에러 메시지
-        self.fields['last_name'].error_messages = {
-            'required': '성을 입력해주세요.',
-            'max_length': '성은 150자를 초과할 수 없습니다.'
-        }
-
         # birth_date 필드 에러 메시지
         self.fields['birth_date'].error_messages = {
             'invalid': '올바른 날짜 형식으로 입력해주세요.'
@@ -152,18 +148,6 @@ class CustomUserCreationForm(UserCreationForm):
         if not email:
             raise forms.ValidationError("이메일을 입력해주세요.")
         return email
-
-    def clean_first_name(self):
-        first_name = self.cleaned_data.get('first_name')
-        if not first_name:
-            raise forms.ValidationError("이름을 입력해주세요.")
-        return first_name
-
-    def clean_last_name(self):
-        last_name = self.cleaned_data.get('last_name')
-        if not last_name:
-            raise forms.ValidationError("성을 입력해주세요.")
-        return last_name
     
     def clean_birth_date(self):
         birth_date = self.cleaned_data.get('birth_date')
@@ -183,7 +167,25 @@ class CustomUserCreationForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise ValidationError("이미 존재하는 이메일입니다.")
         return email
+    
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name:
+            raise forms.ValidationError("이름을 입력해주세요.")
+        return name
+    
+
 class CustomUserChangeForm(UserChangeForm):
+    name = forms.CharField(
+        required=True,
+        max_length=50,
+        label="이름",
+        error_messages={
+            'required': '이름을 입력해주세요.',
+            'max_length': '이름은 50자를 초과할 수 없습니다.'
+        }
+    )
+
     favorite_genres = forms.ModelMultipleChoiceField(
         queryset=Genre.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -192,7 +194,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm.Meta):
         model = User
-        fields = ('first_name', 'last_name','nickname', 'email', 'birth_date', 'favorite_genres', 'email')
+        fields = ('name', 'nickname', 'email', 'birth_date', 'favorite_genres', 'email')
 
     def clean_favorite_genres(self):
         genres = self.cleaned_data.get('favorite_genres')

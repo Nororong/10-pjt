@@ -224,3 +224,23 @@ def password_reset(request):
             return render(request, 'accounts/password_reset.html', {'error': "등록된 이메일이 아닙니다."})
 
     return render(request, 'accounts/password_reset.html')
+
+
+def find_id(request):
+    success_message = None
+    error_message = None
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+
+        try:
+            user = User.objects.get(name=name, email=email)
+            success_message = f"회원님의 아이디는 '{user.username}'입니다."
+        except User.DoesNotExist:
+            error_message = "입력하신 정보와 일치하는 회원을 찾을 수 없습니다."
+
+    return render(request, 'accounts/find_id.html', {
+        'success_message': success_message,
+        'error_message': error_message
+    })
