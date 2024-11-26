@@ -11,16 +11,12 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .models import Genre, User
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from django.conf import settings
 import requests
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
-from smtplib import SMTPException
-# from user_agent import generate_user_agent
-# from .utils import send_id_email
+from django.utils.crypto import get_random_string
+
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -51,6 +47,7 @@ def login(request):
     }
     return render(request, 'accounts/login.html', context)
 
+
 @login_required
 def preference(request):
     if request.method == 'POST':
@@ -72,10 +69,12 @@ def preference(request):
     }
     return render(request, 'accounts/preference.html', context)
 
+
 @login_required
 def logout(request):
     auth_logout(request)
     return redirect('movies:index')
+
 
 @login_required
 def delete(request):
@@ -178,3 +177,50 @@ def password_change(request, user_pk):
 
 def mypage(request):
     return render(request, 'accounts/mypage.html')
+
+    
+COURIER_API_URL = "https://api.courier.com/send"
+COURIER_API_KEY = settings.COURIER_API_KEY
+
+def password_reset(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            # 임시 비밀번호 생성
+            temp_password = get_random_string(length=8)
+            user.set_password(temp_password)  # 새로운 임시 비밀번호 설정
+            user.save()
+
+            # Courier API를 사용하여 이메일 전송
+            COURIER_API_KEY = settings.COURIER_API_KEY  # settings에서 API 키를 가져옵니다.
+            COURIER_API_URL = 'https://api.courier.com/send'  # Courier API URL
+
+            headers = {
+                "Authorization": f"Bearer {COURIER_API_KEY}",
+                "Content-Type": "application/json"
+            }
+
+            payload = {
+                "message": {
+                    "to": {"email": email},
+                    "content": {
+                        "title": "비밀번호 재설정 요청",
+                        "body": f"새로운 임시 비밀번호는 다음과 같습니다: {temp_password}\n로그인 후 반드시 비밀번호를 변경하세요.",
+                    },
+                }
+            }
+
+            # POST 요청을 통해 이메일 보내기
+            response = requests.post(COURIER_API_URL, json=payload, headers=headers)
+
+            if response.status_code == 200:
+                return render(request, 'accounts/password_reset.html', {'success': True})
+            else:    
+                return render(request, 'accounts/password_reset.html', {'success': True})
+
+        else:
+            return render(request, 'accounts/password_reset.html', {'error': "등록된 이메일이 아닙니다."})
+
+    return render(request, 'accounts/password_reset.html')

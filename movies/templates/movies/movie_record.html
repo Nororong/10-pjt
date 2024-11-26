@@ -48,7 +48,7 @@
               {{ comment.content }}
             </span>
           </p>
-          <p><small>{{ comment.created_at }}</small></p>
+          <p><small>{{ comment.created_at|date:"y-m-d" }}</small></p>
         </div>
         {% if not forloop.last %}
           <hr>
@@ -68,7 +68,7 @@
           <a href="{% url 'articles:articles_detail' article.pk %}">
             <p class="record-movie-title-title">👉 {{ article.title }}</p>
           </a>
-          <p><small>{{ article.created_at }}</small></p>
+          <p><small>{{ article.created_at|date:"y-m-d" }}</small></p>
         </div>
         {% if not forloop.last %}
           <hr>
@@ -91,7 +91,7 @@
             </a>
           </p>
           <p><strong>댓글&nbsp;&nbsp;&nbsp;</strong>{{ comment.content }}</p>
-          <p><small>{{ comment.created_at }}</small></p>
+          <p><small>{{ comment.created_at|date:"y-m-d" }}</small></p>
         </div>
         {% if not forloop.last %}
           <hr>

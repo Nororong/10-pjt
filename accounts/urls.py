@@ -12,4 +12,6 @@ urlpatterns = [
     path('update/', views.update, name='update'),
     path('mypage/', views.mypage, name='mypage'),
     path('<int:user_pk>/password_change/', CustomPasswordChangeView.as_view(), name='password_change'),
+    path('find_id/', views.mypage, name='mypage'),
+    path('password_reset/', views.password_reset, name='password_reset'),
 ]

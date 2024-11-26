@@ -7,7 +7,7 @@
       <p>{{ article.title }}</p>
     </div>
     <div class="article-detail-user">
-      <p>작성일: {{ article.created_at }}</p>
+      <p>작성일: {{ article.created_at|date:"y-m-d" }}</p>
       <p class="article-detail-user-name">{{ request.user.nickname }}</p>
     </div>
     <hr>
