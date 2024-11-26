@@ -207,27 +207,34 @@
   
       const movieId = heartIcon.dataset.movieId;
   
-      heartIcon.classList.add('bounce');
+      // 하트 상태에 따라 미니 하트 생성 여부 결정
+      const isCurrentlyLiked = heartIcon.dataset.isLiked === "true";
   
-      heartIcon.addEventListener('animationend', function () {
-        heartIcon.classList.remove('bounce');
-      });
-
-      const rect = heartIcon.getBoundingClientRect();
-      const numHearts = Math.floor(Math.random() * 3) + 3;
+      // 하트가 켜졌을 때만 미니 하트 애니메이션 생성
+      if (!isCurrentlyLiked) {
+        heartIcon.classList.add('bounce');
   
-      for (let i = 0; i < numHearts; i++) {
-        const miniHeart = createMiniHeart();
-        miniHeart.style.position = 'fixed';
-        miniHeart.style.left = `${rect.left + rect.width / 2}px`;
-        miniHeart.style.top = `${rect.top + rect.height / 2}px`;
-        document.body.appendChild(miniHeart);
-
-        miniHeart.addEventListener('animationend', () => {
-          document.body.removeChild(miniHeart);
+        heartIcon.addEventListener('animationend', function () {
+          heartIcon.classList.remove('bounce');
         });
+
+        const rect = heartIcon.getBoundingClientRect();
+        const numHearts = Math.floor(Math.random() * 3) + 20;
+  
+        for (let i = 0; i < numHearts; i++) {
+          const miniHeart = createMiniHeart();
+          miniHeart.style.position = 'fixed';
+          miniHeart.style.left = `${rect.left + rect.width / 2}px`;
+          miniHeart.style.top = `${rect.top + rect.height / 2}px`;
+          document.body.appendChild(miniHeart);
+
+          miniHeart.addEventListener('animationend', () => {
+            document.body.removeChild(miniHeart);
+          });
+        }
       }
   
+      // 하트 상태를 변경
       axios({
         method: 'post',
         url: `/movies/${movieId}/likes/`,

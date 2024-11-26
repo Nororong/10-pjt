@@ -95,23 +95,25 @@ def update(request):
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             user = form.save()
-            
+
             # ManyToMany 관계 업데이트
             favorite_genres = form.cleaned_data['favorite_genres']
             request.user.favorite_genres.set(favorite_genres)
-            
+
             messages.success(request, "성공적으로 수정되었습니다!")
             return redirect('movies:index')
         else:
+            print(form.errors)  # 폼 오류를 확인
             messages.error(request, "수정에 실패했습니다. 다시 시도해주세요.")
     else:
         form = CustomUserChangeForm(instance=request.user)
         # 초기값 설정
+        form.fields['name'].initial = request.user.name  # name 필드 초기값 설정
         form.fields['favorite_genres'].initial = request.user.favorite_genres.all()
 
     context = {
         'form': form
-        }
+    }
     return render(request, 'accounts/update.html', context)
 
 def set_preferences(request):
