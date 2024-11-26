@@ -7,6 +7,7 @@
     justify-content: center; /* 세로축 중앙 정렬 */
     height: 75vh; 
     margin: 0 auto;
+    color: #ffffff;
 }
 
 .form-container {
@@ -39,6 +40,10 @@
     align-items: center; /* 세로축 중앙 정렬 */
     height: auto; /* 부모 요소 높이 자동 */
     margin: auto; /* 버튼과 이전 요소 간의 간격을 줄임 */
+}
+
+.btn.btn-dark {
+  background-color: black;
 }
 
 .form-group {
@@ -92,6 +97,7 @@
     justify-content: center; /* 세로축 중앙 정렬 */
     min-height: 75vh;
     padding: 20px 0;
+    color: #ffffff;
 }
 
 .form-group {
@@ -307,7 +313,7 @@
 
 .login-link {
     margin-left: 10px;
-    color: black; /* 검은색 글씨 */
+    color: rgb(255, 255, 255); /* 검은색 글씨 */
     font-size: 0.9rem;
     cursor: pointer; /* 클릭 가능 표시 */
     text-decoration: none;
