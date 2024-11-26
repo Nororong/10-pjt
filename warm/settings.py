@@ -142,16 +142,9 @@ STATICFILES_DIRS = [
 # API_KEY 추가
 TMDB_API_KEY = config('TMDB_API_KEY')
 OPENWEATHERMAP_API_KEY=config('OPENWEATHERMAP_API_KEY')
+COURIER_API_KEY = config('COURIER_API_KEY')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP 서버
-EMAIL_PORT = 587  # Gmail SMTP 포트
-EMAIL_USE_TLS = True  # TLS 보안 사용
-EMAIL_HOST_USER = 'dnjsdl1022@ajou.ac.kr'  # 발신할 이메일 주소
-EMAIL_HOST_PASSWORD = 'nkcl ucco mocc lkhw'  # Gmail 앱 비밀번호
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 기본 발신자 이메일
