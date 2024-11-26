@@ -491,6 +491,10 @@
     }
 }
 
+@media (max-width: 768px) {
+    
+}
+
 
 /* 반응형 날씨 검색 페이지 */
 /* 1025px - 1200px (중간 화면 크기) */
@@ -548,6 +552,8 @@
 
 /* 768px 이하 (작은 화면 크기) */
 @media (max-width: 768px) {
+
+
     .weather-content-box {
         width: 100%; /* 폭을 화면 비율에 맞게 조정 */
         height: 320px; /* 높이를 자동으로 조정 */
@@ -593,6 +599,10 @@
     .weather-content-box .col-4 {
         text-align: center; /* 텍스트 중앙 정렬 */
         width: 100%; /* 폭 제한 해제 */
+    }
+
+    .movie-detail-css {
+        flex-direction: row;
     }
 }
 
