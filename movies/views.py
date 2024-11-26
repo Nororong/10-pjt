@@ -178,7 +178,6 @@ def get_weather_data(city):
 @login_required
 def weather_view(request, city):
     weather_data = get_weather_data(city)
-    context = {}
     weather_descriptions = {
         'Clear': '맑은🌞',
         'Clouds': '흐린☁',
@@ -189,19 +188,24 @@ def weather_view(request, city):
         'Mist': '안개가 낀🌫',
         'Fog': '짙은 안개가 끼는🌫',
     }
-    searched_movies=request.GET.get('searched_movies', '')
+
+    searched_movies = request.GET.get('searched_movies', '')
+    movies = Movie.objects.filter(
+        title__isnull=False,
+        recommended_temperature__isnull=False
+    )
+
     if searched_movies:
         movies = movies.filter(
             Q(title__icontains=searched_movies)
         ).distinct()
 
+    # (날씨 및 추천 로직은 유지)
     if weather_data:
         weather_condition = weather_data['weather'][0]['main']
-        description = weather_data['weather'][0]['description']
         temperature = weather_data['main']['temp']
-        humidity = weather_data['main']['humidity']
         korean_weather_description = weather_descriptions.get(weather_condition, '알 수 없는 날씨')
-        
+
         def get_temperature_category(temp):
             if temp <= 0:
                 return 'very_cold'
@@ -213,15 +217,9 @@ def weather_view(request, city):
                 return 'warm'
             else:
                 return 'hot'
-            
+
         current_temperature_category = get_temperature_category(temperature)
         user_genres = request.user.favorite_genres.all()
-
-        # title과 recommended_temperature가 있는 영화만 필터링
-        movies = Movie.objects.filter(
-            title__isnull=False,
-            recommended_temperature__isnull=False
-        )
 
         if user_genres.exists():
             movies = movies.filter(
@@ -247,18 +245,16 @@ def weather_view(request, city):
             'city': city,
             'korean_weather_description': korean_weather_description,
             'weather_condition': weather_condition,
-            'description': description,
             'temperature': temperature,
-            'humidity': humidity,
+            'humidity': weather_data['main']['humidity'],
             'current_temperature_category': current_temperature_category,
             'movies': movies_with_temp,
-            'searched_movies' : searched_movies,
+            'searched_movies': searched_movies,
         }
     else:
-        context['error'] = '날씨를 불러올 수 없어요. 올바른 도시명을 다시 입력해주세요!'
+        context = {'error': '날씨를 불러올 수 없습니다. 올바른 도시명을 입력해주세요!'}
 
     return render(request, 'movies/weather.html', context)
-
 @login_required
 def weather_input(request):
     if request.method == 'POST':

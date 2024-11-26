@@ -5,7 +5,8 @@
 
 <div class="container weather-search-form">
   <p class="weather-movie-list"><strong class="weather-movie-list-name">{{ user.nickname }}</strong>님의 선호도를 기반으로, 오늘 날씨에 어울리는 영화를 추천해 드릴게요! 🥰</p>
-  <form action="{% url "movies:movie_list" %}" method="GET">
+  <!-- form action 수정 -->
+  <form method="GET">
     <input type="text" name="searched_movies" value="{{ searched_movies }}" placeholder="원하는 영화를 검색해요!">
     <button>검색</button>
   </form>
