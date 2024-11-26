@@ -3,6 +3,7 @@
 body {
     font-family: 'Montserrat', 'Noto Sans KR', sans-serif !important; /* Bootstrap 덮어쓰기 */
     padding-top: 90px;
+    background-color: #141414;
   }
 
 
