@@ -1,25 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <!--모달!-->
-  {% comment %} <div class="modal" tabindex="-1">
+
+  <!--모달-->
+  <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">WARM</h5>
+          <h5 class="modal-title" id="alertModalLabel">알림</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>로그인이 필요한 페이지예요.</p>
+          <!-- 여기에 JavaScript로 메시지가 동적으로 들어갑니다 -->
+          <p id="alertModalMessage"></p>
         </div>
         <div class="modal-footer">
-          <a href="{% url 'accounts:login' %}">
-            <button class="modal-btn" type="button" class="btn btn-primary">로그인</button>
-          </a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
         </div>
       </div>
     </div>
-  </div> {% endcomment %}
+  </div>
+
 
   <div class="preference-form-container">
     <div>
@@ -47,7 +48,46 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+      const sections = ['genres'];
+      const form = document.getElementById('preference-form');
+      const submitButton = form.querySelector('button[type="submit"]');
+    
+      // 모달 요소와 메시지
+      const alertModal = new bootstrap.Modal(document.getElementById('alertModal'));
+      const alertModalMessage = document.getElementById('alertModalMessage');
+    
+      // '저장하기' 버튼 클릭 시 이벤트
+      submitButton.addEventListener('click', function (event) {
+        const checkedCount = document.querySelectorAll('#genresSection input[type="checkbox"]:checked').length;
+    
+        // 최소 1개 이상의 장르가 선택되어야 함
+        if (checkedCount === 0) {
+          event.preventDefault(); // 폼 제출을 막음
+          alertModalMessage.textContent = '최소 1개 이상의 장르를 선택해야 합니다.';
+          alertModal.show(); // 모달 표시
+          return false; // 더 이상 진행되지 않도록 함
+        }
+      });
+    
+      sections.forEach(section => {
+        const checkboxes = document.querySelectorAll(`#${section}Section input[type="checkbox"]`);
+        checkboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', function () {
+            const checked = document.querySelectorAll(`#${section}Section input[type="checkbox"]:checked`);
+            if (checked.length > 3) {
+              this.checked = false; // 현재 체크를 해제
+              alertModalMessage.textContent = `${section.charAt(0).toUpperCase() + section.slice(1)}는 최대 3개까지만 선택할 수 있습니다.`;
+              alertModal.show(); // 모달 표시
+            }
+          });
+        });
+      });
+    });
+    
+
+    // 원래 코드
+    {% comment %} document.addEventListener('DOMContentLoaded', function() {
       const sections = ['genres'];
       const form = document.getElementById('preference-form');
       const checkboxes = document.querySelectorAll('#genresSection input[type="checkbox"]');
@@ -77,6 +117,6 @@
           });
         });
       });
-    });
+    }); {% endcomment %}
   </script>
 {% endblock content %}

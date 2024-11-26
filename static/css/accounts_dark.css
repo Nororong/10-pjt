@@ -152,6 +152,7 @@
     justify-content: center; /* 세로축 중앙 정렬 */
     height: 75vh;
     margin: 0 auto;
+    color: #ffffff;
 }
 
 .submit-btn {
@@ -279,11 +280,12 @@
 .mypage-cate-title {
     font-size: 18px;
     font-weight: 600;
+    color: #ffffff;
 }
 
 .mypage-cate-detail a {
     text-decoration: none;
-    color: #212529;
+    color: #ffffff;
 }
 
 .find-id-btn {
@@ -372,4 +374,11 @@
   text-align: center;
   line-height: 15px;
 }
-  
+
+.preference-section {
+  color: #ffffff;
+}
+
+.preference-hr {
+  color: #ffffff;
+}

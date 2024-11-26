@@ -74,6 +74,7 @@
     /* position: absolute; */
     margin-top: 30px; /* 네비게이션 바 상단에서 10px 떨어짐 */
     margin-bottom: 40px;
+    color: #ffffff;
 }
 
 .movie-list-title {
@@ -95,6 +96,9 @@
 
 /* movie detail */
 /* 영화 상세 페이지 */
+hr {
+    color: #ffffff;
+}
 .detail-poster {
     max-width: 560px;
     border-radius: 20px;
@@ -112,6 +116,7 @@
 
 .movie-detail-text {
     margin: auto 0;
+    color: #ffffff;
 }
 
 .movie-detail-title {
@@ -122,6 +127,7 @@
 .comment-ment {
     text-align: start;
     margin-top: 20px;
+    color: #ffffff;
 }
 
 .movie-detail-comment-box {
@@ -200,6 +206,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    color: #ffffff;
 }
 
 .movie-comment-delete-text > p {
@@ -218,7 +225,7 @@
 .no-liked-movies-message {
     text-align: center;
     font-size: 16px;
-    color: #555;
+    color: #ffffff;
     margin-top: 70px;
   }
 
@@ -227,7 +234,7 @@
     font-weight: 600;
     margin-top: 20px;
     margin-bottom: 40px;
-    
+    color: #ffffff;
 }
 
 
@@ -236,7 +243,7 @@
 }
 
 .record-movie-title-title {
-    color: #212529;
+    color: #ffffff;
     font-size: 16px;
     font-weight: 400;
 }
@@ -247,11 +254,11 @@
 
 .record-movie-article-comment a {
     text-decoration: none;
-    color: #212529;
+    color: #ffffff;
 }
 
 .record {
-    border-bottom: 6px solid #f0f0f0;
+    border-bottom: 6px solid #3f3f3f;
     margin-top: 50px;
     margin-bottom: 50px;
 }
@@ -263,6 +270,7 @@
 .record-movie-comment-detail {
     margin-top: 30px;
     margin-bottom: 30px;
+    color: #ffffff;
 }
 
 
@@ -279,6 +287,7 @@
     font-size: 20px;
     font-weight: 600;
     margin-top: 70px;
+    color: #ffffff;
 }
 
 .movie-main-title > span {
@@ -287,26 +296,31 @@
 
 .movie-main-title-1 {
     font-size: 16px;
+    color: #ffffff;
 
 }
 
 .movie-main-title-genre {
     text-decoration: none;
-    color: #212529;
+    color: #ffffff;
 }
 
-
+.movie-title {
+    color: #ffffff;
+}
 
 /* 날씨 기반 영화 추천 페이지 */
 
 .weather-user-title > p {
     margin-top: 60px;
     font-size: 18px;
+    color: #ffffff;
 }
 
 .weather-user-title > p > span {
     font-size: 20px;
     font-weight: 700;
+    color: #ffffff;
 }
 
 .weather-user-city {
@@ -359,6 +373,7 @@
     margin-top: 60px;
     margin-bottom: 60px;
     font-size: 18px;
+    color: #ffffff;
 }
 
 .weather-movie-list-name {
@@ -457,6 +472,7 @@
   width: 60px;
   margin-left: 6px;
 }
+
 
 
 
@@ -672,3 +688,6 @@ display: block;
     animation: bounce 0.5s ease-in-out; /* 애니메이션 적용 */
   }
 
+.movie-list-container {
+    color: #ffffff;
+}
